@@ -1,0 +1,10 @@
+# replace with CI infrastructure values
+---
+fulcio:
+  server:
+    ingress:
+      hostname: fulcio.localhost
+rekor:
+  server:
+    ingress:
+      hostname: rekor.localhost
