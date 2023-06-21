@@ -12,10 +12,9 @@ A Helm chart for deploying a Sigstore application opinionated for OpenShift
 
 ```console
 helm repo add sigstore https://sigstore.github.io/helm-charts
-helm repo add sigstore-rhel [tbd]
+helm repo add sigstore/scaffold
 
-helm repo update
-helm install my-release [tbd]
+helm upgrade -i my-sigstore-scaffold sigstore/scaffold -f values.yaml
 ```
 
 ## Introduction
@@ -41,32 +40,6 @@ Chart is available in the following formats:
 
 - [Chart Repository](https://helm.sh/docs/topics/chart_repository/)
 - [OCI Artifacts](https://helm.sh/docs/topics/registries/)
-
-### Installing from the Chart Repository
-
-The following command can be used to add the chart repository:
-
-```console
-helm repo add sigstore-rhel https://[tbd]
-```
-
-Once the chart has been added, install one of the available charts:
-
-```console
-helm upgrade -i <release_name> sigstore-rhel/scaffold
-```
-
-### Installing from an OCI Registry
-
-Chart is also available in OCI format. The list of available releases can be found [here-tbd].
-
-Install one of the available versions:
-
-```shell
-helm upgrade -i oci://ghcr.io/[tbd]/scaffold --version=<version>
-```
-
-> **Tip**: List all releases using `helm list`
 
 ### Uninstalling the Chart
 

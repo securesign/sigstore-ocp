@@ -1,5 +1,12 @@
+tsa:
+  server:
+    securityContext:
+      runAsNonRoot: true
+
 rekor:
   server:
+    securityContext:
+      runAsNonRoot: true
     ingress:
       className: ""
       annotations:
@@ -18,6 +25,8 @@ fulcio:
     enabled: false
   server:
     secret: fulcio-secret-rh
+    securityContext:
+      runAsNonRoot: true
     ingress:
       http:
         annotations:
