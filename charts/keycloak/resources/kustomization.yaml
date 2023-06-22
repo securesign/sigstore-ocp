@@ -1,0 +1,8 @@
+resources:
+- keycloak.yaml
+- realm.yaml
+- sigstore-client.yaml
+- user.yaml
+
+#patchesStrategicMerge:
+#- ./patches/service-patch.yaml

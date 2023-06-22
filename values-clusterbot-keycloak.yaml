@@ -1,6 +1,4 @@
-tsa:
-  enabled: false
-
+---
 rekor:
   server:
     securityContext:
@@ -11,9 +9,11 @@ rekor:
         route.openshift.io/termination: "edge"
       hosts:
       # replace with cluster domain
-        - host: rekor.<replace with cluster domain>
+        - host: rekor.apps.177ca20f62c2a845e53e.hypershift.aws-2.ci.openshift.org
           path: /
 
+trillian:
+  enabled: true
 
 fulcio:
   namespace:
@@ -32,22 +32,28 @@ fulcio:
         className: ""
         hosts:
           # replace with cluster domain
-          - host: fulcio.<replace with cluster-domain>
+          - host: fulcio.apps.177ca20f62c2a845e53e.hypershift.aws-2.ci.openshift.org
             path: /
   config:
     contents:
       OIDCIssuers:
         # replace
-        ? https://rh-oidc.s3.us-east-1.amazonaws.com/.....
-        : IssuerURL: https://rh-oidc.s3.us-east-1.amazonaws.com/.......
+        ? https://keycloak-keycloak-system.apps.177ca20f62c2a845e53e.hypershift.aws-2.ci.openshift.org/auth/realms/sigstore
+        : IssuerURL: https://keycloak-keycloak-system.apps.177ca20f62c2a845e53e.hypershift.aws-2.ci.openshift.org/auth/realms/sigstore
           ClientID: sigstore
-          Type: kubernetes
+          Type: email
 
 tuf:
+  enabled: true
   secrets:
+    rekor:
+      name: rekor-public-key
+      path: rekor-pubkey
     fulcio:
       name: fulcio-secret-rh
-  enabled: true
+    ctlog:
+      name: ctlog-public-key
+      path: ctlog-pubkey
   ingress:
     className: ""
     annotations:
@@ -55,7 +61,7 @@ tuf:
     http:
       hosts:
         # replace with cluster domain
-        - host: tuf.<replae with cluster-domain>
+        - host: tuf.apps.177ca20f62c2a845e53e.hypershift.aws-2.ci.openshift.org
           path: /
 
 ctlog:
@@ -67,3 +73,6 @@ ctlog:
 copySecretJob:
   enabled: true
   backoffLimit: 1000
+
+tsa:
+  enabled: false
