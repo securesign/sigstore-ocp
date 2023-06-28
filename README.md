@@ -22,18 +22,20 @@ oc create ns fulcio-system
 oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=file_ca_key.pem --from-file=public=file_ca_pub.pem --from-file=cert=fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
 ```
 
-### Edit the local [values.yaml](./ROSA/values.yaml) file
-
 Run something like the following to view your cluster's cluster-domain
 
 ```bash
 oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
 ```
 
-Edit the values.yaml file accordingly.
+### Edit the local [values.yaml](./charts/scaffold/base/values.yaml)
+
+
+### Apply manifests and deploy the helm charts
 
 ```bash
-helm upgrade -i scaffolding sigstore/scaffold -f values.yaml
+oc apply --kustomize charts/scaffold/overlays/ocp
+helm upgrade -i scaffold sigstore/scaffold -f charts/scaffold/base/values.yaml
 ```
 
 Watch as the stack rolls out.

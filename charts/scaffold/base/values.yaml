@@ -1,17 +1,20 @@
-tsa:
-  enabled: false
+trillian:
+  enabled: true
+  namespace:
+    name: trillian-system
+    create: false
 
 rekor:
+  namespace:
+    name: rekor-system
+    create: false
   server:
-    securityContext:
-      runAsNonRoot: true
     ingress:
       className: ""
       annotations:
         route.openshift.io/termination: "edge"
       hosts:
-      # replace with cluster domain
-        - host: rekor.<replace with cluster domain>
+        - host: rekor.apps.rosa.j7me6-s3kt9-kg5.uks8.p3.openshiftapps.com
           path: /
 
 
@@ -23,27 +26,26 @@ fulcio:
     enabled: false
   server:
     secret: fulcio-secret-rh
-    securityContext:
-      runAsNonRoot: true
     ingress:
       http:
         annotations:
           route.openshift.io/termination: "edge"
         className: ""
         hosts:
-          # replace with cluster domain
-          - host: fulcio.<replace with cluster-domain>
+          - host: fulcio.apps.rosa.j7me6-s3kt9-kg5.uks8.p3.openshiftapps.com
             path: /
   config:
     contents:
       OIDCIssuers:
-        # replace
-        ? https://rh-oidc.s3.us-east-1.amazonaws.com/.....
-        : IssuerURL: https://rh-oidc.s3.us-east-1.amazonaws.com/.......
+        ? https://keycloak-keycloak-system.apps.rosa.j7me6-s3kt9-kg5.uks8.p3.openshiftapps.com/auth/realms/sigstore
+        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.j7me6-s3kt9-kg5.uks8.p3.openshiftapps.com/auth/realms/sigstore
           ClientID: sigstore
-          Type: kubernetes
+          Type: email
 
 tuf:
+  namespace:
+    name: tuf-system
+    create: false
   secrets:
     fulcio:
       name: fulcio-secret-rh
@@ -54,16 +56,18 @@ tuf:
       route.openshift.io/termination: "edge"
     http:
       hosts:
-        # replace with cluster domain
-        - host: tuf.<replae with cluster-domain>
+        - host: tuf.apps.rosa.j7me6-s3kt9-kg5.uks8.p3.openshiftapps.com
           path: /
 
 ctlog:
+  namespace:
+    name: ctlog-system
+    create: false
   enabled: true
   createctconfig:
-    logPrefix: sigstorescaffolding
+    logPrefix: sigstorescaffold
     backoffLimit: 30
 
 copySecretJob:
-  enabled: true
+  enabled: false
   backoffLimit: 1000

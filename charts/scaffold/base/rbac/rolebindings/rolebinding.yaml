@@ -1,0 +1,95 @@
+# TODO: template name of chart == serviceaccount name
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:anyuid
+  namespace: fulcio-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+- kind: ServiceAccount
+  name: fulcio-createcerts
+  namespace: fulcio-system
+- kind: ServiceAccount
+  name: fulcio-server
+  namespace: fulcio-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:anyuid
+  namespace: ctlog-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+- kind: ServiceAccount
+  name: ctlog
+  namespace: ctlog-system
+- kind: ServiceAccount
+  name: ctlog-createtree
+  namespace: ctlog-system
+- kind: ServiceAccount
+  name: scaffold-ctlog-createctconfig
+  namespace: ctlog-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:anyuid
+  namespace: tuf-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+- kind: ServiceAccount
+  name: tuf
+  namespace: tuf-system
+- kind: ServiceAccount
+  name: tuf-secret-copy-job
+  namespace: tuf-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:anyuid
+  namespace: trillian-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+- kind: ServiceAccount
+  name: trillian-logserver
+  namespace: trillian-system
+- kind: ServiceAccount
+  name: trillian-logsigner
+  namespace: trillian-system
+- kind: ServiceAccount
+  name: trillian-mysql
+  namespace: trillian-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:anyuid
+  namespace: rekor-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+- kind: ServiceAccount
+  name: rekor-redis
+  namespace: rekor-system
+- kind: ServiceAccount
+  name: scaffold-rekor-createtree
+  namespace: rekor-system
+- kind: ServiceAccount
+  name: rekor-server
+  namespace: rekor-system
