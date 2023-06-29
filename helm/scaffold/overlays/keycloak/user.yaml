@@ -1,11 +1,11 @@
+---
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  finalizers:
-  - user.cleanup
   labels:
     app: sso
   name: jdoe
+  namespace: keycloak-system
 spec:
   realmSelector:
     matchLabels:
@@ -16,3 +16,21 @@ spec:
     firstName: Jane
     lastName: Doe
     username: jdoe
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  labels:
+    app: sso
+  name: somalley
+  namespace: keycloak-system
+spec:
+  realmSelector:
+    matchLabels:
+      app: sso
+  user:
+    email: somalley@redhat.com
+    enabled: true
+    firstName: Sally
+    lastName: OMalley
+    username: somalley

@@ -1,12 +1,10 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  finalizers:
-  - client.cleanup
   labels:
     app: sso
-    realm: sigstore
-  name: sigstore-client
+  name: sigstore
+  namespace: keycloak-system
 spec:
   client:
     attributes:
@@ -50,4 +48,3 @@ spec:
   realmSelector:
     matchLabels:
       app: sso
-      realm: sigstore
