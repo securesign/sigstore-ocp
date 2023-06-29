@@ -1,0 +1,77 @@
+{{- if .Values.createctconfig.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "ctlog.createctconfig.fullname" . }}
+{{ include "ctlog.namespace" . | indent 2 }}
+  labels:
+    {{- include "ctlog.labels" . | nindent 4 }}
+{{- if .Values.createctconfig.annotations }}
+  annotations:
+{{ toYaml .Values.createctconfig.annotations | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.createctconfig.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.createctconfig.ttlSecondsAfterFinished }}
+{{- end }}
+  backoffLimit: {{ .Values.createctconfig.backoffLimit }}
+  template:
+    spec:
+      serviceAccountName: {{ template "ctlog.serviceAccountName.createctconfig" . }}
+      restartPolicy: Never
+      automountServiceAccountToken: {{ .Values.createctconfig.serviceAccount.mountToken }}
+      initContainers:
+        - name: "wait-for-createtree-configmap"
+          image: "{{ template "ctlog.image" .Values.createctconfig.initContainerImage.curl }}"
+          imagePullPolicy: {{ .Values.createctconfig.initContainerImage.curl.imagePullPolicy }}
+          command: ["sh", "-c", "until curl --fail --header \"Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)\" --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt --max-time 10 https://kubernetes.default.svc/api/v1/namespaces/$(NAMESPACE)/configmaps/{{ template "ctlog.config" . }} | grep '\"treeID\":'; do echo waiting for Configmap {{ template "ctlog.config" . }}; sleep 5; done;"]
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+    {{- if .Values.createctconfig.initContainerResources }}
+          resources:
+{{ toYaml .Values.createctconfig.initContainerResources | indent 12 }}
+    {{- end }}
+      containers:
+        - name: {{ template "ctlog.createctconfig.fullname" . }}
+          image: "{{ template "ctlog.image" .Values.createctconfig.image }}"
+          imagePullPolicy: "{{ .Values.createctconfig.image.pullPolicy }}"
+          args: [
+            "--configmap={{ template "ctlog.config" . }}",
+            "--secret={{ .Values.createctconfig.secret | default (printf "%s-secret" (include "ctlog.fullname" .)) }}",
+          {{- if .Values.createctconfig.privateSecret }}
+            "--private-secret={{ .Values.createctconfig.privateSecret }}",
+          {{- end }}
+          {{- if .Values.createctconfig.pubkeysecret }}
+            "--pubkeysecret={{ .Values.createctconfig.pubkeysecret }}",
+          {{- end }}
+            "--fulcio-url={{ .Values.createctconfig.fulcioURL }}",
+            "--trillian-server={{ .Values.trillian.logServer.name }}.{{ .Values.trillian.namespace }}:{{ .Values.trillian.logServer.portRPC}}",
+          {{- if .Values.createctconfig.privateKeyPasswordSecretName }}
+            "--key-password=$(PRIVATE_KEY_PASSWORD)",
+          {{- end }}
+            "--log-prefix={{ .Values.createctconfig.logPrefix }}"
+          ]
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          {{- if .Values.createctconfig.privateKeyPasswordSecretName }}
+            - name: PRIVATE_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.createctconfig.privateKeyPasswordSecretName  }}
+                  key: password
+          {{- end }}
+    {{- if .Values.createctconfig.resources }}
+          resources:
+{{ toYaml .Values.createctconfig.resources | indent 12 }}
+    {{- end }}
+    {{- if .Values.createctconfig.securityContext }}
+      securityContext:
+{{ toYaml .Values.createctconfig.securityContext | indent 8 }}
+    {{- end }}
+{{- end }}

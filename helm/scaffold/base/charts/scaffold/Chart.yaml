@@ -1,0 +1,38 @@
+annotations:
+  artifacthub.io/license: Apache-2.0
+apiVersion: v2
+dependencies:
+- condition: fulcio.enabled
+  name: fulcio
+  repository: https://sigstore.github.io/helm-charts
+  version: 2.3.3
+- condition: rekor.enabled
+  name: rekor
+  repository: https://sigstore.github.io/helm-charts
+  version: 1.3.5
+- condition: trillian.enabled
+  name: trillian
+  repository: https://sigstore.github.io/helm-charts
+  version: 0.2.6
+- condition: ctlog.enabled
+  name: ctlog
+  repository: https://sigstore.github.io/helm-charts
+  version: 0.2.43
+- condition: tuf.enabled
+  name: tuf
+  repository: https://sigstore.github.io/helm-charts
+  version: 0.1.4
+- condition: tsa.enabled
+  name: tsa
+  repository: https://sigstore.github.io/helm-charts
+  version: 0.1.0
+description: Scaffolding the components of the sigstore architecture
+home: https://sigstore.dev/
+keywords:
+- security
+- pki
+maintainers:
+- name: The Sigstore Authors
+name: scaffold
+type: application
+version: 0.6.14

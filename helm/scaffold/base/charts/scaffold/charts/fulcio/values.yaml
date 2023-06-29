@@ -1,0 +1,121 @@
+namespace:
+  create: false
+  name: fulcio-system
+
+config:
+  contents: {}
+
+server:
+  replicaCount: 1
+  name: server
+  svcPort: 80
+  grpcSvcPort: 5554
+  secret: fulcio-server-secret
+  logging:
+    production: false
+  image:
+    registry: gcr.io
+    repository: projectsigstore/fulcio
+    pullPolicy: IfNotPresent
+    # crane digest gcr.io/projectsigstore/fulcio:v1.3.2
+    # -- v1.3.2
+    version: sha256:16fdf8f0198c58b20faad20f2891b65e00761d66695466ea0dbf1981d1e08120
+  args:
+    port: 5555
+    grpcPort: 5554
+    # Valid values: googleca, pkcs11ca, aws-hsm-root-ca-path, fileca, kmsca
+    certificateAuthority: fileca
+    # kms_resource: gcpkms://....
+    # kms_cert_chain: |-
+    #   << your PEM encoded cert chain here. Order from active intermedate first to root last >>
+    hsm_caroot_id:
+    aws_hsm_root_ca_path:
+    gcp_private_ca_parent: projects/test/locations/us-east1/caPools/test
+    ct_log_url: ""
+    disable_ct_log: false
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+    mountToken: true
+  service:
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 80
+        protocol: TCP
+        targetPort: 5555
+      - name: grpc
+        port: 5554
+        protocol: TCP
+        targetPort: 5554
+      - name: 2112-tcp
+        port: 2112
+        protocol: TCP
+        targetPort: 2112
+  ingress:
+    http:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+      - path: /
+        host: "fulcio.localhost"
+      tls: []
+    grpc:
+      enabled: false
+      className: ""
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+      hosts:
+        - host: fulcio.localhost
+          path: /dev.sigstore.fulcio.v2.CA
+      tls:
+        - secretName: fulcio-grpc-ingress-tls
+          hosts:
+            - fulcio.localhost
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65533
+
+createcerts:
+  enabled: true
+  replicaCount: 1
+  name: createcerts
+  image:
+    registry: ghcr.io
+    repository: sigstore/scaffolding/createcerts
+    pullPolicy: IfNotPresent
+    # v0.3.0
+    version: "sha256:73e7ac35d0e5169bd14a5cb6caed2e7d44277dec3d1de92e08f4d055523089a1"
+  ttlSecondsAfterFinished: 3600
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+    mountToken: true
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65533
+  annotations: {}
+
+# Configure ctlog dependency
+ctlog:
+  enabled: true
+  name: ctlog
+  forceNamespace: ctlog-system
+  fullnameOverride: ctlog
+  namespace:
+    name: ctlog-system
+    create: true
+  createtree:
+    name: ctlog-createtree
+    fullnameOverride: ctlog-createtree
+  createcerts:
+    name: ctlog-createcerts
+    fullnameOverride: ctlog-createcerts
+  createctconfig:
+    logPrefix: fulcio
+
+# Force namespace of namespaced resources
+forceNamespace: ""

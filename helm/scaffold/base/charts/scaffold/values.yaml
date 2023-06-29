@@ -1,0 +1,101 @@
+---
+# Fulcio
+fulcio:
+  enabled: true
+  namespace:
+    name: fulcio-system
+    create: true
+  forceNamespace: fulcio-system
+  server:
+    fullnameOverride: fulcio-server
+  createcerts:
+    fullnameOverride: fulcio-createcerts
+  ctlog:
+    enabled: false
+    createctconfig:
+      logPrefix: sigstorescaffolding
+
+# CTLog
+ctlog:
+  enabled: true
+  namespace:
+    name: ctlog-system
+    create: true
+  forceNamespace: ctlog-system
+  fullnameOverride: ctlog
+  createcerts:
+    fullnameOverride: ctlog-createcerts
+  createtree:
+    fullnameOverride: ctlog-createtree
+    displayName: ctlog-tree
+# Rekor
+rekor:
+  enabled: true
+  namespace:
+    name: rekor-system
+    create: true
+  forceNamespace: rekor-system
+  fullnameOverride: rekor
+  server:
+    fullnameOverride: rekor-server
+  redis:
+    fullnameOverride: rekor-redis
+  trillian:
+    enabled: false
+
+# Trillian
+trillian:
+  enabled: true
+  namespace:
+    name: trillian-system
+    create: true
+  forceNamespace: trillian-system
+  fullnameOverride: trillian
+  logServer:
+    name: trillian-logserver
+    fullnameOverride: trillian-logserver
+    portHTTP: 8090
+    portRPC: 8091
+  logSigner:
+    name: trillian-logsigner
+    fullnameOverride: trillian-logsigner
+  mysql:
+    fullnameOverride: trillian-mysql
+
+tuf:
+  enabled: false
+  namespace:
+    name: tuf-system
+    create: true
+  forceNamespace: tuf-system
+  fullnameOverride: tuf
+
+  secrets:
+    rekor:
+      name: rekor-public-key
+      path: rekor-pubkey
+    fulcio:
+      name: fulcio-server-secret
+      path: fulcio-cert
+    ctlog:
+      name: ctlog-public-key
+      path: ctlog-pubkey
+
+copySecretJob:
+  enabled: false
+  name: copy-secrets-job
+  registry: docker.io
+  repository: alpine/k8s
+  version: sha256:fb0d2db81fb0f98abb1adf5246d6f0f4d19f34031afe4759cb7ad8e2eb8d2c01
+  imagePullPolicy: IfNotPresent
+  serviceaccount: tuf-secret-copy-job
+  backoffLimit: 6
+
+tsa:
+  enabled: false
+  namespace:
+    name: tsa-system
+    create: true
+  forceNamespace: tsa-system
+  server:
+    fullnameOverride: tsa-server

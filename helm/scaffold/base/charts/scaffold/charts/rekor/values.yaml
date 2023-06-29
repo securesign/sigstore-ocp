@@ -1,0 +1,220 @@
+namespace:
+  create: false
+  name: rekor-system
+imagePullSecrets: []
+
+initContainerImage:
+  curl:
+    registry: docker.io
+    repository: curlimages/curl
+    # -- 7.82.0
+    version: "sha256:dca6e1b1c8e7b8b8e7be4e79fc78a858d12fd56245cb31bfa281dbf7c73a6498"
+    imagePullPolicy: IfNotPresent
+
+redis:
+  enabled: true
+  replicaCount: 1
+  hostname: ""
+  port: 6379
+  args:
+    - --bind
+    - 0.0.0.0
+    - --appendonly
+    - "yes"
+  name: redis
+  image:
+    registry: docker.io
+    repository: redis
+    pullPolicy: IfNotPresent
+    # -- 6.2.6-alpine3.15
+    version: "sha256:6c42cce2871e8dc5fb3e843ed5c4e7939d312faf5e53ff0ff4ca955a7e0b2b39"
+  resources: {}
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+    exec:
+      command:
+        - /bin/sh
+        - -i
+        - -c
+        - test "$(redis-cli -h 127.0.0.1 ping)" = "PONG"
+  service:
+    type: ClusterIP
+    ports:
+      - name: 6379-tcp
+        port: 6379
+        protocol: TCP
+        targetPort: 6379
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+
+server:
+  enabled: true
+  replicaCount: 1
+  name: server
+  port: 3000
+  image:
+    registry: gcr.io
+    repository: projectsigstore/rekor-server
+    pullPolicy: IfNotPresent
+    # crane digest gcr.io/projectsigstore/rekor-server:v1.2.2
+    version: "sha256:23213617ad2b63305064b2a2be0ffe8038c2dc9c4f69b22ffe85ed83f65f54c7"
+  logging:
+    production: false
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - path: /
+        host: root
+    annotations: {}
+    tls: []
+  ingresses:
+    - enabled: false
+      name: "gce-ingress"
+      className: "gce"
+      hosts:
+        - path: /
+          host: root
+      annotations: {}
+      tls: []
+      staticGlobalIP: lb-ext-ip
+      frontendConfigSpec:   # https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_frontendconfig_parameters
+        sslPolicy: rekor-ssl-policy
+        redirectToHttps:
+          enabled: true
+      backendConfigSpec:   # https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-configuration#configuring_ingress_features_through_backendconfig_parameters
+        securityPolicy:
+          name: rekor-security-policy
+        logging:
+          enable: true
+  service:
+    type: ClusterIP
+    ports:
+      - name: 3000-tcp
+        port: 80
+        protocol: TCP
+        targetPort: 3000
+      - name: 2112-tcp
+        port: 2112
+        protocol: TCP
+        targetPort: 2112
+  signer: memory
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+    httpGet:
+      port: 3000
+      path: /ping
+  sharding:
+    mountPath: /sharding
+    filename: sharding-config.yaml
+    contents: ""
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+    httpGet:
+      port: 3000
+      path: /ping
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65533
+  config:
+    key: treeID
+    treeID: ""
+  retrieve_api:
+    enabled: true
+  attestation_storage:
+    enabled: true
+    bucket: file:///var/run/attestations
+    persistence:
+      enabled: true
+      annotations: {}
+      storageClass: ""
+      size: 5Gi
+      mountPath: /var/lib/mysql
+      subPath: ""
+      existingClaim: ""
+      accessModes:
+        - ReadWriteOnce
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "2112"
+  resources: {}
+  extraArgs: []
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+createtree:
+  name: createtree
+  force: false
+  image:
+    registry: ghcr.io
+    repository: sigstore/scaffolding/createtree
+    pullPolicy: IfNotPresent
+    # v0.4.2
+    version: "sha256:03e7b3b068e61f65a730b7a95f498c76a02ddecb4f7a65e09b2753b66ac8399f"
+  ttlSecondsAfterFinished: 3600
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65533
+  resources: {}
+  annotations: {}
+# Configure backfillredis to repair indices that were not inserted into Redis.
+backfillredis:
+  name: backfillredis
+  enabled: false
+  image:
+    registry: ghcr.io
+    repository: sigstore/rekor/backfill-redis
+    pullPolicy: IfNotPresent
+    # v1.2.2
+    version: "sha256:04b43cd3f2d8e165adf072fed494c3c784ee345993048c47c8037b20a3fc6efb"
+  ttlSecondsAfterFinished: 3600
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65533
+  rekorAddress: rekor.rekor-system.svc
+  startIndex: -1
+  endIndex: -1
+  resources: {}
+
+# Configure Trillian dependency
+trillian:
+  enabled: true
+  namespace:
+    name: trillian-system
+    create: true
+  forceNamespace: trillian-system
+  fullnameOverride: trillian
+  adminServer: ""
+  logServer:
+    name: trillian-logserver
+    fullnameOverride: trillian-logserver
+    portHTTP: 8090
+    portRPC: 8091
+  logSigner:
+    name: trillian-logsigner
+    fullnameOverride: trillian-logsigner
+  mysql:
+    fullnameOverride: trillian-mysql
+
+# Force namespace of namespaced resources
+forceNamespace: ""

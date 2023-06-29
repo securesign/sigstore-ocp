@@ -1,0 +1,73 @@
+trillian:
+  enabled: true
+  namespace:
+    name: trillian-system
+    create: false
+
+rekor:
+  namespace:
+    name: rekor-system
+    create: false
+  server:
+    ingress:
+      className: ""
+      annotations:
+        route.openshift.io/termination: "edge"
+      hosts:
+        - host: rekor.apps.rosa.ruxs7-eu877-ta3.whvw.p3.openshiftapps.com
+          path: /
+
+
+fulcio:
+  namespace:
+    name: fulcio-system
+    create: false
+  createcerts:
+    enabled: true
+  server:
+    secret: fulcio-secret-rh
+    ingress:
+      http:
+        annotations:
+          route.openshift.io/termination: "edge"
+        className: ""
+        hosts:
+          - host: fulcio.apps.rosa.ruxs7-eu877-ta3.whvw.p3.openshiftapps.com
+            path: /
+  config:
+    contents:
+      OIDCIssuers:
+        ? https://keycloak-keycloak-system.apps.rosa.ruxs7-eu877-ta3.whvw.p3.openshiftapps.com/auth/realms/sigstore
+        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.ruxs7-eu877-ta3.whvw.p3.openshiftapps.com/auth/realms/sigstore
+          ClientID: sigstore
+          Type: email
+
+tuf:
+  namespace:
+    name: tuf-system
+    create: false
+  secrets:
+    fulcio:
+      name: fulcio-secret-rh
+  enabled: true
+  ingress:
+    className: ""
+    annotations:
+      route.openshift.io/termination: "edge"
+    http:
+      hosts:
+        - host: tuf.apps.rosa.ruxs7-eu877-ta3.whvw.p3.openshiftapps.com
+          path: /
+
+ctlog:
+  namespace:
+    name: ctlog-system
+    create: false
+  enabled: true
+  createctconfig:
+    logPrefix: sigstorescaffold
+    backoffLimit: 30
+
+copySecretJob:
+  enabled: true
+  backoffLimit: 1000

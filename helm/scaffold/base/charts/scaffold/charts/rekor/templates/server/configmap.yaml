@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "rekor.config" . }}
+{{ include "rekor.namespace" . | indent 2 }}
+  labels:
+    {{- include "rekor.server.labels" . | nindent 4 }}
+data:
+  __placeholder: |
+    ###################################################################
+    # Just a placeholder so that reapplying this won't overwrite treeID
+    # if it already exists. This caused grief, do not remove.
+    ###################################################################
+  {{ if .Values.server.config.treeID }}
+  {{ .Values.server.config.key }}: "{{ .Values.server.config.treeID }}"
+  {{ end }}

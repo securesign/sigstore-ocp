@@ -1,0 +1,34 @@
+{{- if .Values.server.ingress.grpc.enabled }}
+apiVersion: "networking.k8s.io/v1"
+kind: Ingress
+metadata:
+  labels:
+    {{- include "fulcio.labels" . | nindent 4 }}
+  name: {{ template "fulcio.fullname" . }}-grpc
+{{ include "fulcio.namespace" . | indent 2 }}
+  annotations:
+{{ toYaml .Values.server.ingress.grpc.annotations | indent 4 }}
+spec:
+{{- if .Values.server.ingress.grpc.className }}
+  ingressClassName: {{ .Values.server.ingress.grpc.className }}
+{{- end }}
+  rules:
+    {{- range .Values.server.ingress.grpc.hosts }}
+    - host: {{ required "An Ingress hostname is required" .host | quote }}
+      http:
+        paths:
+          - path: {{ .path }}
+            pathType: {{ default "Prefix" .pathType }}
+            backend: {{- include "fulcio.server.ingress.backend" (list $ . $.Values.server.grpcSvcPort) | nindent 14 }}
+    {{- end }}
+{{- if .Values.server.ingress.grpc.tls }}
+  tls:
+    {{- range .Values.server.ingress.grpc.tls }}
+    - hosts:
+      {{- range .hosts }}
+      - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+{{- end -}}
+{{- end }}

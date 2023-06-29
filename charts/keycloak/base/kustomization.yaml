@@ -1,4 +1,0 @@
-namespace: keycloak-system
-
-bases:
-- ../resources
