@@ -14,7 +14,8 @@ rekor:
       annotations:
         route.openshift.io/termination: "edge"
       hosts:
-        - host: rekor.apps.rosa.nduz7-gtxqq-niy.tp25.p3.openshiftapps.com
+        #- host: rekor.<base_domain>
+        - host: rekor.apps.rosa.sgtkk-2k9gt-qdc.jbid.p3.openshiftapps.com
           path: /
 
 
@@ -23,7 +24,7 @@ fulcio:
     name: fulcio-system
     create: false
   createcerts:
-    enabled: false
+    enabled: true
   server:
     secret: fulcio-secret-rh
     ingress:
@@ -32,13 +33,15 @@ fulcio:
           route.openshift.io/termination: "edge"
         className: ""
         hosts:
-          - host: fulcio.apps.rosa.nduz7-gtxqq-niy.tp25.p3.openshiftapps.com
+         #- host: fulcio.<base_domain>
+          - host: fulcio.apps.rosa.sgtkk-2k9gt-qdc.jbid.p3.openshiftapps.com
             path: /
   config:
     contents:
       OIDCIssuers:
-        ? https://keycloak-keycloak-system.apps.rosa.nduz7-gtxqq-niy.tp25.p3.openshiftapps.com/auth/realms/sigstore
-        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.nduz7-gtxqq-niy.tp25.p3.openshiftapps.com/auth/realms/sigstore
+        # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
+        ? https://keycloak-keycloak-system.apps.rosa.sgtkk-2k9gt-qdc.jbid.p3.openshiftapps.com/auth/realms/sigstore
+        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.sgtkk-2k9gt-qdc.jbid.p3.openshiftapps.com/auth/realms/sigstore
           ClientID: sigstore
           Type: email
 
@@ -56,7 +59,8 @@ tuf:
       route.openshift.io/termination: "edge"
     http:
       hosts:
-        - host: tuf.apps.rosa.nduz7-gtxqq-niy.tp25.p3.openshiftapps.com
+        #- host: tuf.<base_domain>
+        - host: tuf.apps.rosa.sgtkk-2k9gt-qdc.jbid.p3.openshiftapps.com
           path: /
 
 ctlog:
@@ -65,7 +69,7 @@ ctlog:
     create: false
   enabled: true
   createctconfig:
-    logPrefix: sigstorescaffold
+    logPrefix: sigstorescaffolding
     backoffLimit: 30
 
 copySecretJob:

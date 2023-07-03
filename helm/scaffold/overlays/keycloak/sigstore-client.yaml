@@ -12,6 +12,9 @@ spec:
       user.info.response.signature.alg: RS256
     clientAuthenticatorType: client-secret
     clientId: sigstore
+    defaultClientScopes:
+    - profile
+    - email
     description: Client for Sigstore authentication
     directAccessGrantsEnabled: false
     implicitFlowEnabled: false
@@ -45,6 +48,8 @@ spec:
       protocolMapper: oidc-hardcoded-claim-mapper
     publicClient: true
     standardFlowEnabled: true
+    redirectUris:
+    - "*"
   realmSelector:
     matchLabels:
       app: sso

@@ -13,6 +13,7 @@ spec:
   user:
     email: jdoe@redhat.com
     enabled: true
+    emailVerified: true
     firstName: Jane
     lastName: Doe
     username: jdoe
@@ -31,6 +32,7 @@ spec:
   user:
     email: somalley@redhat.com
     enabled: true
+    emailVerified: true
     firstName: Sally
     lastName: OMalley
     username: somalley

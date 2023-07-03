@@ -1,5 +1,5 @@
 apiVersion: v2
-name: scaffold
+name: scaffolding
 description: A Helm chart for deploying a Sigstore application opinionated for OpenShift
 
 type: application
