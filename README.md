@@ -42,3 +42,14 @@ oc kustomize --enable-helm ./helm/scaffold/overlays/ocp | oc apply -f -
 
 Watch as the stack rolls out.
 You might follow the logs from the fulcio-server deployment in `-n fulcio-system`.
+
+## Add keycloak user and/or credentials
+
+Check out the [user custom resource](https://github.com/redhat-et/sigstore-rhel/blob/main/helm/scaffold/overlays/keycloak/user.yaml)
+for how to create a keycloak user. You can also add the password into the user.yaml but otherwise you must
+access the keycloak route and login as the admin user to set the credentials in the keycloak admin console. To get the keycloak admin credentials,
+run `oc extract secret/credential-keycloak -n keycloak-system`. This will create an `ADMIN_PASSWORD` file with which to login. 
+
+## Sign and/or verify artifacts!
+
+Follow [this](https://github.com/redhat-et/sigstore-rhel/blob/main/sign-verify.md).
