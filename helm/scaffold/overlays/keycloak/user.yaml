@@ -14,6 +14,9 @@ spec:
     email: jdoe@redhat.com
     enabled: true
     emailVerified: true
+    credentials:
+      - type: "password"
+        value: "secure"
     firstName: Jane
     lastName: Doe
     username: jdoe
