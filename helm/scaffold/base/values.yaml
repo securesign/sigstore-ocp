@@ -45,15 +45,22 @@ rekor:
         route.openshift.io/termination: "edge"
       hosts:
         #- host: rekor.<base_domain>
-        - host: rekor.apps.rosa.e4kun-p6j9t-fkp.1u73.p3.openshiftapps.com
+        - host: rekor.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com
           path: /
           
   redis:
+    args:
+      - /usr/bin/run-redis
+      - --bind
+      - 0.0.0.0
+      - --appendonly
+      - "yes"
     image:
       registry: registry.redhat.io
       repository: rhel9/redis-6
-      pullPolicy: IfNotPresent
       version: "sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"
+      pullPolicy: IfNotPresent
+      version: latest
 
   initContainerImage:
     curl:
@@ -81,14 +88,14 @@ fulcio:
         className: ""
         hosts:
          #- host: fulcio.<base_domain>
-          - host: fulcio.apps.rosa.e4kun-p6j9t-fkp.1u73.p3.openshiftapps.com
+          - host: fulcio.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com
             path: /
   config:
     contents:
       OIDCIssuers:
         # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
-        ? https://keycloak-keycloak-system.apps.rosa.e4kun-p6j9t-fkp.1u73.p3.openshiftapps.com/auth/realms/sigstore
-        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.e4kun-p6j9t-fkp.1u73.p3.openshiftapps.com/auth/realms/sigstore
+        ? https://keycloak-keycloak-system.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com/auth/realms/sigstore
+        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com/auth/realms/sigstore
           ClientID: sigstore
           Type: email
 
@@ -111,7 +118,7 @@ tuf:
     http:
       hosts:
         #- host: tuf.<base_domain>
-        - host: tuf.apps.rosa.e4kun-p6j9t-fkp.1u73.p3.openshiftapps.com
+        - host: tuf.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com
           path: /
 
 ctlog:
