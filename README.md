@@ -4,12 +4,10 @@ Sigstore helm-charts and build scripts opinionated for running on OCP and RHEL
 
 `sigstore-rhel/scaffold` chart is an opinionated flavor of the upstream sigstore/scaffold chart located at [sigstore/helm-charts/charts/scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold). It extends the upstream chart with additional OpenShift specific functionality and provides opinionated values.
 
-## scaffold chart
+## Deploy scaffold chart in OpenShift
 
 More information can be found by inspecting the upstream [sigstore/scaffold chart](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold).
 
-
-## Deploy scaffold chart in OpenShift
 
 ### Create custom CA and key in fulcio-system namespace
 
@@ -34,6 +32,15 @@ oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
 ### Edit the local [values.yaml](./helm/scaffold/base/values.yaml) at `helm/scaffold/base/values.yaml`
 
 
+### Install RedHat SSO Operator (Keycloak)
+
+```bash
+oc apply -k helm/scaffold/overlays/keycloak-operator
+
+# wait for this command to succeed before going on to be sure the Keycloak CRDs are registered
+oc get keycloaks -A
+```
+
 ### Apply manifests and deploy the helm charts
 
 ```bash
@@ -43,11 +50,12 @@ oc kustomize --enable-helm ./helm/scaffold/overlays/ocp | oc apply -f -
 Watch as the stack rolls out.
 You might follow the logs from the fulcio-server deployment in `-n fulcio-system`.
 
-## Add keycloak user and/or credentials
+#### Add keycloak user and/or credentials
 
 Check out the [user custom resource](https://github.com/redhat-et/sigstore-rhel/blob/main/helm/scaffold/overlays/keycloak/user.yaml)
-for how to create a keycloak user. You can also add the password into the user.yaml but otherwise you must
-access the keycloak route and login as the admin user to set the credentials in the keycloak admin console. To get the keycloak admin credentials,
+for how to create a keycloak user. For testing, a user `jdoe@redhat.com` with password: `secure` is created.
+
+You can access the keycloak route and login as the admin user to set credentials in the keycloak admin console. To get the keycloak admin credentials,
 run `oc extract secret/credential-keycloak -n keycloak-system`. This will create an `ADMIN_PASSWORD` file with which to login. 
 
 ## Sign and/or verify artifacts!
