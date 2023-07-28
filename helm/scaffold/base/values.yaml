@@ -2,13 +2,13 @@ trillian:
   enabled: true
   createdb:
     image:
-      registry:  gcr.io
-      repository: trillian-opensource-ci/db_server
-      version: "sha256:22b7fddcb4bafc5692760d84dca5e86294363a94e8f0ecb8f5c39364d436e6d5"
+      registry:  ghcr.io
+      repository: sigstore/scaffolding/createdb
+      version: sha256:9aa98492115c465b0cecfd6dbb04411a40c0d2d7e5d7c510f5646bd1d825e3c7
   initContainerImage:
     netcat:
       registry: quay.io
-      repository: rcook/netcat
+      repository: securesign/netcat
       version: v1.0.0
     curl:
       registry: registry.access.redhat.com
@@ -21,12 +21,12 @@ trillian:
   logserver:
     image:
       registry: quay.io
-      repository: rcook/trillian_log_server
+      repository: securesign/trillian_log_server
       version: v1.2.2
   logsigner:
     image:
       registry: quay.io
-      repository: rcook/trillian_log_signer
+      repository: securesign/trillian_log_signer
       version: v1.2.2
 
 
@@ -37,15 +37,15 @@ rekor:
   server:
     image:
       registry: quay.io
-      repository: rcook/rekor-server
-      version: v1.2.2-dirty
+      repository: securesign/rekor-server
+      version: v1.2.2
     ingress:
       className: ""
       annotations:
         route.openshift.io/termination: "edge"
       hosts:
         #- host: rekor.<base_domain>
-        - host: rekor.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com
+        - host: rekor.apps.rosa.tgxcz-eca3j-sir.bl5a.p3.openshiftapps.com
           path: /
           
   redis:
@@ -78,7 +78,7 @@ fulcio:
   server:
     image:
       registry: quay.io
-      repository: rcook/fulcio
+      repository: securesign/fulcio
       version: v1.3.1
     secret: fulcio-secret-rh
     ingress:
@@ -88,14 +88,14 @@ fulcio:
         className: ""
         hosts:
          #- host: fulcio.<base_domain>
-          - host: fulcio.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com
+          - host: fulcio.apps.rosa.tgxcz-eca3j-sir.bl5a.p3.openshiftapps.com
             path: /
   config:
     contents:
       OIDCIssuers:
         # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
-        ? https://keycloak-keycloak-system.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com/auth/realms/sigstore
-        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com/auth/realms/sigstore
+        ? https://keycloak-keycloak-system.apps.rosa.tgxcz-eca3j-sir.bl5a.p3.openshiftapps.com/auth/realms/sigstore
+        : IssuerURL: https://keycloak-keycloak-system.apps.rosa.tgxcz-eca3j-sir.bl5a.p3.openshiftapps.com/auth/realms/sigstore
           ClientID: sigstore
           Type: email
 
@@ -118,7 +118,7 @@ tuf:
     http:
       hosts:
         #- host: tuf.<base_domain>
-        - host: tuf.apps.rosa.xzfmo-yt5xs-5ms.7tjj.p3.openshiftapps.com
+        - host: tuf.apps.rosa.tgxcz-eca3j-sir.bl5a.p3.openshiftapps.com
           path: /
 
 ctlog:
@@ -129,8 +129,8 @@ ctlog:
   server:
     image:
       registry: quay.io
-      repository: rcook/ct_server
-      version: v0.6.4-dirty
+      repository: securesign/ct_server
+      version: v0.6.4
   createctconfig:
     logPrefix: sigstorescaffolding
     backoffLimit: 30
