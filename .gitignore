@@ -1,3 +1,11 @@
+charts
+Chart.lock
+
+# Vim swap files
+*.swp
+
 ./fulcio-root
 **/fulcio-root
+./rekor-key
+**/rekor-key
 **ADMIN**

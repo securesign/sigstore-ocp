@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-# fulcio-system is already created if using custom fulcio-roots secret
-#- fulcio-system.yaml
-- rekor-system.yaml
-- trillian-system.yaml
-- tuf-system.yaml
-- ctlog-system.yaml
