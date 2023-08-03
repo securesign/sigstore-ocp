@@ -1,0 +1,53 @@
+configs:
+  ctlog:
+    namespace: ctlog-system
+    create: true
+    rolebindings:
+      - ctlog
+      - ctlog-createtree
+      - scaffolding-ctlog-createctconfig
+  fulcio:
+    namespace: fulcio-system
+    create: true
+    rolebindings:
+      - fulcio-createcerts
+      - fulcio-server
+    server:
+      secret:
+        name: ""
+        password: ""
+        public_key: ""
+        private_key: ""
+        public_key_file: ""
+        private_key_file: ""
+        root_cert: ""
+        root_cert_file: ""
+
+  rekor:
+    namespace: rekor-system
+    create: true
+    rolebindings:
+      - rekor-redis
+      - rekor-server
+      - scaffolding-rekor-createtree
+    signer:
+      secret:
+        name: ""
+        private_key: ""
+        private_key_file: ""
+
+  trillian:
+    namespace: trillian-system
+    create: true
+    rolebindings:
+      - trillian-logserver
+      - trillian-logsigner
+      - trillian-mysql
+  tuf:
+    namespace: tuf-system
+    create: true
+    rolebindings:
+      - tuf
+      - tuf-secret-copy-job
+rbac:
+  clusterrole: system:openshift:scc:anyuid

@@ -1,7 +1,0 @@
----
-server:
-  ingress:
-    http:
-      hosts:
-        - host: fulcio.localhost
-          path: /

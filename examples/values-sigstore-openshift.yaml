@@ -1,0 +1,122 @@
+---
+
+configs:
+  rekor:
+    signer:
+      secret:
+        name: rekor-private-key
+        private_key: |
+          -----BEGIN EC PRIVATE KEY-----
+          MHcCAQEEICBcOscL4cr0GTpzQdSG3nCHvvhGgVluLT/OFPJMYVaIoAoGCCqGSM49
+          AwEHoUQDQgAEwHL3z+nzF+GUk+HxIlyDB6RBVkVNtEYo+O31N8GJh51fL6SkQRQz
+          TvHo+gk8dNe6aScNXRAtbZP8uEMuBYU1pA==
+          -----END EC PRIVATE KEY-----
+
+  fulcio:
+    server:
+      secret:
+        name: "fulcio-secret-rh"
+        password: "fulcio"
+        public_key: |
+          -----BEGIN PUBLIC KEY-----
+          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk52z98mDI8K7Hh5NU0DPZE0v25mO
+          mLRfCAhyvFLWjuAqgWB3V1+ozmH8txXPSjUrmuBA8UybnOkbJNjI64w5UA==
+          -----END PUBLIC KEY-----
+        private_key: |
+          -----BEGIN EC PRIVATE KEY-----
+          Proc-Type: 4,ENCRYPTED
+          DEK-Info: DES-EDE3-CBC,95E8F06458914E40
+
+          Rk2VO4MirGZNBCboN4glwfJy2UAmyuEg/MODiOMa3IWf1DNY2tcpWE4SnUVyAm6L
+          RQaQbUIFMH7iFETyuQPp1jNs+GJWhs4mhwfIYlMCdQLEdAKLPUyCMSQDRaJ+QR2E
+          4u5KAZa/CWkL/HLz226bl4L53eQVW4v0S9apluuhy1s=
+          -----END EC PRIVATE KEY-----
+        root_cert: |
+          -----BEGIN CERTIFICATE-----
+          MIICtzCCAlygAwIBAgIJAME0VsLfyjElMAoGCCqGSM49BAMCMHIxCzAJBgNVBAYT
+          AlVTMRcwFQYDVQQIDA5Ob3J0aCBDYXJvbGluYTEQMA4GA1UEBwwHUmFsZWlnaDEQ
+          MA4GA1UECgwHUmVkIEhhdDEmMCQGA1UECwwdUmVkIEhhdCBFbWVyZ2luZyBUZWNo
+          bm9sb2dpZXMwHhcNMjMwNzMxMTEwODE2WhcNMjQwNzMwMTEwODE2WjByMQswCQYD
+          VQQGEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcMB1JhbGVp
+          Z2gxEDAOBgNVBAoMB1JlZCBIYXQxJjAkBgNVBAsMHVJlZCBIYXQgRW1lcmdpbmcg
+          VGVjaG5vbG9naWVzMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk52z98mDI8K7
+          Hh5NU0DPZE0v25mOmLRfCAhyvFLWjuAqgWB3V1+ozmH8txXPSjUrmuBA8UybnOkb
+          JNjI64w5UKOB2jCB1zAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTjoQToDWhE
+          C+yS2X4pIEB8jqWsCDCBpAYDVR0jBIGcMIGZgBTjoQToDWhEC+yS2X4pIEB8jqWs
+          CKF2pHQwcjELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAw
+          DgYDVQQHDAdSYWxlaWdoMRAwDgYDVQQKDAdSZWQgSGF0MSYwJAYDVQQLDB1SZWQg
+          SGF0IEVtZXJnaW5nIFRlY2hub2xvZ2llc4IJAME0VsLfyjElMAoGCCqGSM49BAMC
+          A0kAMEYCIQCS9BVRLPjGhFEJPc4mMD2g8lc275d+OO4qx/OswysyigIhAPzcJCf8
+          szmI+ON/YItgbv0e5Wu7t9700ujBNfgMhzyO
+          -----END CERTIFICATE-----
+
+scaffold:
+  fulcio:
+    namespace:
+      name: fulcio-system
+      create: false
+    createcerts:
+      enabled: false
+    server:
+      secret: fulcio-secret-rh
+      ingress:
+        http:
+          annotations:
+            route.openshift.io/termination: "edge"
+          className: ""
+          hosts:
+            - host: fulcio.apps.<OPENSHIFT_BASE_DOMAIN>
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          ? https://<KEYCLOAK_HOSTNAME>/auth/realms/<REALM>
+          : IssuerURL: https://<KEYCLOAK_HOSTNAME>/auth/realms/<REALM>
+            ClientID: <CLIENT_ID>
+            Type: email
+  rekor:
+    namespace:
+      create: false
+    server:
+      ingress:
+        className: ""
+        annotations:
+          route.openshift.io/termination: "edge"
+        hosts:
+          - host: rekor.<OPENSHIFT_BASE_DOMAIN>
+            path: /
+      signer: /key/private
+      signerFileSecretOptions:
+        secretName: rekor-private-key
+        secretMountSubPath: private
+        secretMountPath: /key
+        privateKeySecretKey: private
+  tuf:
+    namespace:
+      create: false
+    secrets:
+      fulcio:
+        name: fulcio-secret-rh
+    enabled: true
+    ingress:
+      className: ""
+      annotations:
+        route.openshift.io/termination: "edge"
+      http:
+        hosts:
+          - host: tuf.<OPENSHIFT_BASE_DOMAIN>
+            path: /
+  ctlog:
+    namespace:
+      create: false
+    createctconfig:
+      backoffLimit: 30
+
+  trillian:
+    namespace:
+      create: false
+
+
+  copySecretJob:
+    enabled: true
+    backoffLimit: 1000

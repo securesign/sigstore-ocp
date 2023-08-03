@@ -1,54 +1,146 @@
-# sigstore-rhel-openshift
+# sigstore-openshift
 
-Sigstore helm-charts and build scripts opinionated for running on OCP and RHEL
+Wrapper chart to streamline the scaffolding of Sigstore within an OpenShift environment.
 
-`sigstore-rhel/scaffold` chart is an opinionated flavor of the upstream sigstore/scaffold chart located at [sigstore/helm-charts/charts/scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold). It extends the upstream chart with additional OpenShift specific functionality and provides opinionated values.
+## Overview
 
-## Deploy scaffold chart in OpenShift
+This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold) chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
 
-More information can be found by inspecting the upstream [sigstore/scaffold chart](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold).
+The chart enhances the scaffold chart by taking care of the following:
 
+* Provision Namespaces
+* Configure `RoleBindings` to enable access to the `anyuid` SecurityContextConstraint
+* Inject root and signing keys
+    * Fulcio
+    * Rekor
 
-### Create custom CA and key in fulcio-system namespace
+# Chart Configurations
 
+The following sections describe how to specifically configure certain features of the chart:
+
+## Fulcio and Rekor Key Injection
+
+Utilize the following commands and configurations to inject Fulcio root and Rekor private signing keys:
+
+### Fulcio Root Key
+
+First, generate a root key.
 Open [fulcio-create-CA script](./ROSA/fulcio-create-root-ca-openssl.sh) to check out the commands before running it.
 The `openssl` commands are interactive.
 
-*TODO: create external secret & template*
 
-```bash
+```shell
 ./fulcio-create-root-ca-openssl.sh
-oc create ns fulcio-system
-cd fulcio-root
-oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=file_ca_key.pem --from-file=public=file_ca_pub.pem --from-file=cert=fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
 ```
 
-Run something like the following to view your cluster's cluster-domain
+Add the following to an overriding Values file injecting the public key, private key, and password used for the private key:
 
-```bash
-oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
+```yaml
+configs:
+  fulcio:
+    server:
+      secret:
+        name: "fulcio-secret-rh"
+        password: "<password>"
+        public_key: |
+          <file_ca_pub.pem>
+        private_key: |
+          <contents_of_file_ca_key.pem>
+        root_cert: |
+          <contents_of_fulcio-root.pem>
 ```
 
-### Edit the local [values.yaml](./helm/scaffold/base/values.yaml) at `helm/scaffold/base/values.yaml`
+### Rekor Signer Key
 
+First, generate a signer key
 
-### Install RedHat SSO Operator (Keycloak)
+```shell
+openssl ecparam -name prime256v1 -genkey -noout -out key.pem
+```
 
-```bash
-oc apply -k helm/scaffold/overlays/keycloak-operator
+Add the following to a overriding Values file injecting the signer key:
+
+```yaml
+configs:
+  rekor:
+    signer:
+      secret:
+        name: rekor-private-key
+        private_key: |
+          <contents_of_key.pem>
+```
+
+NOTE: The name of the generated secret, `rekor-private-key` can be customized. Ensure the naming is consist ent throughout each of the customization options
+
+## Scaffolding Customization
+
+Similar to any Helm dependency, values from the Scaffold chart can be customized by embedding the properties within the `scaffold` property similar to the following:
+
+```yaml
+scaffold:
+  fulcio:
+    namespace:
+      name: fulcio-system
+      create: false
+...
+```
+
+## Chart Installation
+
+When logged in as an elevated OpenShift user, execute the following to install the chart referencing the customized values file:
+
+```shell
+helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_file>
+```
+
+## Sample Implementation
+
+A Helm values file is available in the [examples](examples) directory named [values-sigstore-openshift.yaml](examples/values-sigstore-openshift.yaml) that provides a baseline to work off of. It can be customized based on an individual target environment. 
+
+A Helm values file used to install Sigstore in a ROSA cluster is available in [values-rosa.yaml](examples/values-rosa.yaml).
+
+### Prerequisites
+
+The following must be satisfied prior to deploying the sample implementation:
+
+* Keycloak/RHSSO Deploy (or compatible OpenID endpoint)
+    * A dedicated _Realm_ (Recommended)
+    * A _Client_ representing the Sigstore integration
+        * Valid _Redirect URI's_. A value of `*` can be used for testing
+    * 1 or more `Users`
+        * Email Verified
+
+The RHSSO Operator and necessary Keycloak resources can be deployed in OpenShift with the following:
+
+```shell
+oc apply --kustomize keycloak/operator
 
 # wait for this command to succeed before going on to be sure the Keycloak CRDs are registered
 oc get keycloaks -A
+
+oc apply --kustomize keycloak/resources
 ```
 
-### Apply manifests and deploy the helm charts
 
-```bash
-oc kustomize --enable-helm ./helm/scaffold/overlays/ocp | oc apply -f -
+### Customizing the Sample Values File
+
+Perform the following modifications to the customized sample files to curate the deployment of the chart:
+
+1. Update all occurrences of `<OPENSHIFT_BASE_DOMAIN>` with the value from the following command:
+
+```shell
+oc get dns cluster -o jsonpath='{ .spec.baseDomain }'
 ```
 
-Watch as the stack rolls out.
-You might follow the logs from the fulcio-server deployment in `-n fulcio-system`.
+2. Update all occurrences of `<KEYCLOAK_HOSTNAME>` with the hostname of Keycloak/RHSSO and `<REALM>` with the name of the Keycloak/RHSSO realm. If an alternate OIDC provider other than Keycloak/RHSSO was used, update the values to align to this implementation. 
+
+4. Update all occurrences of `<CLIENT_ID>` with the name of the OIDC client
+
+5. Perform any additional customizations as desired
+
+### Installing the Chart
+
+Install the Chart referencing the customized value file similar to the steps described in the [Chart Installation](#chart-installation) section.
 
 #### Add keycloak user and/or credentials
 
@@ -61,3 +153,44 @@ run `oc extract secret/credential-keycloak -n keycloak-system`. This will create
 ## Sign and/or verify artifacts!
 
 Follow [this](https://github.com/redhat-et/sigstore-rhel/blob/main/sign-verify.md).
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| configs.ctlog.create | bool | `true` |  |
+| configs.ctlog.namespace | string | `"ctlog-system"` |  |
+| configs.ctlog.rolebindings[0] | string | `"ctlog"` |  |
+| configs.ctlog.rolebindings[1] | string | `"ctlog-createtree"` |  |
+| configs.ctlog.rolebindings[2] | string | `"scaffolding-ctlog-createctconfig"` |  |
+| configs.fulcio.create | bool | `true` |  |
+| configs.fulcio.namespace | string | `"fulcio-system"` |  |
+| configs.fulcio.rolebindings[0] | string | `"fulcio-createcerts"` |  |
+| configs.fulcio.rolebindings[1] | string | `"fulcio-server"` |  |
+| configs.fulcio.server.secret.name | string | `""` |  |
+| configs.fulcio.server.secret.password | string | `""` |  |
+| configs.fulcio.server.secret.private_key | string | `""` |  |
+| configs.fulcio.server.secret.private_key_file | string | `""` |  |
+| configs.fulcio.server.secret.public_key | string | `""` |  |
+| configs.fulcio.server.secret.public_key_file | string | `""` |  |
+| configs.fulcio.server.secret.root_cert | string | `""` |  |
+| configs.fulcio.server.secret.root_cert_file | string | `""` |  |
+| configs.rekor.create | bool | `true` |  |
+| configs.rekor.namespace | string | `"rekor-system"` |  |
+| configs.rekor.rolebindings[0] | string | `"rekor-redis"` |  |
+| configs.rekor.rolebindings[1] | string | `"rekor-server"` |  |
+| configs.rekor.rolebindings[2] | string | `"scaffolding-rekor-createtree"` |  |
+| configs.rekor.signer.secret.name | string | `""` |  |
+| configs.rekor.signer.secret.private_key | string | `""` |  |
+| configs.rekor.signer.secret.private_key_file | string | `""` |  |
+| configs.trillian.create | bool | `true` |  |
+| configs.trillian.namespace | string | `"trillian-system"` |  |
+| configs.trillian.rolebindings[0] | string | `"trillian-logserver"` |  |
+| configs.trillian.rolebindings[1] | string | `"trillian-logsigner"` |  |
+| configs.trillian.rolebindings[2] | string | `"trillian-mysql"` |  |
+| configs.tuf.create | bool | `true` |  |
+| configs.tuf.namespace | string | `"tuf-system"` |  |
+| configs.tuf.rolebindings[0] | string | `"tuf"` |  |
+| configs.tuf.rolebindings[1] | string | `"tuf-secret-copy-job"` |  |
+| rbac.clusterrole | string | `"system:openshift:scc:anyuid"` |  |
+
+----------------------------------------------
