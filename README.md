@@ -10,24 +10,19 @@ The chart enhances the scaffold chart by taking care of the following:
 
 * Provision Namespaces
 * Configure `RoleBindings` to enable access to the `anyuid` SecurityContextConstraint
-* Inject root and signing keys
-    * Fulcio
-    * Rekor
+* Inject Fulcio root and Rekor signing keys
 
-# Chart Configurations
+# Chart configurations
 
 The following sections describe how to specifically configure certain features of the chart:
 
-## Fulcio and Rekor Key Injection
+## Fulcio root key injection
 
-Utilize the following commands and configurations to inject Fulcio root and Rekor private signing keys:
-
-### Fulcio Root Key
+Utilize the following commands and configurations to inject Fulcio root secret:
 
 First, generate a root key.
-Open [fulcio-create-CA script](./ROSA/fulcio-create-root-ca-openssl.sh) to check out the commands before running it.
+Open [fulcio-create-CA script](./fulcio-create-root-ca-openssl.sh) to check out the commands before running it.
 The `openssl` commands are interactive.
-
 
 ```shell
 ./fulcio-create-root-ca-openssl.sh
@@ -42,23 +37,21 @@ configs:
       secret:
         name: "fulcio-secret-rh"
         password: "<password>"
-        public_key: |
-          <file_ca_pub.pem>
-        private_key: |
-          <contents_of_file_ca_key.pem>
-        root_cert: |
-          <contents_of_fulcio-root.pem>
+        public_key_file: "keys-cert/file_ca_pub.pem"
+        private_key_file: "keys-cert/file_ca_key.pem"
+        root_cert_file: "keys-cert/fulcio-root.pem"
 ```
 
 ### Rekor Signer Key
 
-First, generate a signer key
+Open [rekor create signer script](./rekor-create-signer-key.sh) to check out the commands before running it.
+Generate a signer key:
 
 ```shell
-openssl ecparam -name prime256v1 -genkey -noout -out key.pem
+./rekor-create-signer-key.sh
 ```
 
-Add the following to a overriding Values file injecting the signer key:
+Add the following to override the values file injecting the signer key:
 
 ```yaml
 configs:
@@ -66,15 +59,14 @@ configs:
     signer:
       secret:
         name: rekor-private-key
-        private_key: |
-          <contents_of_key.pem>
+        private_key_file: "keys-cert/rekor_key.pem"
 ```
 
-NOTE: The name of the generated secret, `rekor-private-key` can be customized. Ensure the naming is consist ent throughout each of the customization options
+NOTE: The name of the generated secret, `rekor-private-key` can be customized. Ensure the naming is consistent throughout each of the customization options
 
-## Scaffolding Customization
+## Scaffolding customization
 
-Similar to any Helm dependency, values from the Scaffold chart can be customized by embedding the properties within the `scaffold` property similar to the following:
+Similar to any Helm dependency, values from the upstream `scaffold` chart can be customized by embedding the properties within the `scaffold` property similar to the following:
 
 ```yaml
 scaffold:
@@ -97,8 +89,6 @@ helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_
 
 A Helm values file is available in the [examples](examples) directory named [values-sigstore-openshift.yaml](examples/values-sigstore-openshift.yaml) that provides a baseline to work off of. It can be customized based on an individual target environment. 
 
-A Helm values file used to install Sigstore in a ROSA cluster is available in [values-rosa.yaml](examples/values-rosa.yaml).
-
 ### Prerequisites
 
 The following must be satisfied prior to deploying the sample implementation:
@@ -119,24 +109,24 @@ oc apply --kustomize keycloak/operator
 oc get keycloaks -A
 
 oc apply --kustomize keycloak/resources
+# wait for keycloak-system pods to be running before proceeding
 ```
 
-
-### Customizing the Sample Values File
+### Update the values file
 
 Perform the following modifications to the customized sample files to curate the deployment of the chart:
 
 1. Update all occurrences of `<OPENSHIFT_BASE_DOMAIN>` with the value from the following command:
 
 ```shell
-oc get dns cluster -o jsonpath='{ .spec.baseDomain }'
+oc get dnsrecords -o yaml -n openshift-ingress-operator -o jsonpath='{ .spec.baseDomain }'
 ```
 
 2. Update all occurrences of `<KEYCLOAK_HOSTNAME>` with the hostname of Keycloak/RHSSO and `<REALM>` with the name of the Keycloak/RHSSO realm. If an alternate OIDC provider other than Keycloak/RHSSO was used, update the values to align to this implementation. 
 
-4. Update all occurrences of `<CLIENT_ID>` with the name of the OIDC client
+3. Update all occurrences of `<CLIENT_ID>` with the name of the OIDC client
 
-5. Perform any additional customizations as desired
+4. Perform any additional customizations as desired
 
 ### Installing the Chart
 
@@ -153,6 +143,7 @@ run `oc extract secret/credential-keycloak -n keycloak-system`. This will create
 ## Sign and/or verify artifacts!
 
 Follow [this](https://github.com/redhat-et/sigstore-rhel/blob/main/sign-verify.md).
+
 ## Values
 
 | Key | Type | Default | Description |

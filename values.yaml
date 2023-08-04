@@ -6,6 +6,7 @@ configs:
       - ctlog
       - ctlog-createtree
       - scaffolding-ctlog-createctconfig
+
   fulcio:
     namespace: fulcio-system
     create: true
@@ -43,11 +44,13 @@ configs:
       - trillian-logserver
       - trillian-logsigner
       - trillian-mysql
+
   tuf:
     namespace: tuf-system
     create: true
     rolebindings:
       - tuf
       - tuf-secret-copy-job
+
 rbac:
   clusterrole: system:openshift:scc:anyuid

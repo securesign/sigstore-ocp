@@ -1,10 +1,12 @@
 ---
 
+# The private key values are for example/testing only - these are not sensitive nor are they used anywhere
 configs:
   rekor:
     signer:
       secret:
         name: rekor-private-key
+        #private_key_file: "keys-cert/rekor_key.pem"
         private_key: |
           -----BEGIN EC PRIVATE KEY-----
           MHcCAQEEICBcOscL4cr0GTpzQdSG3nCHvvhGgVluLT/OFPJMYVaIoAoGCCqGSM49
@@ -17,6 +19,9 @@ configs:
       secret:
         name: "fulcio-secret-rh"
         password: "fulcio"
+        #public_key_file: "keys-cert/file_ca_pub.pem"
+        #private_key_file: "keys-cert/file_ca_key.pem"
+        #root_cert_file: "keys-cert/fulcio-root.pem"
         public_key: |
           -----BEGIN PUBLIC KEY-----
           MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk52z98mDI8K7Hh5NU0DPZE0v25mO
@@ -83,13 +88,13 @@ scaffold:
         annotations:
           route.openshift.io/termination: "edge"
         hosts:
-          - host: rekor.<OPENSHIFT_BASE_DOMAIN>
+          - host: rekor.apps.<OPENSHIFT_BASE_DOMAIN>
             path: /
       signer: /key/private
       signerFileSecretOptions:
         secretName: rekor-private-key
-        secretMountSubPath: private
         secretMountPath: /key
+        secretMountSubPath: private
         privateKeySecretKey: private
   tuf:
     namespace:
@@ -104,7 +109,7 @@ scaffold:
         route.openshift.io/termination: "edge"
       http:
         hosts:
-          - host: tuf.<OPENSHIFT_BASE_DOMAIN>
+          - host: tuf.apps.<OPENSHIFT_BASE_DOMAIN>
             path: /
   ctlog:
     namespace:

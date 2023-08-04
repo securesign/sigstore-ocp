@@ -4,8 +4,7 @@ Chart.lock
 # Vim swap files
 *.swp
 
-./fulcio-root
-**/fulcio-root
-./rekor-key
-**/rekor-key
+keys-cert
+*.pem
+./keys-cert/*.pem
 **ADMIN**
