@@ -6,17 +6,19 @@ Wrapper chart to streamline the scaffolding of Sigstore within an OpenShift envi
 
 This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold) chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
 
+If you have already read this document and want a quick no-fail path to installing a Sigstore stack, follow the section [quick start](#no-fail-quickstart)
+
 The chart enhances the scaffold chart by taking care of the following:
 
 * Provision Namespaces
 * Configure `RoleBindings` to enable access to the `anyuid` SecurityContextConstraint
 * Inject Fulcio root and Rekor signing keys
 
-# Chart configurations
+### Chart configurations
 
 The following sections describe how to specifically configure certain features of the chart:
 
-## Fulcio root key injection
+#### Fulcio root key injection
 
 Utilize the following commands and configurations to inject Fulcio root secret:
 
@@ -42,7 +44,7 @@ configs:
         root_cert_file: "keys-cert/fulcio-root.pem"
 ```
 
-### Rekor Signer Key
+#### Rekor Signer Key
 
 Open [rekor create signer script](./rekor-create-signer-key.sh) to check out the commands before running it.
 Generate a signer key:
@@ -64,7 +66,7 @@ configs:
 
 NOTE: The name of the generated secret, `rekor-private-key` can be customized. Ensure the naming is consistent throughout each of the customization options
 
-## Scaffolding customization
+#### Scaffolding customization
 
 Similar to any Helm dependency, values from the upstream `scaffold` chart can be customized by embedding the properties within the `scaffold` property similar to the following:
 
@@ -77,19 +79,11 @@ scaffold:
 ...
 ```
 
-## Chart Installation
-
-When logged in as an elevated OpenShift user, execute the following to install the chart referencing the customized values file:
-
-```shell
-helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_file>
-```
-
-## Sample Implementation
+### Sample Implementation
 
 A Helm values file is available in the [examples](examples) directory named [values-sigstore-openshift.yaml](examples/values-sigstore-openshift.yaml) that provides a baseline to work off of. It can be customized based on an individual target environment. 
 
-### Prerequisites
+#### Prerequisites
 
 The following must be satisfied prior to deploying the sample implementation:
 
@@ -112,7 +106,7 @@ oc apply --kustomize keycloak/resources
 # wait for keycloak-system pods to be running before proceeding
 ```
 
-### Update the values file
+#### Update the values file
 
 Perform the following modifications to the customized sample files to curate the deployment of the chart:
 
@@ -130,8 +124,11 @@ oc get dnsrecords -o yaml -n openshift-ingress-operator -o jsonpath='{ .spec.bas
 
 ### Installing the Chart
 
-Install the Chart referencing the customized value file similar to the steps described in the [Chart Installation](#chart-installation) section.
+When logged in as an elevated OpenShift user, execute the following to install the chart referencing the customized values file:
 
+```shell
+helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_file>
+```
 #### Add keycloak user and/or credentials
 
 Check out the [user custom resource](https://github.com/redhat-et/sigstore-rhel/blob/main/helm/scaffold/overlays/keycloak/user.yaml)
@@ -140,9 +137,43 @@ for how to create a keycloak user. For testing, a user `jdoe@redhat.com` with pa
 You can access the keycloak route and login as the admin user to set credentials in the keycloak admin console. To get the keycloak admin credentials,
 run `oc extract secret/credential-keycloak -n keycloak-system`. This will create an `ADMIN_PASSWORD` file with which to login. 
 
-## Sign and/or verify artifacts!
+### Sign and/or verify artifacts!
 
 Follow [this](https://github.com/redhat-et/sigstore-rhel/blob/main/sign-verify.md).
+
+## No fail quick start
+
+No-Fail steps to get a working sigstore stack with a fresh OpenShift cluster
+(hopefully)
+
+0. Obtain the base_domain with:
+
+```shell
+oc get dns/cluster -o jsonpath='{ .spec.baseDomain }' && echo
+```
+
+1. Create the keys & root cert. This will populate a directory `./keys-cert`
+
+```shell
+./fulcio-create-root-ca-openssl.sh  #interactive, you'll enter "apps.<base_domain>" for the hostname, and enter the same password for all keys
+./rekor-create-signer-key.sh
+```
+
+2. Substitute `base_domain` from above (rosa.xxxxx.com) in 5 places in [examples/values-ez.yaml](./examples/values-ez.yaml), like so in VIM :) 
+
+```shell 
+:%s/rosa.*.com/rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com/g
+```
+
+3.  Run the following:
+
+```shell
+helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f examples/values-rosa-upstream-images.yaml
+```
+
+A good way to tell if things are progressing well is to watch `oc get jobs -A` and when the tuf-system job is complete, things should be ready.
+Once complete, move to the [Sign & Verify document](./sign-verify.md) to test the Sigstore stack. 
+Good Luck!
 
 ## Values
 
