@@ -6,7 +6,7 @@ Wrapper chart to streamline the scaffolding of Sigstore within an OpenShift envi
 
 This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold) chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
 
-If you have already read this document and want a quick no-fail path to installing a Sigstore stack, follow the section [quick start](#no-fail-quickstart)
+If you have already read this document and want a quick no-fail path to installing a Sigstore stack, follow the section [quick start](#no-fail-quick-start-in-5-steps)
 
 The chart enhances the scaffold chart by taking care of the following:
 
@@ -141,7 +141,7 @@ run `oc extract secret/credential-keycloak -n keycloak-system`. This will create
 
 Follow [this](https://github.com/redhat-et/sigstore-rhel/blob/main/sign-verify.md).
 
-## No fail quick start
+## No fail quick start in 5 steps
 
 No-Fail steps to get a working sigstore stack with a fresh OpenShift cluster
 (hopefully)
@@ -152,23 +152,30 @@ No-Fail steps to get a working sigstore stack with a fresh OpenShift cluster
 oc get dns/cluster -o jsonpath='{ .spec.baseDomain }' && echo
 ```
 
-1. Create the keys & root cert. This will populate a directory `./keys-cert`
+1. Install RHSSO Operator and deploy Sigstore Keycloak
+
+```shell
+oc apply --kustomize keycloak/operator # wait until the keycloak API is ready, check w/ non-erroring 'oc get keycloaks'
+oc apply --kustomize keycloak/resources # wait until keycloak-system pods are healthy/running
+```
+
+2. Create the keys & root cert. This will populate a directory `./keys-cert`
 
 ```shell
 ./fulcio-create-root-ca-openssl.sh  #interactive, you'll enter "apps.<base_domain>" for the hostname, and enter the same password for all keys
 ./rekor-create-signer-key.sh
 ```
 
-2. Substitute `base_domain` from above (rosa.xxxxx.com) in 5 places in [examples/values-ez.yaml](./examples/values-ez.yaml), like so in VIM :) 
+3. Substitute `base_domain` from above (rosa.xxxxx.com) in 5 places in [examples/values-ez.yaml](./examples/values-ez.yaml), like so in VIM :) 
 
 ```shell 
 :%s/rosa.*.com/rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com/g
 ```
 
-3.  Run the following:
+4.  Run the following:
 
 ```shell
-helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f examples/values-rosa-upstream-images.yaml
+helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f examples/values-ez.yaml
 ```
 
 A good way to tell if things are progressing well is to watch `oc get jobs -A` and when the tuf-system job is complete, things should be ready.
