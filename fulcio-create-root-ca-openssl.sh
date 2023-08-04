@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-mkdir -p fulcio-root
-cd fulcio-root
+mkdir -p keys-cert
+cd keys-cert
 
 openssl ecparam -genkey -name prime256v1 -noout -out unenc.key
 openssl ec -in unenc.key -out file_ca_key.pem -des3
