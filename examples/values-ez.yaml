@@ -32,6 +32,12 @@ scaffold:
   ctlog:
     namespace:
       create: false
+    server:
+      image:
+        registry: quay.io
+        repository: securesign/ct_server
+        version: v0.6.4
+        pullPolicy: IfNotPresent
     createctconfig:
       backoffLimit: 30
       enabled: true
@@ -41,13 +47,34 @@ scaffold:
           repository: ubi9/ubi-minimal
           version: latest
           imagePullPolicy: IfNotPresent
+      image:
+        registry: quay.io
+        repository: securesign/createctconfig
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    createtree:
+      image:
+        registry: quay.io
+        repository: securesign/createtree
+        version: v0.6.4
+        pullPolicy: IfNotPresent
   fulcio:
     namespace:
       name: fulcio-system
       create: false
     createcerts:
       enabled: true
+      image:
+        registry: quay.io
+        repository: securesign/createcerts
+        version: v0.6.4
+        pullPolicy: IfNotPresent
     server:
+      image:
+        registry: quay.io
+        repository: securesign/fulcio
+        version: v1.4.0
+        pullPolicy: IfNotPresent
       secret: fulcio-secret-rh
       ingress:
         http:
@@ -72,6 +99,11 @@ scaffold:
       namespace: rekor-system
       create: false
     server:
+      image:
+        registry: quay.io
+        repository: securesign/rekor-server
+        version: v1.2.2
+        pullPolicy: IfNotPresent
       signer: /key/private
       signerFileSecretOptions:
         secretName: rekor-private-key
@@ -86,10 +118,27 @@ scaffold:
           - host: rekor.apps.rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com
             path: /
           
+    createtree:
+      image:
+        registry: quay.io
+        repository: securesign/createtree
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    backfillredis:
+      image:
+        registry: quay.io
+        repository: securesign/backfill-redis
+        version: v1.2.2
+        pullPolicy: IfNotPresent
   trillian:
     namespace:
       create: false
     createdb:
+      image:
+        registry: quay.io
+        repository: securesign/createdb
+        version: v0.6.4
+        pullPolicy: IfNotPresent
     initContainerImage:
       netcat:
         registry: quay.io
@@ -114,6 +163,24 @@ scaffold:
         pullPolicy: IfNotPresent
         version: latest
 
+    logSigner:
+      image:
+        registry: quay.io
+        repository: securesign/trillian_log_signer
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+    logServer:
+      image:
+        registry: quay.io
+        repository: securesign/trillian_log_server
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+    mysql:
+      gcp:
+        scaffoldSQLProxy:
+          registry: quay.io
+          repository: securesign/cloudsqlproxy
+          version: v0.6.4
   tuf:
     namespace:
       create: false
@@ -131,8 +198,8 @@ scaffold:
             path: /
     deployment:
       registry: quay.io
-      repository: ablock/tuf-server
-      version: "sha256:c4f534807b331e97b107d908b7e0cf14a896399bc372bca6a2c7e4f6d730807c"
+      repository: securesign/tuf/server
+      version: latest
 
   copySecretJob:
     enabled: true

@@ -62,7 +62,17 @@ scaffold:
       create: false
     createcerts:
       enabled: false
+      image:
+        registry: quay.io
+        repository: securesign/createcerts
+        version: v0.6.4
+        pullPolicy: IfNotPresent
     server:
+      image:
+        registry: quay.io
+        repository: securesign/fulcio
+        version: v1.4.0
+        pullPolicy: IfNotPresent
       secret: fulcio-secret-rh
       ingress:
         http:
@@ -83,6 +93,11 @@ scaffold:
     namespace:
       create: false
     server:
+      image:
+        registry: quay.io
+        repository: securesign/rekor-server
+        version: v1.2.2
+        pullPolicy: IfNotPresent
       ingress:
         className: ""
         annotations:
@@ -96,6 +111,18 @@ scaffold:
         secretMountPath: /key
         secretMountSubPath: private
         privateKeySecretKey: private
+    createtree:
+      image:
+        registry: quay.io
+        repository: securesign/createtree
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    backfillredis:
+      image:
+        registry: quay.io
+        repository: securesign/backfill-redis
+        version: v1.2.2
+        pullPolicy: IfNotPresent
   tuf:
     namespace:
       create: false
@@ -111,15 +138,90 @@ scaffold:
         hosts:
           - host: tuf.apps.<OPENSHIFT_BASE_DOMAIN>
             path: /
+    deployment:
+      registry: quay.io
+      repository: securesign/tuf/server
+      version: latest
   ctlog:
     namespace:
       create: false
+    server:
+      image:
+        registry: quay.io
+        repository: securesign/ct_server
+        version: v0.6.4
+        pullPolicy: IfNotPresent
     createctconfig:
       backoffLimit: 30
+      enabled: true
+      initContainerImage:
+        curl:
+          registry: registry.access.redhat.com
+          repository: ubi9/ubi-minimal
+          version: latest
+          imagePullPolicy: IfNotPresent
+      image:
+        registry: quay.io
+        repository: securesign/createctconfig
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    createtree:
+      image:
+        registry: quay.io
+        repository: securesign/createtree
+        version: v0.6.4
+        pullPolicy: IfNotPresent
 
   trillian:
     namespace:
       create: false
+    createdb:
+      image:
+        registry: quay.io
+        repository: securesign/createdb
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    initContainerImage:
+      netcat:
+        registry: quay.io
+        repository: securesign/netcat
+        version: v1.0.0
+      curl:
+        registry: registry.access.redhat.com
+        repository: ubi9/ubi-minimal
+        version: latest
+        imagePullPolicy: IfNotPresent
+    redis:
+      args:
+        - /usr/bin/run-redis
+        - --bind
+        - 0.0.0.0
+        - --appendonly
+        - "yes"
+      image:
+        registry: registry.redhat.io
+        repository: rhel9/redis-6
+        version: "sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"
+        pullPolicy: IfNotPresent
+        version: latest
+    logSigner:
+      image:
+        registry: quay.io
+        repository: securesign/trillian_log_signer
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+    logServer:
+      image:
+        registry: quay.io
+        repository: securesign/trillian_log_server
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+    mysql:
+      gcp:
+        scaffoldSQLProxy:
+          registry: quay.io
+          repository: securesign/cloudsqlproxy
+          version: v0.6.4
 
 
   copySecretJob:
