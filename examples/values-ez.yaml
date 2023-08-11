@@ -181,6 +181,34 @@ scaffold:
           registry: quay.io
           repository: securesign/cloudsqlproxy
           version: v0.6.4
+      image:
+        registry: quay.io
+        repository: securesign/trillian-db
+        version: v1.5.2
+        pullPolicy: IfNotPresent
+      args: []
+      securityContext:
+        fsGroup: 0
+      livenessProbe:
+        exec:
+          command:
+          - mysqladmin
+          - ping
+          - -h
+          - localhost
+          - -u
+          - $(MYSQL_USER)
+          - -p$(MYSQL_PASSWORD)
+      readinessProbe:
+        exec:
+          command:
+          - mysqladmin
+          - ping
+          - -h
+          - localhost
+          - -u
+          - $(MYSQL_USER)
+          - -p$(MYSQL_PASSWORD)
   tuf:
     namespace:
       create: false
