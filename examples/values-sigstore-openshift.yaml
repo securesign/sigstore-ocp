@@ -65,13 +65,13 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/createcerts
-        version: sha256:cc10d4f86a893de36e6a269558612b1343dc64c359b927cfcc77ba617eab8283
+        version: v0.6.4
         pullPolicy: IfNotPresent
     server:
       image:
         registry: quay.io
         repository: securesign/fulcio
-        version: sha256:9239e56419073d57bba2ec217c0cf64499b7d4e686a875394d34a802ad99fbad
+        version: v1.4.0
         pullPolicy: IfNotPresent
       secret: fulcio-secret-rh
       ingress:
@@ -96,7 +96,7 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/rekor-server
-        version: sha256:90797567a064e7b7a41fde208c8468decd11b6b9bab8ed4ab60139c8667600db
+        version: v1.2.2
         pullPolicy: IfNotPresent
       ingress:
         className: ""
@@ -115,13 +115,13 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/createtree
-        version: sha256:c03cdc797e8d248bfa7371b34b1eda582702e5386fdbb543e5a121afae255fb7
+        version: 	v0.6.4
         pullPolicy: IfNotPresent
     backfillredis:
       image:
         registry: quay.io
         repository: securesign/backfill-redis
-        version: sha256:e2cecc21e04f7234dd46651b8cba6a076d869197aa84044404bc08339d6e4913
+        version: v1.2.2
         pullPolicy: IfNotPresent
   tuf:
     namespace:
@@ -141,7 +141,7 @@ scaffold:
     deployment:
       registry: quay.io
       repository: securesign/tuf/server
-      version: sha256:b1cbb379f5c4b315bc5a7d7a37865ab61669a0a07002b6920374ebae3b37699c
+      version: d2e1b58
   ctlog:
     namespace:
       create: false
@@ -149,7 +149,7 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/ct_server
-        version: sha256:fa5a9a55884d09b7d3fc1d2390087f8344962398d90234958ca7424354c6909e
+        version: v0.6.4
         pullPolicy: IfNotPresent
     createctconfig:
       backoffLimit: 30
@@ -158,18 +158,18 @@ scaffold:
         curl:
           registry: registry.access.redhat.com
           repository: ubi9/ubi-minimal
-          version: sha256:dc02c6aa8199beb8ed13312d7116a94aa87b5412886bbe358845d3f0626c0f1e
+          version: latest
           imagePullPolicy: IfNotPresent
       image:
         registry: quay.io
         repository: securesign/createctconfig
-        version: sha256:1888f625d93618e32766e712f94e148f72fb82b11604001cd98ea6300a9197be
+        version: v0.6.4
         pullPolicy: IfNotPresent
     createtree:
       image:
         registry: quay.io
         repository: securesign/createtree
-        version: sha256:c03cdc797e8d248bfa7371b34b1eda582702e5386fdbb543e5a121afae255fb7
+        version: v0.6.4
         pullPolicy: IfNotPresent
 
   trillian:
@@ -179,17 +179,17 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/createdb
-        version: sha256:19917392e462b0dcf9550441ec0da9518b4666de28fb7e992c692b624569488e
+        version: v0.6.4
         pullPolicy: IfNotPresent
     initContainerImage:
       netcat:
         registry: quay.io
         repository: securesign/netcat
-        version: sha256:b07e50992406ec494abaf2e32d6184f947735074503d6842b4f98240846dc705
+        version: v1.0.0
       curl:
         registry: registry.access.redhat.com
         repository: ubi9/ubi-minimal
-        version: sha256:dc02c6aa8199beb8ed13312d7116a94aa87b5412886bbe358845d3f0626c0f1e
+        version: latest
         imagePullPolicy: IfNotPresent
     redis:
       args:
@@ -207,24 +207,24 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/trillian_log_signer
-        version: sha256:ba8d467c38c1eb6a24f843b855e6b01fd5b524d7db45a82b4092a681b561c143
+        version: v1.2.2
         pullPolicy: IfNotPresent
     logServer:
       image:
         registry: quay.io
         repository: securesign/trillian_log_server
-        version: sha256:7e4e931b0141d82034700d7aab113d5b1aab8b2af79fbd254a7a5958cd601969
+        version: v1.2.2
         pullPolicy: IfNotPresent
     mysql:
       gcp:
         scaffoldSQLProxy:
           registry: quay.io
           repository: securesign/cloudsqlproxy
-          version: sha256:6ebd895c0d9896d27185d5e44e2fddd0d00733c5417646b5b239ecfd33bc9bdb
+          version: v0.6.4
       image:
         registry: quay.io
         repository: securesign/trillian-db
-        version: sha256:090e44f8982d66d21c6dc74eb3c0ab3c17e43f22f11731f2e15463f39f811c4a
+        version:  v1.5.2
         pullPolicy: IfNotPresent
       args: []
       securityContext:
