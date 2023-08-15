@@ -115,7 +115,7 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/createtree
-        version: 	v0.6.4
+        version: v0.6.4
         pullPolicy: IfNotPresent
     backfillredis:
       image:
@@ -141,7 +141,7 @@ scaffold:
     deployment:
       registry: quay.io
       repository: securesign/tuf/server
-      version: d2e1b58
+      version: latest
   ctlog:
     namespace:
       create: false
@@ -224,7 +224,7 @@ scaffold:
       image:
         registry: quay.io
         repository: securesign/trillian-db
-        version:  v1.5.2
+        version: v1.5.2
         pullPolicy: IfNotPresent
       args: []
       securityContext:
