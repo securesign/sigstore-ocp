@@ -52,3 +52,50 @@ cosign verify \
 ```
 
 If the signature verification did not result in an error, the deployment of Sigstore was successful!
+
+## Signing a Container Using the Cosign pod.
+
+Follow the steps below to sign a container with the cosign pod that has been published to an OCI registry.
+
+If the `BASE_HOSTNAME` environmental variable is not already specified in the Helm chart, make sure to set it in the cosign pod.
+
+1. Get the name of the pod.
+
+``` 
+oc get pods -n cosign 
+```
+
+2. Initialize the TUF roots.
+
+```shell
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json'
+```
+
+3. Login to the image repository of your choice using cosign.
+```
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign login <repo> -u <username> -p <password>'
+```
+
+4. Retrieve `id_token` from the keycloak provider.
+```
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+-d "client_id=<client_id>" \
+-d "username=<username>" \
+-d "password=<password>" \
+-d "grant_type=password" \
+-d "scope=openid" \
+<Keycloak_issuer_url>/auth/realms/<client_id>/protocol/openid-connect/token
+```
+
+5. Sign the container.
+```
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$KEYCLOAK_OIDC_ISSUER --identity-token=<id_token> <image>'
+```
+
+6. Verify the signed image.
+
+```shell
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --rekor-url=$REKOR_URL --certificate-identity-regexp sigstore-user --certificate-oidc-issuer-regexp keycloak <image>'
+```
+
+If the signature verification did not result in an error, the deployment of Sigstore was successful!
