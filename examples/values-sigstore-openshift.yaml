@@ -55,6 +55,9 @@ configs:
           szmI+ON/YItgbv0e5Wu7t9700ujBNfgMhzyO
           -----END CERTIFICATE-----
 
+  cosign:
+    BASE_HOSTNAME: apps.rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com
+
 scaffold:
   fulcio:
     namespace:
