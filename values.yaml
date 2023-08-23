@@ -53,7 +53,7 @@ configs:
       - tuf-secret-copy-job
 
   cosign:
-    BASE_HOSTNAME: apps.<base_domain>
+    BASE_DOMAIN: apps.<base_domain>
     namespace: cosign
     create: true
     rolebindings:

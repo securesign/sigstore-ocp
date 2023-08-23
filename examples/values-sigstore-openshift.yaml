@@ -56,7 +56,7 @@ configs:
           -----END CERTIFICATE-----
 
   cosign:
-    BASE_HOSTNAME: apps.rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com
+    BASE_DOMAIN: apps.<OPENSHIFT_BASE_DOMAIN>
 
 scaffold:
   fulcio:

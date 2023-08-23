@@ -17,18 +17,18 @@ spec:
       - name: {{ .Values.configs.cosign.metadata.name }}
         image: "{{ .Values.configs.cosign.image.registry }}/{{ .Values.configs.cosign.image.repository }}:{{ .Values.configs.cosign.image.version }}"
         env:
-        - name: BASE_HOSTNAME
-          value: {{ .Values.configs.cosign.BASE_HOSTNAME }}
+        - name: BASE_DOMAIN
+          value: {{ .Values.configs.cosign.BASE_DOMAIN }}
         - name: KEYCLOAK_REALM
           value: "sigstore"
         - name: FULCIO_URL
-          value: "https://fulcio.$(BASE_HOSTNAME)"
+          value: "https://fulcio.$(BASE_DOMAIN)"
         - name: KEYCLOAK_URL
-          value: "https://keycloak-keycloak-system.$(BASE_HOSTNAME)"
+          value: "https://keycloak-keycloak-system.$(BASE_DOMAIN)"
         - name: REKOR_URL
-          value: "https://rekor.$(BASE_HOSTNAME)"
+          value: "https://rekor.$(BASE_DOMAIN)"
         - name: TUF_URL
-          value: "https://tuf.$(BASE_HOSTNAME)"
+          value: "https://tuf.$(BASE_DOMAIN)"
         - name: KEYCLOAK_OIDC_ISSUER
           value: "$KEYCLOAK_URL/auth/realms/$(KEYCLOAK_REALM)"
         securityContext:

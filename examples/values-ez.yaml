@@ -28,7 +28,7 @@ configs:
         name: rekor-private-key
         private_key_file: "keys-cert/rekor_key.pem"
   cosign:
-    BASE_HOSTNAME: apps.rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com
+    BASE_DOMAIN: apps.rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com
 
 scaffold:
   ctlog:
