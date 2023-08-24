@@ -52,5 +52,21 @@ configs:
       - tuf
       - tuf-secret-copy-job
 
+  cosign:
+    BASE_DOMAIN: apps.<base_domain>
+    namespace: cosign
+    create: true
+    rolebindings:
+      - cosign
+    metadata:
+      name: cosign
+    spec:
+      replicas: 1
+    image:
+      registry: quay.io
+      repository: securesign/cosign
+      version: v2.1.1
+      pullPolicy: IfNotPresent
+
 rbac:
   clusterrole: system:openshift:scc:anyuid

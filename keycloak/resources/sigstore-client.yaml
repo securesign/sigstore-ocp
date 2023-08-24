@@ -16,7 +16,7 @@ spec:
     - profile
     - email
     description: Client for Sigstore authentication
-    directAccessGrantsEnabled: false
+    directAccessGrantsEnabled: true
     implicitFlowEnabled: false
     name: sigstore
     protocol: openid-connect

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.configs.cosign.metadata.name }}
+  namespace: {{ .Values.configs.cosign.namespace }}
+spec:
+  replicas: {{ .Values.configs.cosign.spec.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.configs.cosign.metadata.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.configs.cosign.metadata.name }}
+    spec:
+      containers:
+      - name: {{ .Values.configs.cosign.metadata.name }}
+        image: "{{ .Values.configs.cosign.image.registry }}/{{ .Values.configs.cosign.image.repository }}:{{ .Values.configs.cosign.image.version }}"
+        env:
+        - name: BASE_DOMAIN
+          value: {{ .Values.configs.cosign.BASE_DOMAIN }}
+        - name: KEYCLOAK_REALM
+          value: "sigstore"
+        - name: FULCIO_URL
+          value: "https://fulcio.$(BASE_DOMAIN)"
+        - name: KEYCLOAK_URL
+          value: "https://keycloak-keycloak-system.$(BASE_DOMAIN)"
+        - name: REKOR_URL
+          value: "https://rekor.$(BASE_DOMAIN)"
+        - name: TUF_URL
+          value: "https://tuf.$(BASE_DOMAIN)"
+        - name: KEYCLOAK_OIDC_ISSUER
+          value: "$KEYCLOAK_URL/auth/realms/$(KEYCLOAK_REALM)"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault

@@ -55,6 +55,9 @@ configs:
           szmI+ON/YItgbv0e5Wu7t9700ujBNfgMhzyO
           -----END CERTIFICATE-----
 
+  cosign:
+    BASE_DOMAIN: apps.<OPENSHIFT_BASE_DOMAIN>
+
 scaffold:
   fulcio:
     namespace:

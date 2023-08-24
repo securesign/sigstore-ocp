@@ -172,6 +172,12 @@ oc apply --kustomize keycloak/resources # wait until keycloak-system pods are he
 :%s/rosa.*.com/rosa.p9esn-qgkm3-wkk.o7au.p3.openshiftapps.com/g
 ```
 
+* *If you intend to use the cosign pod to sign an image, ensure you configure the BASE_DOMAIN value in the values-ez.yaml, or values-sigstore-openshift.yaml file.*
+```
+cosign:
+  BASE_DOMAIN: apps.<base_domain>
+```
+
 4.  Run the following:
 
 ```shell
