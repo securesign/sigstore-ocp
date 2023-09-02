@@ -1,259 +1,41 @@
+# With this example, it is expected that there is a secret with the fulcio root & signing keys
+# named 'fulcio-secret-rh' in namespace 'fulcio-system'.
+# fulcio root & key secret name must match fulcio secret name in scaffold.tuf
+# that defaults to 'fulcio-secret-rh'
+# For root & key requirements, see ../requirements-keys-certs.md
+# Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> below.
+# Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
 ---
-
-# The private key values are for example/testing only - these are not sensitive nor are they used anywhere
 configs:
-  rekor:
-    signer:
-      secret:
-        name: rekor-private-key
-        #private_key_file: "keys-cert/rekor_key.pem"
-        private_key: |
-          -----BEGIN EC PRIVATE KEY-----
-          MHcCAQEEICBcOscL4cr0GTpzQdSG3nCHvvhGgVluLT/OFPJMYVaIoAoGCCqGSM49
-          AwEHoUQDQgAEwHL3z+nzF+GUk+HxIlyDB6RBVkVNtEYo+O31N8GJh51fL6SkQRQz
-          TvHo+gk8dNe6aScNXRAtbZP8uEMuBYU1pA==
-          -----END EC PRIVATE KEY-----
-
-  fulcio:
-    server:
-      secret:
-        name: "fulcio-secret-rh"
-        password: "fulcio"
-        #public_key_file: "keys-cert/file_ca_pub.pem"
-        #private_key_file: "keys-cert/file_ca_key.pem"
-        #root_cert_file: "keys-cert/fulcio-root.pem"
-        public_key: |
-          -----BEGIN PUBLIC KEY-----
-          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk52z98mDI8K7Hh5NU0DPZE0v25mO
-          mLRfCAhyvFLWjuAqgWB3V1+ozmH8txXPSjUrmuBA8UybnOkbJNjI64w5UA==
-          -----END PUBLIC KEY-----
-        private_key: |
-          -----BEGIN EC PRIVATE KEY-----
-          Proc-Type: 4,ENCRYPTED
-          DEK-Info: DES-EDE3-CBC,95E8F06458914E40
-
-          Rk2VO4MirGZNBCboN4glwfJy2UAmyuEg/MODiOMa3IWf1DNY2tcpWE4SnUVyAm6L
-          RQaQbUIFMH7iFETyuQPp1jNs+GJWhs4mhwfIYlMCdQLEdAKLPUyCMSQDRaJ+QR2E
-          4u5KAZa/CWkL/HLz226bl4L53eQVW4v0S9apluuhy1s=
-          -----END EC PRIVATE KEY-----
-        root_cert: |
-          -----BEGIN CERTIFICATE-----
-          MIICtzCCAlygAwIBAgIJAME0VsLfyjElMAoGCCqGSM49BAMCMHIxCzAJBgNVBAYT
-          AlVTMRcwFQYDVQQIDA5Ob3J0aCBDYXJvbGluYTEQMA4GA1UEBwwHUmFsZWlnaDEQ
-          MA4GA1UECgwHUmVkIEhhdDEmMCQGA1UECwwdUmVkIEhhdCBFbWVyZ2luZyBUZWNo
-          bm9sb2dpZXMwHhcNMjMwNzMxMTEwODE2WhcNMjQwNzMwMTEwODE2WjByMQswCQYD
-          VQQGEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcMB1JhbGVp
-          Z2gxEDAOBgNVBAoMB1JlZCBIYXQxJjAkBgNVBAsMHVJlZCBIYXQgRW1lcmdpbmcg
-          VGVjaG5vbG9naWVzMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk52z98mDI8K7
-          Hh5NU0DPZE0v25mOmLRfCAhyvFLWjuAqgWB3V1+ozmH8txXPSjUrmuBA8UybnOkb
-          JNjI64w5UKOB2jCB1zAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTjoQToDWhE
-          C+yS2X4pIEB8jqWsCDCBpAYDVR0jBIGcMIGZgBTjoQToDWhEC+yS2X4pIEB8jqWs
-          CKF2pHQwcjELMAkGA1UEBhMCVVMxFzAVBgNVBAgMDk5vcnRoIENhcm9saW5hMRAw
-          DgYDVQQHDAdSYWxlaWdoMRAwDgYDVQQKDAdSZWQgSGF0MSYwJAYDVQQLDB1SZWQg
-          SGF0IEVtZXJnaW5nIFRlY2hub2xvZ2llc4IJAME0VsLfyjElMAoGCCqGSM49BAMC
-          A0kAMEYCIQCS9BVRLPjGhFEJPc4mMD2g8lc275d+OO4qx/OswysyigIhAPzcJCf8
-          szmI+ON/YItgbv0e5Wu7t9700ujBNfgMhzyO
-          -----END CERTIFICATE-----
-
   cosign:
-    BASE_DOMAIN: apps.<OPENSHIFT_BASE_DOMAIN>
+    BASE_DOMAIN: <OPENSHIFT_BASE_DOMAIN>
 
+# github.com/sigstore/helm-charts/charts
 scaffold:
   fulcio:
-    namespace:
-      name: fulcio-system
-      create: false
-    createcerts:
-      enabled: false
-      image:
-        registry: quay.io
-        repository: securesign/createcerts
-        version: v0.6.4
-        pullPolicy: IfNotPresent
     server:
-      image:
-        registry: quay.io
-        repository: securesign/fulcio
-        version: v1.4.0
-        pullPolicy: IfNotPresent
-      secret: fulcio-secret-rh
       ingress:
         http:
-          annotations:
-            route.openshift.io/termination: "edge"
-          className: ""
           hosts:
-            - host: fulcio.apps.<OPENSHIFT_BASE_DOMAIN>
+            - host: fulcio.<OPENSHIFT_BASE_DOMAIN>
               path: /
     config:
       contents:
         OIDCIssuers:
-          ? https://<KEYCLOAK_HOSTNAME>/auth/realms/<REALM>
-          : IssuerURL: https://<KEYCLOAK_HOSTNAME>/auth/realms/<REALM>
-            ClientID: <CLIENT_ID>
+          # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+            ClientID: sigstore
             Type: email
   rekor:
-    namespace:
-      create: false
     server:
-      image:
-        registry: quay.io
-        repository: securesign/rekor-server
-        version: v1.2.2
-        pullPolicy: IfNotPresent
       ingress:
-        className: ""
-        annotations:
-          route.openshift.io/termination: "edge"
         hosts:
-          - host: rekor.apps.<OPENSHIFT_BASE_DOMAIN>
+          - host: rekor.<OPENSHIFT_BASE_DOMAIN>
             path: /
-      signer: /key/private
-      signerFileSecretOptions:
-        secretName: rekor-private-key
-        secretMountPath: /key
-        secretMountSubPath: private
-        privateKeySecretKey: private
-    createtree:
-      image:
-        registry: quay.io
-        repository: securesign/createtree
-        version: v0.6.4
-        pullPolicy: IfNotPresent
-    backfillredis:
-      image:
-        registry: quay.io
-        repository: securesign/backfill-redis
-        version: v1.2.2
-        pullPolicy: IfNotPresent
   tuf:
-    namespace:
-      create: false
-    secrets:
-      fulcio:
-        name: fulcio-secret-rh
-    enabled: true
     ingress:
-      className: ""
-      annotations:
-        route.openshift.io/termination: "edge"
       http:
         hosts:
-          - host: tuf.apps.<OPENSHIFT_BASE_DOMAIN>
+          - host: tuf.<OPENSHIFT_BASE_DOMAIN>
             path: /
-    deployment:
-      registry: quay.io
-      repository: securesign/tuf/server
-      version: latest
-  ctlog:
-    namespace:
-      create: false
-    server:
-      image:
-        registry: quay.io
-        repository: securesign/ct_server
-        version: v0.6.4
-        pullPolicy: IfNotPresent
-    createctconfig:
-      backoffLimit: 30
-      enabled: true
-      initContainerImage:
-        curl:
-          registry: registry.access.redhat.com
-          repository: ubi9/ubi-minimal
-          version: latest
-          imagePullPolicy: IfNotPresent
-      image:
-        registry: quay.io
-        repository: securesign/createctconfig
-        version: v0.6.4
-        pullPolicy: IfNotPresent
-    createtree:
-      image:
-        registry: quay.io
-        repository: securesign/createtree
-        version: v0.6.4
-        pullPolicy: IfNotPresent
-
-  trillian:
-    namespace:
-      create: false
-    createdb:
-      image:
-        registry: quay.io
-        repository: securesign/createdb
-        version: v0.6.4
-        pullPolicy: IfNotPresent
-    initContainerImage:
-      netcat:
-        registry: quay.io
-        repository: securesign/netcat
-        version: v1.0.0
-      curl:
-        registry: registry.access.redhat.com
-        repository: ubi9/ubi-minimal
-        version: latest
-        imagePullPolicy: IfNotPresent
-    redis:
-      args:
-        - /usr/bin/run-redis
-        - --bind
-        - 0.0.0.0
-        - --appendonly
-        - "yes"
-      image:
-        registry: registry.redhat.io
-        repository: rhel9/redis-6
-        version: "sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"
-        pullPolicy: IfNotPresent
-    logSigner:
-      image:
-        registry: quay.io
-        repository: securesign/trillian_log_signer
-        version: v1.2.2
-        pullPolicy: IfNotPresent
-    logServer:
-      image:
-        registry: quay.io
-        repository: securesign/trillian_log_server
-        version: v1.2.2
-        pullPolicy: IfNotPresent
-    mysql:
-      gcp:
-        scaffoldSQLProxy:
-          registry: quay.io
-          repository: securesign/cloudsqlproxy
-          version: v0.6.4
-      image:
-        registry: quay.io
-        repository: securesign/trillian-db
-        version: v1.5.2
-        pullPolicy: IfNotPresent
-      args: []
-      securityContext:
-        fsGroup: 0
-      livenessProbe:
-        exec:
-          command:
-          - mysqladmin
-          - ping
-          - -h
-          - localhost
-          - -u
-          - $(MYSQL_USER)
-          - -p$(MYSQL_PASSWORD)
-      readinessProbe:
-        exec:
-          command:
-          - mysqladmin
-          - ping
-          - -h
-          - localhost
-          - -u
-          - $(MYSQL_USER)
-          - -p$(MYSQL_PASSWORD)
-
-
-  copySecretJob:
-    enabled: true
-    backoffLimit: 1000

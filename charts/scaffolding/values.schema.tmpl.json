@@ -1,0 +1,204 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "Root Schema",
+    "properties": {
+        "scaffold": {
+            "title": "Upstream Sigstore Scaffold chart schema.",
+            "$ref": "https://raw.githubusercontent.com/sigstore/helm-charts/main/charts/scaffold/values.schema.json"
+        },
+        "configs": {
+            "type": "object",
+            "properties": {
+                "cosign": {
+                    "properties": {
+                        "BASE_DOMAIN": {
+                            "type": "string"
+                        },
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ctlog": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "fulcio": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "server": {
+                            "properties": {
+                                "secret": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "password": {
+                                            "type": "string"
+                                        },
+                                        "private_key": {
+                                            "type": "string"
+                                        },
+                                        "private_key_file": {
+                                            "type": "string"
+                                        },
+                                        "public_key": {
+                                            "type": "string"
+                                        },
+                                        "public_key_file": {
+                                            "type": "string"
+                                        },
+                                        "root_cert": {
+                                            "type": "string"
+                                        },
+                                        "root_cert_file": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "rekor": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "signer": {
+                            "properties": {
+                                "secret": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "private_key": {
+                                            "type": "string"
+                                        },
+                                        "private_key_file": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "trillian": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "tuf": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "rbac": {
+            "properties": {
+                "clusterrole": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    }
+}

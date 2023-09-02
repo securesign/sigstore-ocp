@@ -1,0 +1,66 @@
+# With this example, the user provides the fulcio signing key and root certificate content,
+# either from files with path relative to this file, or by pasting contents below.
+# For fulcio cert & key requirements, see ../requirements-keys-certs.md
+# Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> and fulcio cert password below.
+# Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
+---
+configs:
+  fulcio:
+    # -- whether to create the 'fulcio-system' namespace
+    # When providing the fulcio server.secret, the ns already exists
+    create: false
+    server:
+      secret:
+        # secret name must match fulcio secret name in scaffold.tuf
+        # that defaults to 'fulcio-secret-rh'
+        name: fulcio-secret-rh
+        password: "CHANGEME"
+        # must provide 1 of each, key_file path or key contents
+        #public_key_file: "keys-cert/file_ca_pub.pem"
+        #private_key_file: "keys-cert/file_ca_key.pem"
+        #root_cert_file: "keys-cert/fulcio-root.pem"
+        public_key: |
+          -----BEGIN PUBLIC KEY-----
+          paste contents here
+          -----END PUBLIC KEY-----
+        private_key: |
+          -----BEGIN EC PRIVATE KEY-----
+          paste contents here
+          -----END EC PRIVATE KEY-----
+        root_cert: |
+          -----BEGIN CERTIFICATE-----
+          paste contents here
+          -----END CERTIFICATE-----
+  cosign:
+    BASE_DOMAIN: <OPENSHIFT_BASE_DOMAIN>
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  fulcio:
+    server:
+      ingress:
+        http:
+          hosts:
+            - host: fulcio.<OPENSHIFT_BASE_DOMAIN>
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+            ClientID: sigstore
+            Type: email
+  rekor:
+    server:
+      ingress:
+        hosts:
+          - host: rekor.<OPENSHIFT_BASE_DOMAIN>
+            path: /
+  tuf:
+    ingress:
+      http:
+        hosts:
+          - host: tuf.<OPENSHIFT_BASE_DOMAIN>
+            path: /
+

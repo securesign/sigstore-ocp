@@ -1,0 +1,9 @@
+{{- range $configKey, $config := .Values.configs }}
+{{- if $config.create }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $config.namespace }}
+{{- end }}
+{{- end }}

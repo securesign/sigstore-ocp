@@ -1,0 +1,80 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Overview
+
+This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold)
+chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
+
+If you have already read this document and want a quick no-fail path to installing a Sigstore stack with RH SSO,
+follow [quick start](./quick-start-with-keycloak.md)
+
+The chart enhances the scaffold chart by taking care of the following:
+
+* Provision Namespaces
+* Configure `RoleBindings` to enable access to the `anyuid` SecurityContextConstraint
+* Inject Fulcio root and Rekor signing keys
+
+### Scaffold customization
+
+Similar to any Helm dependency, values from the upstream `scaffold` chart can be customized by embedding the properties
+within the `scaffold` property similar to the following:
+
+```yaml
+scaffold:
+  fulcio:
+    namespace:
+      name: fulcio-system
+      create: false
+...
+```
+
+### Sample Implementation
+
+#### Prerequisites
+
+The following must be satisfied prior to deploying the sample implementation:
+
+* Fulcio root CA certificate and signing keys
+    * More information in [requirements-keys-certs.md](./requirements-keys-certs.md)
+* OpenID Token Issuer endpoint
+    * Keycloak/RHSSO requirements can be followed and deployed in OpenShift with [keycloak-example.md](./keycloak-example.md)
+
+#### Update the values file
+
+Helm values files are available in the examples directory that provides a baseline to work off of.
+It can be customized based on an individual target environment.
+Perform the following modifications to the [example values file](./examples/values-sigstore-openshift.yaml)
+to curate the deployment of the chart:
+
+1. Update all occurrences of `<OPENSHIFT_BASE_DOMAIN>` with the value from the following command:
+
+```shell
+oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
+# omit the '*.'
+```
+
+2. Modify the OIDC Issuer URL in the fulcio config section of the values file as necessary.
+
+4. Perform any additional customizations as desired
+
+### Installing the Chart
+
+When logged in as an elevated OpenShift user, execute the following to install the chart referencing the
+customized values file:
+
+```shell
+helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_file>
+```
+
+### Sign and/or verify artifacts!
+
+Follow [this](./sign-verify.md) to sign and/or verify artifacts.
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

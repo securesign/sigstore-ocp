@@ -1,27 +1,47 @@
 configs:
   ctlog:
+    # -- Namespace for ctlog resources
     namespace: ctlog-system
+    # -- Whether to create the ctlog namespace
     create: true
+    # -- Names for rolebindings to add clusterroles to ctlog serviceaccounts.
+    # The names must match the serviceaccount names in the ctlog namespace.
     rolebindings:
       - ctlog
       - ctlog-createtree
       - scaffolding-ctlog-createctconfig
 
   fulcio:
+    # -- Namespace for fulcio resources
     namespace: fulcio-system
+    # -- Whether to create the fulcio namespace
     create: true
+    # -- Names for rolebindings to add clusterroles to fulcio serviceaccounts.
+    # The names must match the serviceaccount names in the fulcio namespace.
     rolebindings:
       - fulcio-createcerts
       - fulcio-server
     server:
+      #  -- Secret to create with fulcio signing backend certificate and keys.
+      #  Leave this section out if a secret already exists in the fulcio namespace.
+      #  The secret.name must match the value of scaffold.fulcio.server.secret and
+      #  also tuf.secrets.fulcio.name. For details on certificate and key requirements,
+      #  see https://github.com/sigstore/fulcio/blob/main/docs/setup.md#ca-certificate-requirements
       secret:
         name: ""
+        # -- password to decrypt the signing key
         password: ""
+        # -- signer public key
         public_key: ""
+        # -- a PEM-encoded encrypted signing key
         private_key: ""
+        # -- file containing signer public key
         public_key_file: ""
+        # -- file containing a PEM-encoded encrypted signing key
         private_key_file: ""
+        # -- fulcio root certificate authority (CA)
         root_cert: ""
+        # -- file containing fulcio root certificate authority (CA)
         root_cert_file: ""
     clusterMonitoring:
       enabled: true
@@ -31,16 +51,26 @@ configs:
           scheme: http
 
   rekor:
+    # -- namespace for rekor resources
     namespace: rekor-system
+    # -- whether to create the rekor namespace
     create: true
+    # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
+    # The names must match the serviceaccount names in the rekor namespace.
     rolebindings:
       - rekor-redis
       - rekor-server
       - scaffolding-rekor-createtree
     signer:
+      # -- Secret that contains the private key used to sign entries and the tree head of the transparency log
+      # When this section is left out, scaffold.rekor can be configured to mount and/or create the secret and key.
       secret:
+        # -- Name of the secret to create with the private key data. This name must match the value in
+        # scaffold.rekor.server.signer.signerFileSecretOptions.secretName. 
         name: ""
+        # -- Private encrypted signing key
         private_key: ""
+        # -- File containing a private encrypted signing key
         private_key_file: ""
     clusterMonitoring:
       enabled: true
@@ -50,30 +80,47 @@ configs:
           scheme: http
 
   trillian:
+    # -- namespace for trillian resources
     namespace: trillian-system
+    # -- whether to create the trillian namespace
     create: true
+    # -- names for rolebindings to add clusterroles to trillian serviceaccounts.
+    # The names must match the serviceaccount names in the trillian namespace.
     rolebindings:
       - trillian-logserver
       - trillian-logsigner
       - trillian-mysql
 
   tuf:
+    # -- namespace for tuf resources
     namespace: tuf-system
+    # -- whether to create the tuf namespace
     create: true
+    # -- names for rolebindings to add clusterroles to tuf serviceaccounts.
+    # The names must match the serviceaccount names in the tuf namespace.
     rolebindings:
       - tuf
       - tuf-secret-copy-job
 
   cosign:
-    BASE_DOMAIN: apps.<base_domain>
+    # -- DNS name to be used to generate environment variables for cosign commands.
+    # Can be obtained from OpenShift with 'oc get dnsrecords -o yaml -n openshift-ingress-operator'
+    BASE_DOMAIN: "localhost.com"
+    # -- namespace for cosign resources
     namespace: cosign
+    # -- whether to create the cosign namespace
     create: true
+    # -- names for rolebindings to add clusterroles to cosign serviceaccounts.
+    # The names must match the serviceaccount names in the cosign namespace.
     rolebindings:
       - cosign
-    metadata:
-      name: cosign
-    spec:
-      replicas: 1
+    # -- Name of deployment
+    name: cosign
+    # -- Image containing the cosign binary as well as environment variables with the base domain injected.
+    ## @param configs.cosign.image.registry
+    ## @param configs.cosign.image.repository
+    ## @param configs.cosign.image.version
+    ## @param configs.cosign.image.pullPolicy
     image:
       registry: quay.io
       repository: securesign/cosign
@@ -81,4 +128,9 @@ configs:
       pullPolicy: IfNotPresent
 
 rbac:
+<<<<<<< HEAD
   clusterrole: system:openshift:scc:anyuid
+=======
+  # -- clusterrole to be added to sigstore component serviceaccounts.
+  clusterrole: system:openshift:scc:anyuid
+>>>>>>> 02cd6a2 (update README,docs,helm-docs pre-commit,schema)

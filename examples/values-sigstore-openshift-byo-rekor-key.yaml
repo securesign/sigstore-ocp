@@ -1,0 +1,62 @@
+# With this example, the user provides the rekor private signing key content,
+# either from file path relative to this file, or by pasting its contents below.
+# For rekor key requirements, see ../requirements-keys-certs.md
+# Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> below.
+# Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
+---
+configs:
+  rekor:
+    # -- whether to create the 'rekor-system' namespace
+    # When providing the rekor signer.secret, the ns already exists
+    create: false
+    signer:
+      secret:
+        # must provide 1 of each, key_file path or key contents
+        # name must match rekor signer secretName in scaffold.rekor.server
+        name: rekor-private-key
+        #private_key_file: "keys-cert/rekor_key.pem"
+        private_key: |
+          -----BEGIN EC PRIVATE KEY-----
+          paste contents here
+          -----END EC PRIVATE KEY-----
+  cosign:
+    BASE_DOMAIN: <OPENSHIFT_BASE_DOMAIN>
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  fulcio:
+    server:
+      ingress:
+        http:
+          hosts:
+            - host: fulcio.<OPENSHIFT_BASE_DOMAIN>
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+            ClientID: sigstore
+            Type: email
+  rekor:
+    server:
+      # when providing contents of secret with configs.rekor.signer
+      # the signer sections must also be provided here
+      signer: /key/private
+      signerFileSecretOptions:
+        secretName: rekor-private-key
+        secretMountPath: /key
+        secretMountSubPath: private
+        privateKeySecretKey: private
+      ingress:
+        hosts:
+          - host: rekor.<OPENSHIFT_BASE_DOMAIN>
+            path: /
+  tuf:
+    ingress:
+      http:
+        hosts:
+          - host: tuf.<OPENSHIFT_BASE_DOMAIN>
+            path: /
+
