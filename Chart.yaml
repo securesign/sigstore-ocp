@@ -8,3 +8,8 @@ dependencies:
   - name: scaffold
     version: x
     repository: https://sigstore.github.io/helm-charts
+
+  - name: grafana
+    version: x
+    repository: "https://grafana.github.io/helm-charts"
+    condition: grafana.enabled

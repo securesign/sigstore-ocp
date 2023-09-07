@@ -233,3 +233,40 @@ scaffold:
   copySecretJob:
     enabled: true
     backoffLimit: 1000
+
+grafana:
+  securityContext:
+    runAsUser: 1000760000
+    runAsGroup: 1000760000
+    fsGroup: 1000760000
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - access: proxy
+          isDefault: true
+          jsonData:
+            httpHeaderName1: "Authorization"
+            timeInterval: 5s
+            tlsSkipVerify: true
+          name: Prometheus
+          secureJsonData:
+            httpHeaderValue1: "Bearer {{ .Values.accToken }}"
+          type: prometheus
+          url: "https://thanos-querier-openshift-monitoring.apps.rosa.vdx4u-y9kr4-qi4.pehe.p3.openshiftapps.com"
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "sigstore-monitoring"
+          orgId: 1
+          options:
+            path: /var/lib/grafana/dashboards/sigstore-monitoring
+  extraConfigmapMounts:
+    - name: dashboard-configmap
+      mountPath: /var/lib/grafana/dashboards/sigstore-monitoring
+      configMap: grafana-dashboard-configmap
+  ingress:
+    enabled: true
+    hosts:
+      - scaffolding-grafana-sigstore.apps.rosa.vdx4u-y9kr4-qi4.pehe.p3.openshiftapps.com

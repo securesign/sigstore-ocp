@@ -70,3 +70,7 @@ configs:
 
 rbac:
   clusterrole: system:openshift:scc:anyuid
+
+grafana:
+  enabled: false
+  accToken: access_token
