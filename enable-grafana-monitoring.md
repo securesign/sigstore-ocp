@@ -12,7 +12,7 @@ Before enabling Grafana monitoring, retrieve an access token from a service acco
 export ACC_TOKEN=$(oc -n openshift-user-workload-monitoring get secrets -o name | grep 'prometheus-user-workload-token-' | xargs -I {} oc -n openshift-user-workload-monitoring get {} -o=jsonpath="{.data.token}" | base64 -d)
 ```
 
-This command retrieves the correct access token and sets it to the ACC_TOKEN environmental variable.
+This command retrieves the correct access token and sets it to the ACC_TOKEN environmental variable.You may want to `echo $ACC_TOKEN` before proceeding to ensure the variable is set if its not the cluster may not be fully provisioned yet.
 
 ## Step 2: Deploying the Helm Chart with Grafana
 
