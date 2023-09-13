@@ -193,23 +193,15 @@ scaffold:
       livenessProbe:
         exec:
           command:
-          - mysqladmin
-          - ping
-          - -h
-          - localhost
-          - -u
-          - $(MYSQL_USER)
-          - -p$(MYSQL_PASSWORD)
+          - /bin/sh
+          - -c
+          - mysqladmin ping -h localhost -u $MYSQL_USER -p$MYSQL_PASSWORD
       readinessProbe:
         exec:
           command:
-          - mysqladmin
-          - ping
-          - -h
-          - localhost
-          - -u
-          - $(MYSQL_USER)
-          - -p$(MYSQL_PASSWORD)
+          - /bin/sh
+          - -c
+          - mysqladmin ping -h localhost -u $MYSQL_USER -p$MYSQL_PASSWORD
   tuf:
     namespace:
       create: false
