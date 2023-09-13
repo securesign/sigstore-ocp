@@ -1,7 +1,8 @@
 # With this example, it is expected that there is a secret with the fulcio root & signing keys
-# named 'fulcio-secret-rh' in namespace 'fulcio-system'.
-# fulcio root & key secret name must match fulcio secret name in scaffold.tuf
-# that defaults to 'fulcio-secret-rh'
+# named 'fulcio-secret-rh' in namespace 'fulcio-system' and a secret 'rekor-private-key'
+# with rekor signing keys in the 'rekor-system' namespace.
+# secret names must match secret names in scaffold.tuf, that default to
+# 'fulcio-secret-rh' and 'rekor-private-key'
 # For root & key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> below.
 # Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
@@ -9,6 +10,10 @@
 configs:
   cosign:
     BASE_DOMAIN: <OPENSHIFT_BASE_DOMAIN>
+  fulcio:
+    create: false
+  rekor:
+    create: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

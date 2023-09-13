@@ -1,14 +1,16 @@
 # With this example, the user provides the rekor private signing key content,
 # either from file path relative to this file, or by pasting its contents below.
+# It's assumed the secret 'fulcio-secret-rh' exists already in 'fulcio-system' namespace.
 # For rekor key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> below.
 # Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
 ---
 configs:
+  fulcio:
+    create: false
   rekor:
     # -- whether to create the 'rekor-system' namespace
     # When providing the rekor signer.secret, the ns already exists
-    create: false
     signer:
       secret:
         # must provide 1 of each, key_file path or key contents

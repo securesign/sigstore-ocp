@@ -10,13 +10,14 @@ The `openssl` commands are interactive.
 ./fulcio-create-root-ca-openssl.sh
 ```
 
+The command creates keys and cert in `./keys-cert` folder.
 Either create a secret in the fulcio-system namespace with:
 
 ```bash
 # Note replace <PASSWORD> with value of password to decrypt signing key created above.
 # if necessary, 'oc create ns fulcio-system'
 
-oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=file_ca_key.pem --from-file=public=file_ca_pub.pem --from-file=cert=fulcio-root.pem  --from-literal=password=<PASSWORD> --dry-run=client -o yaml | oc apply -f-
+oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem  --from-literal=password=<PASSWORD> --dry-run=client -o yaml | oc apply -f-
 ```
 
 Or, add the following to an overriding Values file injecting the public key, private key, and password used for the private key:

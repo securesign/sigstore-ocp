@@ -36,6 +36,9 @@ spec:
     email: somalley@redhat.com
     enabled: true
     emailVerified: true
+    credentials:
+      - type: "password"
+        value: "secure"
     firstName: Sally
     lastName: OMalley
     username: somalley

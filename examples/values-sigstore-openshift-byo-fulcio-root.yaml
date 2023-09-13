@@ -1,10 +1,13 @@
 # With this example, the user provides the fulcio signing key and root certificate content,
 # either from files with path relative to this file, or by pasting contents below.
+# It assumes the secret 'rekor-private-key' exists in rekor-system namespace.
 # For fulcio cert & key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> and fulcio cert password below.
 # Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
 ---
 configs:
+  rekor:
+    create: false
   fulcio:
     # -- whether to create the 'fulcio-system' namespace
     # When providing the fulcio server.secret, the ns already exists

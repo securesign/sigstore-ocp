@@ -211,6 +211,14 @@ scaffold:
         repository: securesign/rekor-server
         version: v1.2.2
         pullPolicy: IfNotPresent
+      # when providing contents of secret with configs.rekor.signer
+      # the signer sections must also be provided here
+      signer: /key/private
+      signerFileSecretOptions:
+        secretName: rekor-private-key
+        secretMountPath: /key
+        secretMountSubPath: private
+        privateKeySecretKey: private
       ingress:
         className: ""
         annotations:
@@ -218,7 +226,7 @@ scaffold:
         hosts:
           - host: rekor.BASE_DOMAIN
             path: /
-      
+
     createtree:
       image:
         registry: quay.io
@@ -354,10 +362,11 @@ scaffold:
   copySecretJob:
     name: copy-secrets-job
     enabled: true
-    registry: registry.access.redhat.com
-    repository: ubi9/ubi-minimal
+    # TODO: Update copy-secrets image
+    registry: quay.io
+    repository: sallyom/copy-secrets
     version: latest
-    imagePullPolicy: IfNotPresent
+    imagePullPolicy: Always
     serviceaccount: tuf-secret-copy-job
     backoffLimit: 1000
 

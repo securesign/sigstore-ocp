@@ -123,10 +123,10 @@ Kubernetes: `>= 1.19.0-0`
 | rbac.clusterrole | clusterrole to be added to sigstore component serviceaccounts. | string | `"system:openshift:scc:anyuid"` |
 | scaffold.copySecretJob.backoffLimit |  | int | `1000` |
 | scaffold.copySecretJob.enabled |  | bool | `true` |
-| scaffold.copySecretJob.imagePullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.copySecretJob.imagePullPolicy |  | string | `"Always"` |
 | scaffold.copySecretJob.name |  | string | `"copy-secrets-job"` |
-| scaffold.copySecretJob.registry |  | string | `"registry.access.redhat.com"` |
-| scaffold.copySecretJob.repository |  | string | `"ubi9/ubi-minimal"` |
+| scaffold.copySecretJob.registry |  | string | `"quay.io"` |
+| scaffold.copySecretJob.repository |  | string | `"sallyom/copy-secrets"` |
 | scaffold.copySecretJob.serviceaccount |  | string | `"tuf-secret-copy-job"` |
 | scaffold.copySecretJob.version |  | string | `"latest"` |
 | scaffold.ctlog.createcerts.fullnameOverride |  | string | `"ctlog-createcerts"` |
@@ -201,6 +201,11 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.server.ingress.className |  | string | `""` |
 | scaffold.rekor.server.ingress.hosts[0].host |  | string | `"rekor.BASE_DOMAIN"` |
 | scaffold.rekor.server.ingress.hosts[0].path |  | string | `"/"` |
+| scaffold.rekor.server.signer |  | string | `"/key/private"` |
+| scaffold.rekor.server.signerFileSecretOptions.privateKeySecretKey |  | string | `"private"` |
+| scaffold.rekor.server.signerFileSecretOptions.secretMountPath |  | string | `"/key"` |
+| scaffold.rekor.server.signerFileSecretOptions.secretMountSubPath |  | string | `"private"` |
+| scaffold.rekor.server.signerFileSecretOptions.secretName |  | string | `"rekor-private-key"` |
 | scaffold.rekor.trillian.enabled |  | bool | `false` |
 | scaffold.trillian.createdb.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.createdb.image.registry |  | string | `"quay.io"` |
