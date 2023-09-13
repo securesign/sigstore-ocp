@@ -1,3 +1,4 @@
+
 # scaffolding
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
@@ -84,437 +85,207 @@ Kubernetes: `>= 1.19.0-0`
 
 ## Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| configs.cosign.BASE_DOMAIN | string | `"BASE_DOMAIN"` | DNS name to be used to generate environment variables for cosign commands. Can be obtained from OpenShift with 'oc get dnsrecords -o yaml -n openshift-ingress-operator' |
-| configs.cosign.create | bool | `true` | whether to create the cosign namespace |
-| configs.cosign.image | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` | Image containing the cosign binary as well as environment variables with the base domain injected. |
-| configs.cosign.name | string | `"cosign"` | Name of deployment |
-| configs.cosign.namespace | string | `"cosign"` | namespace for cosign resources |
-| configs.cosign.rolebindings | list | `["cosign"]` | names for rolebindings to add clusterroles to cosign serviceaccounts. The names must match the serviceaccount names in the cosign namespace. |
-| configs.ctlog.create | bool | `true` | Whether to create the ctlog namespace |
-| configs.ctlog.namespace | string | `"ctlog-system"` | Namespace for ctlog resources |
-| configs.ctlog.rolebindings | list | `["ctlog","ctlog-createtree","scaffolding-ctlog-createctconfig"]` | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. |
-| configs.fulcio.create | bool | `true` | Whether to create the fulcio namespace |
-| configs.fulcio.namespace | string | `"fulcio-system"` | Namespace for fulcio resources |
-| configs.fulcio.rolebindings | list | `["fulcio-createcerts","fulcio-server"]` | Names for rolebindings to add clusterroles to fulcio serviceaccounts. The names must match the serviceaccount names in the fulcio namespace. |
-| configs.fulcio.server.secret.name | string | `""` |  |
-| configs.fulcio.server.secret.password | string | `""` | password to decrypt the signing key |
-| configs.fulcio.server.secret.private_key | string | `""` | a PEM-encoded encrypted signing key |
-| configs.fulcio.server.secret.private_key_file | string | `""` | file containing a PEM-encoded encrypted signing key |
-| configs.fulcio.server.secret.public_key | string | `""` | signer public key |
-| configs.fulcio.server.secret.public_key_file | string | `""` | file containing signer public key |
-| configs.fulcio.server.secret.root_cert | string | `""` | fulcio root certificate authority (CA) |
-| configs.fulcio.server.secret.root_cert_file | string | `""` | file containing fulcio root certificate authority (CA) |
-| configs.rekor.create | bool | `true` | whether to create the rekor namespace |
-| configs.rekor.namespace | string | `"rekor-system"` | namespace for rekor resources |
-| configs.rekor.rolebindings | list | `["rekor-redis","rekor-server","scaffolding-rekor-createtree"]` | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. |
-| configs.rekor.signer | object | `{"secret":{"name":"","private_key":"","private_key_file":""}}` | Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log When this section is left out, scaffold.rekor creates the secret and key. |
-| configs.rekor.signer.secret.name | string | `""` | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. |
-| configs.rekor.signer.secret.private_key | string | `""` | Private encrypted signing key |
-| configs.rekor.signer.secret.private_key_file | string | `""` | File containing a private encrypted signing key |
-| configs.trillian.create | bool | `true` | whether to create the trillian namespace |
-| configs.trillian.namespace | string | `"trillian-system"` | namespace for trillian resources |
-| configs.trillian.rolebindings | list | `["trillian-logserver","trillian-logsigner","trillian-mysql"]` | names for rolebindings to add clusterroles to trillian serviceaccounts. The names must match the serviceaccount names in the trillian namespace. |
-| configs.tuf.create | bool | `true` | whether to create the tuf namespace |
-| configs.tuf.namespace | string | `"tuf-system"` | namespace for tuf resources |
-| configs.tuf.rolebindings | list | `["tuf","tuf-secret-copy-job"]` | names for rolebindings to add clusterroles to tuf serviceaccounts. The names must match the serviceaccount names in the tuf namespace. |
-| rbac.clusterrole | string | `"system:openshift:scc:anyuid"` | clusterrole to be added to sigstore component serviceaccounts. |
-| scaffold.copySecretJob.backoffLimit | int | `1000` |  |
-| scaffold.copySecretJob.enabled | bool | `true` |  |
-| scaffold.copySecretJob.imagePullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.copySecretJob.name | string | `"copy-secrets-job"` |  |
-| scaffold.copySecretJob.registry | string | `"registry.access.redhat.com"` |  |
-| scaffold.copySecretJob.repository | string | `"ubi9/ubi-minimal"` |  |
-| scaffold.copySecretJob.serviceaccount | string | `"tuf-secret-copy-job"` |  |
-| scaffold.copySecretJob.version | string | `"latest"` |  |
-| scaffold.ctlog.createcerts.fullnameOverride | string | `"ctlog-createcerts"` |  |
-| scaffold.ctlog.createctconfig.backoffLimit | int | `30` |  |
-| scaffold.ctlog.createctconfig.enabled | bool | `true` |  |
-| scaffold.ctlog.createctconfig.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.createctconfig.image.registry | string | `"quay.io"` |  |
-| scaffold.ctlog.createctconfig.image.repository | string | `"securesign/createctconfig"` |  |
-| scaffold.ctlog.createctconfig.image.version | string | `"v0.6.4"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.imagePullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.registry | string | `"registry.access.redhat.com"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.repository | string | `"ubi9/ubi-minimal"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.version | string | `"latest"` |  |
-| scaffold.ctlog.createtree.displayName | string | `"ctlog-tree"` |  |
-| scaffold.ctlog.createtree.fullnameOverride | string | `"ctlog-createtree"` |  |
-| scaffold.ctlog.createtree.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.createtree.image.registry | string | `"quay.io"` |  |
-| scaffold.ctlog.createtree.image.repository | string | `"securesign/createtree"` |  |
-| scaffold.ctlog.createtree.image.version | string | `"v0.6.4"` |  |
-| scaffold.ctlog.enabled | bool | `true` |  |
-| scaffold.ctlog.forceNamespace | string | `"ctlog-system"` |  |
-| scaffold.ctlog.fullnameOverride | string | `"ctlog"` |  |
-| scaffold.ctlog.namespace.create | bool | `false` |  |
-| scaffold.ctlog.namespace.name | string | `"ctlog-system"` |  |
-| scaffold.ctlog.server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.server.image.registry | string | `"quay.io"` |  |
-| scaffold.ctlog.server.image.repository | string | `"securesign/ct_server"` |  |
-| scaffold.ctlog.server.image.version | string | `"v0.6.4"` |  |
-| scaffold.fulcio.createcerts.enabled | bool | `true` |  |
-| scaffold.fulcio.createcerts.fullnameOverride | string | `"fulcio-createcerts"` |  |
-| scaffold.fulcio.createcerts.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.fulcio.createcerts.image.registry | string | `"quay.io"` |  |
-| scaffold.fulcio.createcerts.image.repository | string | `"securesign/createcerts"` |  |
-| scaffold.fulcio.createcerts.image.version | string | `"v0.6.4"` |  |
-| scaffold.fulcio.ctlog.createctconfig.logPrefix | string | `"sigstorescaffolding"` |  |
-| scaffold.fulcio.ctlog.enabled | bool | `false` |  |
-| scaffold.fulcio.enabled | bool | `true` |  |
-| scaffold.fulcio.forceNamespace | string | `"fulcio-system"` |  |
-| scaffold.fulcio.namespace.create | bool | `false` |  |
-| scaffold.fulcio.namespace.name | string | `"fulcio-system"` |  |
-| scaffold.fulcio.server.fullnameOverride | string | `"fulcio-server"` |  |
-| scaffold.fulcio.server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.fulcio.server.image.registry | string | `"quay.io"` |  |
-| scaffold.fulcio.server.image.repository | string | `"securesign/fulcio"` |  |
-| scaffold.fulcio.server.image.version | string | `"v1.4.0"` |  |
-| scaffold.fulcio.server.ingress.http.annotations."route.openshift.io/termination" | string | `"edge"` |  |
-| scaffold.fulcio.server.ingress.http.className | string | `""` |  |
-| scaffold.fulcio.server.ingress.http.enabled | bool | `true` |  |
-| scaffold.fulcio.server.ingress.http.hosts[0].host | string | `"fulcio.BASE_DOMAIN"` |  |
-| scaffold.fulcio.server.ingress.http.hosts[0].path | string | `"/"` |  |
-| scaffold.fulcio.server.secret | string | `"fulcio-secret-rh"` |  |
-| scaffold.rekor.backfillredis.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.rekor.backfillredis.image.registry | string | `"quay.io"` |  |
-| scaffold.rekor.backfillredis.image.repository | string | `"securesign/backfill-redis"` |  |
-| scaffold.rekor.backfillredis.image.version | string | `"v1.2.2"` |  |
-| scaffold.rekor.createtree.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.rekor.createtree.image.registry | string | `"quay.io"` |  |
-| scaffold.rekor.createtree.image.repository | string | `"securesign/createtree"` |  |
-| scaffold.rekor.createtree.image.version | string | `"v0.6.4"` |  |
-| scaffold.rekor.enabled | bool | `true` |  |
-| scaffold.rekor.forceNamespace | string | `"rekor-system"` |  |
-| scaffold.rekor.fullnameOverride | string | `"rekor"` |  |
-| scaffold.rekor.namespace.create | bool | `false` |  |
-| scaffold.rekor.namespace.name | string | `"rekor-system"` |  |
-| scaffold.rekor.redis.fullnameOverride | string | `"rekor-redis"` |  |
-| scaffold.rekor.server.fullnameOverride | string | `"rekor-server"` |  |
-| scaffold.rekor.server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.rekor.server.image.registry | string | `"quay.io"` |  |
-| scaffold.rekor.server.image.repository | string | `"securesign/rekor-server"` |  |
-| scaffold.rekor.server.image.version | string | `"v1.2.2"` |  |
-| scaffold.rekor.server.ingress.annotations."route.openshift.io/termination" | string | `"edge"` |  |
-| scaffold.rekor.server.ingress.className | string | `""` |  |
-| scaffold.rekor.server.ingress.hosts[0].host | string | `"rekor.BASE_DOMAIN"` |  |
-| scaffold.rekor.server.ingress.hosts[0].path | string | `"/"` |  |
-| scaffold.rekor.trillian.enabled | bool | `false` |  |
-| scaffold.trillian.createdb.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.createdb.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.createdb.image.repository | string | `"securesign/createdb"` |  |
-| scaffold.trillian.createdb.image.version | string | `"v0.6.4"` |  |
-| scaffold.trillian.enabled | bool | `true` |  |
-| scaffold.trillian.forceNamespace | string | `"trillian-system"` |  |
-| scaffold.trillian.fullnameOverride | string | `"trillian"` |  |
-| scaffold.trillian.initContainerImage.curl.imagePullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.initContainerImage.curl.registry | string | `"registry.access.redhat.com"` |  |
-| scaffold.trillian.initContainerImage.curl.repository | string | `"ubi9/ubi-minimal"` |  |
-| scaffold.trillian.initContainerImage.curl.version | string | `"latest"` |  |
-| scaffold.trillian.initContainerImage.netcat.registry | string | `"quay.io"` |  |
-| scaffold.trillian.initContainerImage.netcat.repository | string | `"securesign/netcat"` |  |
-| scaffold.trillian.initContainerImage.netcat.version | string | `"v1.0.0"` |  |
-| scaffold.trillian.logServer.fullnameOverride | string | `"trillian-logserver"` |  |
-| scaffold.trillian.logServer.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.logServer.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.logServer.image.repository | string | `"securesign/trillian_log_server"` |  |
-| scaffold.trillian.logServer.image.version | string | `"v1.2.2"` |  |
-| scaffold.trillian.logServer.name | string | `"trillian-logserver"` |  |
-| scaffold.trillian.logServer.portHTTP | int | `8090` |  |
-| scaffold.trillian.logServer.portRPC | int | `8091` |  |
-| scaffold.trillian.logSigner.fullnameOverride | string | `"trillian-logsigner"` |  |
-| scaffold.trillian.logSigner.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.logSigner.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.logSigner.image.repository | string | `"securesign/trillian_log_signer"` |  |
-| scaffold.trillian.logSigner.image.version | string | `"v1.2.2"` |  |
-| scaffold.trillian.logSigner.name | string | `"trillian-logsigner"` |  |
-| scaffold.trillian.mysql.args | list | `[]` |  |
-| scaffold.trillian.mysql.fullnameOverride | string | `"trillian-mysql"` |  |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.registry | string | `"quay.io"` |  |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository | string | `"securesign/cloudsqlproxy"` |  |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version | string | `"v0.6.4"` |  |
-| scaffold.trillian.mysql.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.mysql.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.mysql.image.repository | string | `"securesign/trillian-db"` |  |
-| scaffold.trillian.mysql.image.version | string | `"v1.5.2"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[0] | string | `"mysqladmin"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[1] | string | `"ping"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[2] | string | `"-h"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[3] | string | `"localhost"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[4] | string | `"-u"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[5] | string | `"$(MYSQL_USER)"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[6] | string | `"-p$(MYSQL_PASSWORD)"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[0] | string | `"mysqladmin"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[1] | string | `"ping"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[2] | string | `"-h"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[3] | string | `"localhost"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[4] | string | `"-u"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[5] | string | `"$(MYSQL_USER)"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[6] | string | `"-p$(MYSQL_PASSWORD)"` |  |
-| scaffold.trillian.mysql.securityContext.fsGroup | int | `0` |  |
-| scaffold.trillian.namespace.create | bool | `false` |  |
-| scaffold.trillian.namespace.name | string | `"trillian-system"` |  |
-| scaffold.trillian.redis.args[0] | string | `"/usr/bin/run-redis"` |  |
-| scaffold.trillian.redis.args[1] | string | `"--bind"` |  |
-| scaffold.trillian.redis.args[2] | string | `"0.0.0.0"` |  |
-| scaffold.trillian.redis.args[3] | string | `"--appendonly"` |  |
-| scaffold.trillian.redis.args[4] | string | `"yes"` |  |
-| scaffold.trillian.redis.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.redis.image.registry | string | `"registry.redhat.io"` |  |
-| scaffold.trillian.redis.image.repository | string | `"rhel9/redis-6"` |  |
-| scaffold.trillian.redis.image.version | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |  |
-| scaffold.tsa.enabled | bool | `false` |  |
-| scaffold.tsa.forceNamespace | string | `"tsa-sytem"` |  |
-| scaffold.tsa.namespace.create | bool | `false` |  |
-| scaffold.tsa.namespace.name | string | `"tsa-system"` |  |
-| scaffold.tsa.server.fullnameOverride | string | `"tsa-server"` |  |
-| scaffold.tuf.deployment.registry | string | `"quay.io"` |  |
-| scaffold.tuf.deployment.repository | string | `"securesign/tuf/server"` |  |
-| scaffold.tuf.deployment.version | string | `"latest"` |  |
-| scaffold.tuf.enabled | bool | `true` |  |
-| scaffold.tuf.forceNamespace | string | `"tuf-system"` |  |
-| scaffold.tuf.fullnameOverride | string | `"tuf"` |  |
-| scaffold.tuf.ingress.annotations."route.openshift.io/termination" | string | `"edge"` |  |
-| scaffold.tuf.ingress.className | string | `""` |  |
-| scaffold.tuf.ingress.http.hosts[0].host | string | `"tuf.BASE_DOMAIN"` |  |
-| scaffold.tuf.ingress.http.hosts[0].path | string | `"/"` |  |
-| scaffold.tuf.namespace.create | bool | `false` |  |
-| scaffold.tuf.namespace.name | string | `"tuf-system"` |  |
-| scaffold.tuf.secrets.ctlog.name | string | `"ctlog-public-key"` |  |
-| scaffold.tuf.secrets.ctlog.path | string | `"ctlog-pubkey"` |  |
-| scaffold.tuf.secrets.fulcio.name | string | `"fulcio-secret-rh"` |  |
-| scaffold.tuf.secrets.fulcio.path | string | `"fulcio-cert"` |  |
-| scaffold.tuf.secrets.rekor.name | string | `"rekor-public-key"` |  |
-| scaffold.tuf.secrets.rekor.path | string | `"rekor-pubkey"` |  |
-
-# scaffolding
-
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
-
-A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
-
-## Maintainers
-
-| Name | Email | Url |
-| ---- | ------ | --- |
-| TrustedSigner |  |  |
-
-## Source Code
-
-* <https://github.com/securesign/sigstore-ocp>
-
-## Requirements
-
-Kubernetes: `>= 1.19.0-0`
-
-| Repository | Name | Version |
-|------------|------|---------|
-| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.28 |
-
-## Values
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| configs.cosign.BASE_DOMAIN | string | `"BASE_DOMAIN"` | DNS name to be used to generate environment variables for cosign commands. Can be obtained from OpenShift with 'oc get dnsrecords -o yaml -n openshift-ingress-operator' |
-| configs.cosign.create | bool | `true` | whether to create the cosign namespace |
-| configs.cosign.image | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` | Image containing the cosign binary as well as environment variables with the base domain injected. |
-| configs.cosign.name | string | `"cosign"` | Name of deployment |
-| configs.cosign.namespace | string | `"cosign"` | namespace for cosign resources |
-| configs.cosign.rolebindings | list | `["cosign"]` | names for rolebindings to add clusterroles to cosign serviceaccounts. The names must match the serviceaccount names in the cosign namespace. |
-| configs.ctlog.create | bool | `true` | Whether to create the ctlog namespace |
-| configs.ctlog.namespace | string | `"ctlog-system"` | Namespace for ctlog resources |
-| configs.ctlog.rolebindings | list | `["ctlog","ctlog-createtree","scaffolding-ctlog-createctconfig"]` | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. |
-| configs.fulcio.create | bool | `true` | Whether to create the fulcio namespace |
-| configs.fulcio.namespace | string | `"fulcio-system"` | Namespace for fulcio resources |
-| configs.fulcio.rolebindings | list | `["fulcio-createcerts","fulcio-server"]` | Names for rolebindings to add clusterroles to fulcio serviceaccounts. The names must match the serviceaccount names in the fulcio namespace. |
-| configs.fulcio.server.secret.name | string | `""` |  |
-| configs.fulcio.server.secret.password | string | `""` | password to decrypt the signing key |
-| configs.fulcio.server.secret.private_key | string | `""` | a PEM-encoded encrypted signing key |
-| configs.fulcio.server.secret.private_key_file | string | `""` | file containing a PEM-encoded encrypted signing key |
-| configs.fulcio.server.secret.public_key | string | `""` | signer public key |
-| configs.fulcio.server.secret.public_key_file | string | `""` | file containing signer public key |
-| configs.fulcio.server.secret.root_cert | string | `""` | fulcio root certificate authority (CA) |
-| configs.fulcio.server.secret.root_cert_file | string | `""` | file containing fulcio root certificate authority (CA) |
-| configs.rekor.create | bool | `true` | whether to create the rekor namespace |
-| configs.rekor.namespace | string | `"rekor-system"` | namespace for rekor resources |
-| configs.rekor.rolebindings | list | `["rekor-redis","rekor-server","scaffolding-rekor-createtree"]` | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. |
-| configs.rekor.signer | object | `{"secret":{"name":"","private_key":"","private_key_file":""}}` | Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log When this section is left out, scaffold.rekor creates the secret and key. |
-| configs.rekor.signer.secret.name | string | `""` | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. |
-| configs.rekor.signer.secret.private_key | string | `""` | Private encrypted signing key |
-| configs.rekor.signer.secret.private_key_file | string | `""` | File containing a private encrypted signing key |
-| configs.trillian.create | bool | `true` | whether to create the trillian namespace |
-| configs.trillian.namespace | string | `"trillian-system"` | namespace for trillian resources |
-| configs.trillian.rolebindings | list | `["trillian-logserver","trillian-logsigner","trillian-mysql"]` | names for rolebindings to add clusterroles to trillian serviceaccounts. The names must match the serviceaccount names in the trillian namespace. |
-| configs.tuf.create | bool | `true` | whether to create the tuf namespace |
-| configs.tuf.namespace | string | `"tuf-system"` | namespace for tuf resources |
-| configs.tuf.rolebindings | list | `["tuf","tuf-secret-copy-job"]` | names for rolebindings to add clusterroles to tuf serviceaccounts. The names must match the serviceaccount names in the tuf namespace. |
-| rbac.clusterrole | string | `"system:openshift:scc:anyuid"` | clusterrole to be added to sigstore component serviceaccounts. |
-| scaffold.copySecretJob.backoffLimit | int | `1000` |  |
-| scaffold.copySecretJob.enabled | bool | `true` |  |
-| scaffold.copySecretJob.imagePullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.copySecretJob.name | string | `"copy-secrets-job"` |  |
-| scaffold.copySecretJob.registry | string | `"registry.access.redhat.com"` |  |
-| scaffold.copySecretJob.repository | string | `"ubi9/ubi-minimal"` |  |
-| scaffold.copySecretJob.serviceaccount | string | `"tuf-secret-copy-job"` |  |
-| scaffold.copySecretJob.version | string | `"latest"` |  |
-| scaffold.ctlog.createcerts.fullnameOverride | string | `"ctlog-createcerts"` |  |
-| scaffold.ctlog.createctconfig.backoffLimit | int | `30` |  |
-| scaffold.ctlog.createctconfig.enabled | bool | `true` |  |
-| scaffold.ctlog.createctconfig.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.createctconfig.image.registry | string | `"quay.io"` |  |
-| scaffold.ctlog.createctconfig.image.repository | string | `"securesign/createctconfig"` |  |
-| scaffold.ctlog.createctconfig.image.version | string | `"v0.6.4"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.imagePullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.registry | string | `"registry.access.redhat.com"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.repository | string | `"ubi9/ubi-minimal"` |  |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.version | string | `"latest"` |  |
-| scaffold.ctlog.createtree.displayName | string | `"ctlog-tree"` |  |
-| scaffold.ctlog.createtree.fullnameOverride | string | `"ctlog-createtree"` |  |
-| scaffold.ctlog.createtree.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.createtree.image.registry | string | `"quay.io"` |  |
-| scaffold.ctlog.createtree.image.repository | string | `"securesign/createtree"` |  |
-| scaffold.ctlog.createtree.image.version | string | `"v0.6.4"` |  |
-| scaffold.ctlog.enabled | bool | `true` |  |
-| scaffold.ctlog.forceNamespace | string | `"ctlog-system"` |  |
-| scaffold.ctlog.fullnameOverride | string | `"ctlog"` |  |
-| scaffold.ctlog.namespace.create | bool | `false` |  |
-| scaffold.ctlog.namespace.name | string | `"ctlog-system"` |  |
-| scaffold.ctlog.server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.ctlog.server.image.registry | string | `"quay.io"` |  |
-| scaffold.ctlog.server.image.repository | string | `"securesign/ct_server"` |  |
-| scaffold.ctlog.server.image.version | string | `"v0.6.4"` |  |
-| scaffold.fulcio.createcerts.enabled | bool | `true` |  |
-| scaffold.fulcio.createcerts.fullnameOverride | string | `"fulcio-createcerts"` |  |
-| scaffold.fulcio.createcerts.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.fulcio.createcerts.image.registry | string | `"quay.io"` |  |
-| scaffold.fulcio.createcerts.image.repository | string | `"securesign/createcerts"` |  |
-| scaffold.fulcio.createcerts.image.version | string | `"v0.6.4"` |  |
-| scaffold.fulcio.ctlog.createctconfig.logPrefix | string | `"sigstorescaffolding"` |  |
-| scaffold.fulcio.ctlog.enabled | bool | `false` |  |
-| scaffold.fulcio.enabled | bool | `true` |  |
-| scaffold.fulcio.forceNamespace | string | `"fulcio-system"` |  |
-| scaffold.fulcio.namespace.create | bool | `false` |  |
-| scaffold.fulcio.namespace.name | string | `"fulcio-system"` |  |
-| scaffold.fulcio.server.fullnameOverride | string | `"fulcio-server"` |  |
-| scaffold.fulcio.server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.fulcio.server.image.registry | string | `"quay.io"` |  |
-| scaffold.fulcio.server.image.repository | string | `"securesign/fulcio"` |  |
-| scaffold.fulcio.server.image.version | string | `"v1.4.0"` |  |
-| scaffold.fulcio.server.ingress.http.annotations."route.openshift.io/termination" | string | `"edge"` |  |
-| scaffold.fulcio.server.ingress.http.className | string | `""` |  |
-| scaffold.fulcio.server.ingress.http.enabled | bool | `true` |  |
-| scaffold.fulcio.server.ingress.http.hosts[0].host | string | `"fulcio.BASE_DOMAIN"` |  |
-| scaffold.fulcio.server.ingress.http.hosts[0].path | string | `"/"` |  |
-| scaffold.fulcio.server.secret | string | `"fulcio-secret-rh"` |  |
-| scaffold.rekor.backfillredis.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.rekor.backfillredis.image.registry | string | `"quay.io"` |  |
-| scaffold.rekor.backfillredis.image.repository | string | `"securesign/backfill-redis"` |  |
-| scaffold.rekor.backfillredis.image.version | string | `"v1.2.2"` |  |
-| scaffold.rekor.createtree.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.rekor.createtree.image.registry | string | `"quay.io"` |  |
-| scaffold.rekor.createtree.image.repository | string | `"securesign/createtree"` |  |
-| scaffold.rekor.createtree.image.version | string | `"v0.6.4"` |  |
-| scaffold.rekor.enabled | bool | `true` |  |
-| scaffold.rekor.forceNamespace | string | `"rekor-system"` |  |
-| scaffold.rekor.fullnameOverride | string | `"rekor"` |  |
-| scaffold.rekor.namespace.create | bool | `false` |  |
-| scaffold.rekor.namespace.name | string | `"rekor-system"` |  |
-| scaffold.rekor.redis.fullnameOverride | string | `"rekor-redis"` |  |
-| scaffold.rekor.server.fullnameOverride | string | `"rekor-server"` |  |
-| scaffold.rekor.server.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.rekor.server.image.registry | string | `"quay.io"` |  |
-| scaffold.rekor.server.image.repository | string | `"securesign/rekor-server"` |  |
-| scaffold.rekor.server.image.version | string | `"v1.2.2"` |  |
-| scaffold.rekor.server.ingress.annotations."route.openshift.io/termination" | string | `"edge"` |  |
-| scaffold.rekor.server.ingress.className | string | `""` |  |
-| scaffold.rekor.server.ingress.hosts[0].host | string | `"rekor.BASE_DOMAIN"` |  |
-| scaffold.rekor.server.ingress.hosts[0].path | string | `"/"` |  |
-| scaffold.rekor.trillian.enabled | bool | `false` |  |
-| scaffold.trillian.createdb.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.createdb.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.createdb.image.repository | string | `"securesign/createdb"` |  |
-| scaffold.trillian.createdb.image.version | string | `"v0.6.4"` |  |
-| scaffold.trillian.enabled | bool | `true` |  |
-| scaffold.trillian.forceNamespace | string | `"trillian-system"` |  |
-| scaffold.trillian.fullnameOverride | string | `"trillian"` |  |
-| scaffold.trillian.initContainerImage.curl.imagePullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.initContainerImage.curl.registry | string | `"registry.access.redhat.com"` |  |
-| scaffold.trillian.initContainerImage.curl.repository | string | `"ubi9/ubi-minimal"` |  |
-| scaffold.trillian.initContainerImage.curl.version | string | `"latest"` |  |
-| scaffold.trillian.initContainerImage.netcat.registry | string | `"quay.io"` |  |
-| scaffold.trillian.initContainerImage.netcat.repository | string | `"securesign/netcat"` |  |
-| scaffold.trillian.initContainerImage.netcat.version | string | `"v1.0.0"` |  |
-| scaffold.trillian.logServer.fullnameOverride | string | `"trillian-logserver"` |  |
-| scaffold.trillian.logServer.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.logServer.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.logServer.image.repository | string | `"securesign/trillian_log_server"` |  |
-| scaffold.trillian.logServer.image.version | string | `"v1.2.2"` |  |
-| scaffold.trillian.logServer.name | string | `"trillian-logserver"` |  |
-| scaffold.trillian.logServer.portHTTP | int | `8090` |  |
-| scaffold.trillian.logServer.portRPC | int | `8091` |  |
-| scaffold.trillian.logSigner.fullnameOverride | string | `"trillian-logsigner"` |  |
-| scaffold.trillian.logSigner.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.logSigner.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.logSigner.image.repository | string | `"securesign/trillian_log_signer"` |  |
-| scaffold.trillian.logSigner.image.version | string | `"v1.2.2"` |  |
-| scaffold.trillian.logSigner.name | string | `"trillian-logsigner"` |  |
-| scaffold.trillian.mysql.args | list | `[]` |  |
-| scaffold.trillian.mysql.fullnameOverride | string | `"trillian-mysql"` |  |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.registry | string | `"quay.io"` |  |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository | string | `"securesign/cloudsqlproxy"` |  |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version | string | `"v0.6.4"` |  |
-| scaffold.trillian.mysql.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.mysql.image.registry | string | `"quay.io"` |  |
-| scaffold.trillian.mysql.image.repository | string | `"securesign/trillian-db"` |  |
-| scaffold.trillian.mysql.image.version | string | `"v1.5.2"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[0] | string | `"mysqladmin"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[1] | string | `"ping"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[2] | string | `"-h"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[3] | string | `"localhost"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[4] | string | `"-u"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[5] | string | `"$(MYSQL_USER)"` |  |
-| scaffold.trillian.mysql.livenessProbe.exec.command[6] | string | `"-p$(MYSQL_PASSWORD)"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[0] | string | `"mysqladmin"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[1] | string | `"ping"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[2] | string | `"-h"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[3] | string | `"localhost"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[4] | string | `"-u"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[5] | string | `"$(MYSQL_USER)"` |  |
-| scaffold.trillian.mysql.readinessProbe.exec.command[6] | string | `"-p$(MYSQL_PASSWORD)"` |  |
-| scaffold.trillian.mysql.securityContext.fsGroup | int | `0` |  |
-| scaffold.trillian.namespace.create | bool | `false` |  |
-| scaffold.trillian.namespace.name | string | `"trillian-system"` |  |
-| scaffold.trillian.redis.args[0] | string | `"/usr/bin/run-redis"` |  |
-| scaffold.trillian.redis.args[1] | string | `"--bind"` |  |
-| scaffold.trillian.redis.args[2] | string | `"0.0.0.0"` |  |
-| scaffold.trillian.redis.args[3] | string | `"--appendonly"` |  |
-| scaffold.trillian.redis.args[4] | string | `"yes"` |  |
-| scaffold.trillian.redis.image.pullPolicy | string | `"IfNotPresent"` |  |
-| scaffold.trillian.redis.image.registry | string | `"registry.redhat.io"` |  |
-| scaffold.trillian.redis.image.repository | string | `"rhel9/redis-6"` |  |
-| scaffold.trillian.redis.image.version | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |  |
-| scaffold.tsa.enabled | bool | `false` |  |
-| scaffold.tsa.forceNamespace | string | `"tsa-sytem"` |  |
-| scaffold.tsa.namespace.create | bool | `false` |  |
-| scaffold.tsa.namespace.name | string | `"tsa-system"` |  |
-| scaffold.tsa.server.fullnameOverride | string | `"tsa-server"` |  |
-| scaffold.tuf.deployment.registry | string | `"quay.io"` |  |
-| scaffold.tuf.deployment.repository | string | `"securesign/tuf/server"` |  |
-| scaffold.tuf.deployment.version | string | `"latest"` |  |
-| scaffold.tuf.enabled | bool | `true` |  |
-| scaffold.tuf.forceNamespace | string | `"tuf-system"` |  |
-| scaffold.tuf.fullnameOverride | string | `"tuf"` |  |
-| scaffold.tuf.ingress.annotations."route.openshift.io/termination" | string | `"edge"` |  |
-| scaffold.tuf.ingress.className | string | `""` |  |
-| scaffold.tuf.ingress.http.hosts[0].host | string | `"tuf.BASE_DOMAIN"` |  |
-| scaffold.tuf.ingress.http.hosts[0].path | string | `"/"` |  |
-| scaffold.tuf.namespace.create | bool | `false` |  |
-| scaffold.tuf.namespace.name | string | `"tuf-system"` |  |
-| scaffold.tuf.secrets.ctlog.name | string | `"ctlog-public-key"` |  |
-| scaffold.tuf.secrets.ctlog.path | string | `"ctlog-pubkey"` |  |
-| scaffold.tuf.secrets.fulcio.name | string | `"fulcio-secret-rh"` |  |
-| scaffold.tuf.secrets.fulcio.path | string | `"fulcio-cert"` |  |
-| scaffold.tuf.secrets.rekor.name | string | `"rekor-public-key"` |  |
-| scaffold.tuf.secrets.rekor.path | string | `"rekor-pubkey"` |  |
+| Key | Description | Type | Default |
+|-----|-------------|------|---------|
+| configs.cosign.BASE_DOMAIN | DNS name to be used to generate environment variables for cosign commands. Can be obtained from OpenShift with 'oc get dnsrecords -o yaml -n openshift-ingress-operator' | string | `"BASE_DOMAIN"` |
+| configs.cosign.create | whether to create the cosign namespace | bool | `true` |
+| configs.cosign.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` |
+| configs.cosign.name | Name of deployment | string | `"cosign"` |
+| configs.cosign.namespace | namespace for cosign resources | string | `"cosign"` |
+| configs.cosign.rolebindings | names for rolebindings to add clusterroles to cosign serviceaccounts. The names must match the serviceaccount names in the cosign namespace. | list | `["cosign"]` |
+| configs.ctlog.create | Whether to create the ctlog namespace | bool | `true` |
+| configs.ctlog.namespace | Namespace for ctlog resources | string | `"ctlog-system"` |
+| configs.ctlog.rolebindings | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. | list | `["ctlog","ctlog-createtree","scaffolding-ctlog-createctconfig"]` |
+| configs.fulcio.create | Whether to create the fulcio namespace | bool | `true` |
+| configs.fulcio.namespace | Namespace for fulcio resources | string | `"fulcio-system"` |
+| configs.fulcio.rolebindings | Names for rolebindings to add clusterroles to fulcio serviceaccounts. The names must match the serviceaccount names in the fulcio namespace. | list | `["fulcio-createcerts","fulcio-server"]` |
+| configs.fulcio.server.secret.name |  | string | `""` |
+| configs.fulcio.server.secret.password | password to decrypt the signing key | string | `""` |
+| configs.fulcio.server.secret.private_key | a PEM-encoded encrypted signing key | string | `""` |
+| configs.fulcio.server.secret.private_key_file | file containing a PEM-encoded encrypted signing key | string | `""` |
+| configs.fulcio.server.secret.public_key | signer public key | string | `""` |
+| configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
+| configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
+| configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
+| configs.rekor.create | whether to create the rekor namespace | bool | `true` |
+| configs.rekor.namespace | namespace for rekor resources | string | `"rekor-system"` |
+| configs.rekor.rolebindings | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. | list | `["rekor-redis","rekor-server","scaffolding-rekor-createtree"]` |
+| configs.rekor.signer | Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log When this section is left out, scaffold.rekor creates the secret and key. | object | `{"secret":{"name":"","private_key":"","private_key_file":""}}` |
+| configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
+| configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
+| configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
+| configs.trillian.create | whether to create the trillian namespace | bool | `true` |
+| configs.trillian.namespace | namespace for trillian resources | string | `"trillian-system"` |
+| configs.trillian.rolebindings | names for rolebindings to add clusterroles to trillian serviceaccounts. The names must match the serviceaccount names in the trillian namespace. | list | `["trillian-logserver","trillian-logsigner","trillian-mysql"]` |
+| configs.tuf.create | whether to create the tuf namespace | bool | `true` |
+| configs.tuf.namespace | namespace for tuf resources | string | `"tuf-system"` |
+| configs.tuf.rolebindings | names for rolebindings to add clusterroles to tuf serviceaccounts. The names must match the serviceaccount names in the tuf namespace. | list | `["tuf","tuf-secret-copy-job"]` |
+| rbac.clusterrole | clusterrole to be added to sigstore component serviceaccounts. | string | `"system:openshift:scc:anyuid"` |
+| scaffold.copySecretJob.backoffLimit |  | int | `1000` |
+| scaffold.copySecretJob.enabled |  | bool | `true` |
+| scaffold.copySecretJob.imagePullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.copySecretJob.name |  | string | `"copy-secrets-job"` |
+| scaffold.copySecretJob.registry |  | string | `"registry.access.redhat.com"` |
+| scaffold.copySecretJob.repository |  | string | `"ubi9/ubi-minimal"` |
+| scaffold.copySecretJob.serviceaccount |  | string | `"tuf-secret-copy-job"` |
+| scaffold.copySecretJob.version |  | string | `"latest"` |
+| scaffold.ctlog.createcerts.fullnameOverride |  | string | `"ctlog-createcerts"` |
+| scaffold.ctlog.createctconfig.backoffLimit |  | int | `30` |
+| scaffold.ctlog.createctconfig.enabled |  | bool | `true` |
+| scaffold.ctlog.createctconfig.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.ctlog.createctconfig.image.registry |  | string | `"quay.io"` |
+| scaffold.ctlog.createctconfig.image.repository |  | string | `"securesign/createctconfig"` |
+| scaffold.ctlog.createctconfig.image.version |  | string | `"v0.6.4"` |
+| scaffold.ctlog.createctconfig.initContainerImage.curl.imagePullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.ctlog.createctconfig.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
+| scaffold.ctlog.createctconfig.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
+| scaffold.ctlog.createctconfig.initContainerImage.curl.version |  | string | `"latest"` |
+| scaffold.ctlog.createtree.displayName |  | string | `"ctlog-tree"` |
+| scaffold.ctlog.createtree.fullnameOverride |  | string | `"ctlog-createtree"` |
+| scaffold.ctlog.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.ctlog.createtree.image.registry |  | string | `"quay.io"` |
+| scaffold.ctlog.createtree.image.repository |  | string | `"securesign/createtree"` |
+| scaffold.ctlog.createtree.image.version |  | string | `"v0.6.4"` |
+| scaffold.ctlog.enabled |  | bool | `true` |
+| scaffold.ctlog.forceNamespace |  | string | `"ctlog-system"` |
+| scaffold.ctlog.fullnameOverride |  | string | `"ctlog"` |
+| scaffold.ctlog.namespace.create |  | bool | `false` |
+| scaffold.ctlog.namespace.name |  | string | `"ctlog-system"` |
+| scaffold.ctlog.server.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.ctlog.server.image.registry |  | string | `"quay.io"` |
+| scaffold.ctlog.server.image.repository |  | string | `"securesign/ct_server"` |
+| scaffold.ctlog.server.image.version |  | string | `"v0.6.4"` |
+| scaffold.fulcio.createcerts.enabled |  | bool | `true` |
+| scaffold.fulcio.createcerts.fullnameOverride |  | string | `"fulcio-createcerts"` |
+| scaffold.fulcio.createcerts.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.fulcio.createcerts.image.registry |  | string | `"quay.io"` |
+| scaffold.fulcio.createcerts.image.repository |  | string | `"securesign/createcerts"` |
+| scaffold.fulcio.createcerts.image.version |  | string | `"v0.6.4"` |
+| scaffold.fulcio.ctlog.createctconfig.logPrefix |  | string | `"sigstorescaffolding"` |
+| scaffold.fulcio.ctlog.enabled |  | bool | `false` |
+| scaffold.fulcio.enabled |  | bool | `true` |
+| scaffold.fulcio.forceNamespace |  | string | `"fulcio-system"` |
+| scaffold.fulcio.namespace.create |  | bool | `false` |
+| scaffold.fulcio.namespace.name |  | string | `"fulcio-system"` |
+| scaffold.fulcio.server.fullnameOverride |  | string | `"fulcio-server"` |
+| scaffold.fulcio.server.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.fulcio.server.image.registry |  | string | `"quay.io"` |
+| scaffold.fulcio.server.image.repository |  | string | `"securesign/fulcio"` |
+| scaffold.fulcio.server.image.version |  | string | `"v1.4.0"` |
+| scaffold.fulcio.server.ingress.http.annotations."route.openshift.io/termination" |  | string | `"edge"` |
+| scaffold.fulcio.server.ingress.http.className |  | string | `""` |
+| scaffold.fulcio.server.ingress.http.enabled |  | bool | `true` |
+| scaffold.fulcio.server.ingress.http.hosts[0].host |  | string | `"fulcio.BASE_DOMAIN"` |
+| scaffold.fulcio.server.ingress.http.hosts[0].path |  | string | `"/"` |
+| scaffold.fulcio.server.secret |  | string | `"fulcio-secret-rh"` |
+| scaffold.rekor.backfillredis.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.rekor.backfillredis.image.registry |  | string | `"quay.io"` |
+| scaffold.rekor.backfillredis.image.repository |  | string | `"securesign/backfill-redis"` |
+| scaffold.rekor.backfillredis.image.version |  | string | `"v1.2.2"` |
+| scaffold.rekor.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.rekor.createtree.image.registry |  | string | `"quay.io"` |
+| scaffold.rekor.createtree.image.repository |  | string | `"securesign/createtree"` |
+| scaffold.rekor.createtree.image.version |  | string | `"v0.6.4"` |
+| scaffold.rekor.enabled |  | bool | `true` |
+| scaffold.rekor.forceNamespace |  | string | `"rekor-system"` |
+| scaffold.rekor.fullnameOverride |  | string | `"rekor"` |
+| scaffold.rekor.namespace.create |  | bool | `false` |
+| scaffold.rekor.namespace.name |  | string | `"rekor-system"` |
+| scaffold.rekor.redis.fullnameOverride |  | string | `"rekor-redis"` |
+| scaffold.rekor.server.fullnameOverride |  | string | `"rekor-server"` |
+| scaffold.rekor.server.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.rekor.server.image.registry |  | string | `"quay.io"` |
+| scaffold.rekor.server.image.repository |  | string | `"securesign/rekor-server"` |
+| scaffold.rekor.server.image.version |  | string | `"v1.2.2"` |
+| scaffold.rekor.server.ingress.annotations."route.openshift.io/termination" |  | string | `"edge"` |
+| scaffold.rekor.server.ingress.className |  | string | `""` |
+| scaffold.rekor.server.ingress.hosts[0].host |  | string | `"rekor.BASE_DOMAIN"` |
+| scaffold.rekor.server.ingress.hosts[0].path |  | string | `"/"` |
+| scaffold.rekor.trillian.enabled |  | bool | `false` |
+| scaffold.trillian.createdb.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.trillian.createdb.image.registry |  | string | `"quay.io"` |
+| scaffold.trillian.createdb.image.repository |  | string | `"securesign/createdb"` |
+| scaffold.trillian.createdb.image.version |  | string | `"v0.6.4"` |
+| scaffold.trillian.enabled |  | bool | `true` |
+| scaffold.trillian.forceNamespace |  | string | `"trillian-system"` |
+| scaffold.trillian.fullnameOverride |  | string | `"trillian"` |
+| scaffold.trillian.initContainerImage.curl.imagePullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.trillian.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
+| scaffold.trillian.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
+| scaffold.trillian.initContainerImage.curl.version |  | string | `"latest"` |
+| scaffold.trillian.initContainerImage.netcat.registry |  | string | `"quay.io"` |
+| scaffold.trillian.initContainerImage.netcat.repository |  | string | `"securesign/netcat"` |
+| scaffold.trillian.initContainerImage.netcat.version |  | string | `"v1.0.0"` |
+| scaffold.trillian.logServer.fullnameOverride |  | string | `"trillian-logserver"` |
+| scaffold.trillian.logServer.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.trillian.logServer.image.registry |  | string | `"quay.io"` |
+| scaffold.trillian.logServer.image.repository |  | string | `"securesign/trillian_log_server"` |
+| scaffold.trillian.logServer.image.version |  | string | `"v1.2.2"` |
+| scaffold.trillian.logServer.name |  | string | `"trillian-logserver"` |
+| scaffold.trillian.logServer.portHTTP |  | int | `8090` |
+| scaffold.trillian.logServer.portRPC |  | int | `8091` |
+| scaffold.trillian.logSigner.fullnameOverride |  | string | `"trillian-logsigner"` |
+| scaffold.trillian.logSigner.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.trillian.logSigner.image.registry |  | string | `"quay.io"` |
+| scaffold.trillian.logSigner.image.repository |  | string | `"securesign/trillian_log_signer"` |
+| scaffold.trillian.logSigner.image.version |  | string | `"v1.2.2"` |
+| scaffold.trillian.logSigner.name |  | string | `"trillian-logsigner"` |
+| scaffold.trillian.mysql.args |  | list | `[]` |
+| scaffold.trillian.mysql.fullnameOverride |  | string | `"trillian-mysql"` |
+| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.registry |  | string | `"quay.io"` |
+| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository |  | string | `"securesign/cloudsqlproxy"` |
+| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version |  | string | `"v0.6.4"` |
+| scaffold.trillian.mysql.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.trillian.mysql.image.registry |  | string | `"quay.io"` |
+| scaffold.trillian.mysql.image.repository |  | string | `"securesign/trillian-db"` |
+| scaffold.trillian.mysql.image.version |  | string | `"v1.5.2"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[0] |  | string | `"mysqladmin"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[1] |  | string | `"ping"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[2] |  | string | `"-h"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[3] |  | string | `"localhost"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[4] |  | string | `"-u"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[5] |  | string | `"$(MYSQL_USER)"` |
+| scaffold.trillian.mysql.livenessProbe.exec.command[6] |  | string | `"-p$(MYSQL_PASSWORD)"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[0] |  | string | `"mysqladmin"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[1] |  | string | `"ping"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[2] |  | string | `"-h"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[3] |  | string | `"localhost"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[4] |  | string | `"-u"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[5] |  | string | `"$(MYSQL_USER)"` |
+| scaffold.trillian.mysql.readinessProbe.exec.command[6] |  | string | `"-p$(MYSQL_PASSWORD)"` |
+| scaffold.trillian.mysql.securityContext.fsGroup |  | int | `0` |
+| scaffold.trillian.namespace.create |  | bool | `false` |
+| scaffold.trillian.namespace.name |  | string | `"trillian-system"` |
+| scaffold.trillian.redis.args[0] |  | string | `"/usr/bin/run-redis"` |
+| scaffold.trillian.redis.args[1] |  | string | `"--bind"` |
+| scaffold.trillian.redis.args[2] |  | string | `"0.0.0.0"` |
+| scaffold.trillian.redis.args[3] |  | string | `"--appendonly"` |
+| scaffold.trillian.redis.args[4] |  | string | `"yes"` |
+| scaffold.trillian.redis.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.trillian.redis.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.trillian.redis.image.repository |  | string | `"rhel9/redis-6"` |
+| scaffold.trillian.redis.image.version |  | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |
+| scaffold.tsa.enabled |  | bool | `false` |
+| scaffold.tsa.forceNamespace |  | string | `"tsa-sytem"` |
+| scaffold.tsa.namespace.create |  | bool | `false` |
+| scaffold.tsa.namespace.name |  | string | `"tsa-system"` |
+| scaffold.tsa.server.fullnameOverride |  | string | `"tsa-server"` |
+| scaffold.tuf.deployment.registry |  | string | `"quay.io"` |
+| scaffold.tuf.deployment.repository |  | string | `"securesign/tuf/server"` |
+| scaffold.tuf.deployment.version |  | string | `"latest"` |
+| scaffold.tuf.enabled |  | bool | `true` |
+| scaffold.tuf.forceNamespace |  | string | `"tuf-system"` |
+| scaffold.tuf.fullnameOverride |  | string | `"tuf"` |
+| scaffold.tuf.ingress.annotations."route.openshift.io/termination" |  | string | `"edge"` |
+| scaffold.tuf.ingress.className |  | string | `""` |
+| scaffold.tuf.ingress.http.hosts[0].host |  | string | `"tuf.BASE_DOMAIN"` |
+| scaffold.tuf.ingress.http.hosts[0].path |  | string | `"/"` |
+| scaffold.tuf.namespace.create |  | bool | `false` |
+| scaffold.tuf.namespace.name |  | string | `"tuf-system"` |
+| scaffold.tuf.secrets.ctlog.name |  | string | `"ctlog-public-key"` |
+| scaffold.tuf.secrets.ctlog.path |  | string | `"ctlog-pubkey"` |
+| scaffold.tuf.secrets.fulcio.name |  | string | `"fulcio-secret-rh"` |
+| scaffold.tuf.secrets.fulcio.path |  | string | `"fulcio-cert"` |
+| scaffold.tuf.secrets.rekor.name |  | string | `"rekor-public-key"` |
+| scaffold.tuf.secrets.rekor.path |  | string | `"rekor-pubkey"` |
 
