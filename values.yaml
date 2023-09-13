@@ -23,6 +23,13 @@ configs:
         private_key_file: ""
         root_cert: ""
         root_cert_file: ""
+    clusterMonitoring: 
+      enabled: true
+      name: fulcio
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
 
   rekor:
     namespace: rekor-system
@@ -36,6 +43,13 @@ configs:
         name: ""
         private_key: ""
         private_key_file: ""
+    clusterMonitoring: 
+      enabled: true
+      name: rekor
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
 
   trillian:
     namespace: trillian-system
