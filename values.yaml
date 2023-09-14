@@ -23,9 +23,8 @@ configs:
         private_key_file: ""
         root_cert: ""
         root_cert_file: ""
-    clusterMonitoring: 
+    clusterMonitoring:
       enabled: true
-      name: fulcio
       endpoints:
         - interval: 30s
           port: 2112-tcp
@@ -43,9 +42,8 @@ configs:
         name: ""
         private_key: ""
         private_key_file: ""
-    clusterMonitoring: 
+    clusterMonitoring:
       enabled: true
-      name: rekor
       endpoints:
         - interval: 30s
           port: 2112-tcp

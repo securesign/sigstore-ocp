@@ -36,8 +36,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: {{ $config.clusterMonitoring.name }}   
-  name: {{ $config.clusterMonitoring.name }}-server-monitor
+    app.kubernetes.io/name: {{ $config.namespace }}   
+  name: {{ $config.namespace }}
   namespace: {{ $config.namespace }}
 spec:
   endpoints:
