@@ -34,7 +34,7 @@ spec:
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
       "id": 2,
-      "iteration": 1694776151233,
+      "iteration": 1694788768926,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -62,6 +62,7 @@ spec:
           "fieldConfig": {
             "defaults": {
               "custom": {
+                "align": "auto",
                 "displayMode": "auto",
                 "filterable": true,
                 "inspect": false
@@ -943,6 +944,220 @@ spec:
           "id": 15,
           "title": "Database Health",
           "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "gKa5vTiSk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 41
+          },
+          "id": 29,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "/.*/",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "8.5.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "gKa5vTiSk"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SHOW GLOBAL STATUS LIKE 'Uptime';",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "timeColumn": "time",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "title": "Database Uptime",
+          "transformations": [
+            {
+              "id": "convertFieldType",
+              "options": {
+                "conversions": [
+                  {
+                    "destinationType": "number",
+                    "targetField": "Value"
+                  }
+                ],
+                "fields": {}
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "Hours",
+                "binary": {
+                  "left": "Value",
+                  "operator": "/",
+                  "reducer": "sum",
+                  "right": "3600"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "include": [
+                    "Value"
+                  ],
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Value": true,
+                  "Value / 60": false,
+                  "Variable_name": true
+                },
+                "indexByName": {
+                  "Hours": 1,
+                  "Value": 2,
+                  "Variable_name": 0
+                },
+                "renameByName": {}
+              }
+            }
+          ],
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "gKa5vTiSk"
+          },
+          "description": "Current size of data base in (MB)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 41
+          },
+          "id": 31,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "8.5.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "gKa5vTiSk"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT table_schema AS 'Database',\nROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'Size (MB)'\nFROM information_schema.TABLES\nWHERE table_schema = 'trillian'\nGROUP BY table_schema;",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "timeColumn": "time",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "title": "Database Size (MB)",
+          "type": "stat"
         }
       ],
       "refresh": false,
