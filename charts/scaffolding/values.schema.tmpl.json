@@ -82,6 +82,28 @@
                             },
                             "type": "array"
                         },
+                        "clusterMonitoring": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoints": {
+                                    "type": "array",
+                                    "items": {
+                                        "interval": {
+                                            "type": "string"
+                                         },
+                                        "port": {
+                                            "type": "string"
+                                         },
+                                        "scheme": {
+                                            "type": "string"
+                                         }
+                                     }
+                                }
+                            }
+                        },
                         "server": {
                             "properties": {
                                 "secret": {
@@ -132,6 +154,28 @@
                                 "type": "string"
                             },
                             "type": "array"
+                        },
+                        "clusterMonitoring": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoints": {
+                                    "type": "array",
+                                    "items": {
+                                        "interval": {
+                                            "type": "string"
+                                         },
+                                        "port": {
+                                            "type": "string"
+                                         },
+                                        "scheme": {
+                                            "type": "string"
+                                         }
+                                     }
+                                }
+                            }
                         },
                         "signer": {
                             "properties": {

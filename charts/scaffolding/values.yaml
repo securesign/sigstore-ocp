@@ -11,6 +11,37 @@ configs:
       - ctlog-createtree
       - scaffolding-ctlog-createctconfig
 
+  rekor:
+    # -- namespace for rekor resources
+    namespace: rekor-system
+    # -- whether to create the rekor namespace
+    create: true
+    # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
+    # The names must match the serviceaccount names in the rekor namespace.
+    rolebindings:
+      - rekor-redis
+      - rekor-server
+      - scaffolding-rekor-createtree
+    # -- Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log
+    # When this section is left out, scaffold.rekor creates the secret and key.
+    signer:
+      secret:
+        # -- Name of the secret to create with the private key data. This name must match the value in
+        # scaffold.rekor.server.signer.signerFileSecretOptions.secretName.
+        name: ""
+        # -- Private encrypted signing key
+        private_key: ""
+        # -- File containing a private encrypted signing key
+        private_key_file: ""
+    #  -- With ClusterMonitoring enabled, a ServiceMonitor and RBAC is created. This adds a  metrics target from rekor-server
+    #  in the openshift-monitoring namespace scraped by prometheus along with other cluster-monitoring targets.
+    clusterMonitoring:
+      enabled: true
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
+
   fulcio:
     # -- Namespace for fulcio resources
     namespace: fulcio-system
@@ -43,29 +74,14 @@ configs:
         root_cert: ""
         # -- file containing fulcio root certificate authority (CA)
         root_cert_file: ""
-
-  rekor:
-    # -- namespace for rekor resources
-    namespace: rekor-system
-    # -- whether to create the rekor namespace
-    create: true
-    # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
-    # The names must match the serviceaccount names in the rekor namespace.
-    rolebindings:
-      - rekor-redis
-      - rekor-server
-      - scaffolding-rekor-createtree
-    # -- Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log
-    # When this section is left out, scaffold.rekor creates the secret and key.
-    signer:
-      secret:
-        # -- Name of the secret to create with the private key data. This name must match the value in
-        # scaffold.rekor.server.signer.signerFileSecretOptions.secretName.
-        name: ""
-        # -- Private encrypted signing key
-        private_key: ""
-        # -- File containing a private encrypted signing key
-        private_key_file: ""
+    #  -- With ClusterMonitoring enabled, a ServiceMonitor and RBAC is created. This adds a  metrics target from fulcio-server
+    #  in the openshift-monitoring namespace scraped by prometheus along with other cluster-monitoring targets.
+    clusterMonitoring:
+      enabled: true
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
 
   trillian:
     # -- namespace for trillian resources

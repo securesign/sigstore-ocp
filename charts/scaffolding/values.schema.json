@@ -62,6 +62,28 @@
                 },
                 "fulcio": {
                     "properties": {
+                        "clusterMonitoring": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoints": {
+                                    "items": {
+                                        "interval": {
+                                            "type": "string"
+                                        },
+                                        "port": {
+                                            "type": "string"
+                                        },
+                                        "scheme": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "type": "object"
+                        },
                         "create": {
                             "type": "boolean"
                         },
@@ -113,6 +135,28 @@
                 },
                 "rekor": {
                     "properties": {
+                        "clusterMonitoring": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoints": {
+                                    "items": {
+                                        "interval": {
+                                            "type": "string"
+                                        },
+                                        "port": {
+                                            "type": "string"
+                                        },
+                                        "scheme": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "type": "object"
+                        },
                         "create": {
                             "type": "boolean"
                         },

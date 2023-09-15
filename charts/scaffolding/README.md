@@ -97,6 +97,10 @@ Kubernetes: `>= 1.19.0-0`
 | configs.ctlog.create | Whether to create the ctlog namespace | bool | `true` |
 | configs.ctlog.namespace | Namespace for ctlog resources | string | `"ctlog-system"` |
 | configs.ctlog.rolebindings | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. | list | `["ctlog","ctlog-createtree","scaffolding-ctlog-createctconfig"]` |
+| configs.fulcio.clusterMonitoring.enabled |  | bool | `true` |
+| configs.fulcio.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
+| configs.fulcio.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
+| configs.fulcio.clusterMonitoring.endpoints[0].scheme |  | string | `"http"` |
 | configs.fulcio.create | Whether to create the fulcio namespace | bool | `true` |
 | configs.fulcio.namespace | Namespace for fulcio resources | string | `"fulcio-system"` |
 | configs.fulcio.rolebindings | Names for rolebindings to add clusterroles to fulcio serviceaccounts. The names must match the serviceaccount names in the fulcio namespace. | list | `["fulcio-createcerts","fulcio-server"]` |
@@ -108,6 +112,10 @@ Kubernetes: `>= 1.19.0-0`
 | configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
 | configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
 | configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
+| configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
+| configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
+| configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
+| configs.rekor.clusterMonitoring.endpoints[0].scheme |  | string | `"http"` |
 | configs.rekor.create | whether to create the rekor namespace | bool | `true` |
 | configs.rekor.namespace | namespace for rekor resources | string | `"rekor-system"` |
 | configs.rekor.rolebindings | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. | list | `["rekor-redis","rekor-server","scaffolding-rekor-createtree"]` |
