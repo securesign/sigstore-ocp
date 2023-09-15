@@ -18,12 +18,20 @@ oc apply --kustomize keycloak/resources
 # wait until keycloak-system pods are healthy/running
 ```
 
-2. Create the fulcio signing keys & root cert, and then a secret in the fulcio-system namespace. Replace <PASSWORD> in the `oc` command to match the password for decrypting the signing key.
+2. Create the fulcio signing keys & root cert, and then a secret in the fulcio-system namespace. Replace <PASSWORD> in the `oc` command to match the password for decrypting the signing key. The script creates the keys in `./keys-cert` folder.
 
 ```shell
 oc create ns fulcio-system
 ./fulcio-create-root-ca-openssl.sh
 oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem  --from-literal=password=<PASSWORD> --dry-run=client -o yaml | oc apply -f-
+```
+
+3. Create the rekor signing keys, and then a secret in the rekor-system namespace. The script creates the key in `./keys-cert` folder.
+
+```shell
+oc create ns rekor-system
+./rekor-create-signer-key.sh
+oc -n rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem | oc apply -f-
 ```
 
 3. Substitute base domain found above for `<OPENSHIFT_BASE_DOMAIN> in [examples/values-sigstore-openshift.yaml](./examples/values-sigstore-openshift.yaml)
