@@ -39,6 +39,7 @@ oc -n rekor-system create secret generic rekor-private-key --from-file=private=.
 4.  Run the following:
 
 ```shell
+cd charts/scaffolding
 helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f examples/values-sigstore-openshift.yaml
 ```
 

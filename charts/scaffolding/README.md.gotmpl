@@ -66,6 +66,7 @@ When logged in as an elevated OpenShift user, execute the following to install t
 customized values file:
 
 ```shell
+cd charts/scaffolding
 helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_file>
 ```
 
