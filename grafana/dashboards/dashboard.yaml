@@ -34,7 +34,7 @@ spec:
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
       "id": 2,
-      "iteration": 1694788768926,
+      "iteration": 1695027779133,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -948,7 +948,7 @@ spec:
         {
           "datasource": {
             "type": "mysql",
-            "uid": "gKa5vTiSk"
+            "uid": "P211906C1C32DB77E"
           },
           "fieldConfig": {
             "defaults": {
@@ -994,7 +994,7 @@ spec:
             {
               "datasource": {
                 "type": "mysql",
-                "uid": "gKa5vTiSk"
+                "uid": "P211906C1C32DB77E"
               },
               "format": "table",
               "group": [],
@@ -1023,61 +1023,13 @@ spec:
             }
           ],
           "title": "Database Uptime",
-          "transformations": [
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Value"
-                  }
-                ],
-                "fields": {}
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Hours",
-                "binary": {
-                  "left": "Value",
-                  "operator": "/",
-                  "reducer": "sum",
-                  "right": "3600"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "include": [
-                    "Value"
-                  ],
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Value": true,
-                  "Value / 60": false,
-                  "Variable_name": true
-                },
-                "indexByName": {
-                  "Hours": 1,
-                  "Value": 2,
-                  "Variable_name": 0
-                },
-                "renameByName": {}
-              }
-            }
-          ],
+          "transformations": [],
           "type": "stat"
         },
         {
           "datasource": {
             "type": "mysql",
-            "uid": "gKa5vTiSk"
+            "uid": "P211906C1C32DB77E"
           },
           "description": "Current size of data base in (MB)",
           "fieldConfig": {
@@ -1128,13 +1080,13 @@ spec:
             {
               "datasource": {
                 "type": "mysql",
-                "uid": "gKa5vTiSk"
+                "uid": "P211906C1C32DB77E"
               },
               "format": "table",
               "group": [],
               "metricColumn": "none",
               "rawQuery": true,
-              "rawSql": "SELECT table_schema AS 'Database',\nROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'Size (MB)'\nFROM information_schema.TABLES\nWHERE table_schema = 'trillian'\nGROUP BY table_schema;",
+              "rawSql": "SELECT \n    table_schema AS `Database`, \n    round(SUM(data_length + index_length) / 1024 / 1024, 2) `Size (MB)` \nFROM \n    information_schema.TABLES \nWHERE \n    table_schema = \"trillian\";",
               "refId": "A",
               "select": [
                 [
