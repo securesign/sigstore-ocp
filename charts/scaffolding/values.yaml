@@ -181,7 +181,7 @@ scaffold:
       name: fulcio-system
       create: false
     createcerts:
-      enabled: true
+      enabled: false
       fullnameOverride: fulcio-createcerts
       image:
         registry: quay.io

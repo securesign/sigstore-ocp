@@ -164,7 +164,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.server.image.registry |  | string | `"quay.io"` |
 | scaffold.ctlog.server.image.repository |  | string | `"securesign/ct_server"` |
 | scaffold.ctlog.server.image.version |  | string | `"v0.6.4"` |
-| scaffold.fulcio.createcerts.enabled |  | bool | `true` |
+| scaffold.fulcio.createcerts.enabled |  | bool | `false` |
 | scaffold.fulcio.createcerts.fullnameOverride |  | string | `"fulcio-createcerts"` |
 | scaffold.fulcio.createcerts.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.fulcio.createcerts.image.registry |  | string | `"quay.io"` |
