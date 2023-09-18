@@ -34,7 +34,7 @@ spec:
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
       "id": 2,
-      "iteration": 1695027779133,
+      "iteration": 1695031232719,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -964,7 +964,8 @@ spec:
                     "value": null
                   }
                 ]
-              }
+              },
+              "unit": "dthms"
             },
             "overrides": []
           },
@@ -978,7 +979,7 @@ spec:
           "options": {
             "colorMode": "value",
             "graphMode": "area",
-            "justifyMode": "auto",
+            "justifyMode": "center",
             "orientation": "auto",
             "reduceOptions": {
               "calcs": [
@@ -1023,7 +1024,25 @@ spec:
             }
           ],
           "title": "Database Uptime",
-          "transformations": [],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "TotalMins": true,
+                  "Value": false,
+                  "Variable_name": true
+                },
+                "indexByName": {
+                  "Hours": 1,
+                  "Minutes": 3,
+                  "Value": 2,
+                  "Variable_name": 0
+                },
+                "renameByName": {}
+              }
+            }
+          ],
           "type": "stat"
         },
         {
