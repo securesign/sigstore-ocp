@@ -2,7 +2,7 @@
 # either from files with path relative to this file, or by pasting contents below.
 # It assumes the secret 'rekor-private-key' exists in rekor-system namespace.
 # For fulcio cert & key requirements, see ../requirements-keys-certs.md
-# Note: User must substitute for $OPENSHIFT_BASE_DOMAIN below.
+# Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
 # Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
 ---
 configs:
@@ -35,7 +35,7 @@ configs:
           paste contents here
           -----END CERTIFICATE-----
   cosign:
-    BASE_DOMAIN: apps.$OPENSHIFT_BASE_DOMAIN
+    BASE_DOMAIN: $OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
@@ -44,26 +44,26 @@ scaffold:
       ingress:
         http:
           hosts:
-            - host: fulcio.apps.$OPENSHIFT_BASE_DOMAIN
+            - host: fulcio.$OPENSHIFT_APPS_SUBDOMAIN
               path: /
     config:
       contents:
         OIDCIssuers:
-          # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
-          ? https://keycloak-keycloak-system.apps.$OPENSHIFT_BASE_DOMAIN/auth/realms/sigstore
-          : IssuerURL: https://keycloak-keycloak-system.apps.$OPENSHIFT_BASE_DOMAIN/auth/realms/sigstore
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
             ClientID: sigstore
             Type: email
   rekor:
     server:
       ingress:
         hosts:
-          - host: rekor.apps.$OPENSHIFT_BASE_DOMAIN
+          - host: rekor.$OPENSHIFT_APPS_SUBDOMAIN
             path: /
   tuf:
     ingress:
       http:
         hosts:
-          - host: tuf.apps.$OPENSHIFT_BASE_DOMAIN
+          - host: tuf.$OPENSHIFT_APPS_SUBDOMAIN
             path: /
 

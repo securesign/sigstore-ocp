@@ -56,10 +56,10 @@ to curate the deployment of the chart:
 ### Installing the Chart
 
 When logged in as an elevated OpenShift user, execute the following to install the chart referencing the
-customized values file. The OPENSHIFT_BASE_DOMAIN will be substituted in the values file with `envsubst` below:
+customized values file. The OPENSHIFT_APPS_SUBDOMAIN will be substituted in the values file with `envsubst` below:
 
 ```shell
-OPENSHIFT_BASE_DOMAIN=$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i scaffolding --debug charts/scaffolding -n sigstore --create-namespace --values -
+OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i scaffolding --debug charts/scaffolding -n sigstore --create-namespace --values -
 ```
 
 ### Sign and/or verify artifacts!
