@@ -4,12 +4,12 @@
 # secret names must match secret names in scaffold.tuf, that default to
 # 'fulcio-secret-rh' and 'rekor-private-key'
 # For root & key requirements, see ../requirements-keys-certs.md
-# Note: User must substitute for <OPENSHIFT_BASE_DOMAIN> below.
-# Base domain is results of 'oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName'
+# Note: User must substitute for $OPENSHIFT_BASE_DOMAIN below.
+# Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
 ---
 configs:
   cosign:
-    BASE_DOMAIN: <OPENSHIFT_BASE_DOMAIN>
+    BASE_DOMAIN: apps.$OPENSHIFT_BASE_DOMAIN
   fulcio:
     create: false
   rekor:
@@ -22,25 +22,25 @@ scaffold:
       ingress:
         http:
           hosts:
-            - host: fulcio.<OPENSHIFT_BASE_DOMAIN>
+            - host: fulcio.apps.$OPENSHIFT_BASE_DOMAIN
               path: /
     config:
       contents:
         OIDCIssuers:
-          # https://<keycloak_instance>.<keycloak_ns>.<base_domain>/auth/realms/sigstore
-          ? https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
-          : IssuerURL: https://keycloak-keycloak-system.<OPENSHIFT_BASE_DOMAIN>/auth/realms/sigstore
+          # https://<keycloak_instance>.<keycloak_ns>.apps.<base_domain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.apps.$OPENSHIFT_BASE_DOMAIN/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.apps.$OPENSHIFT_BASE_DOMAIN/auth/realms/sigstore
             ClientID: sigstore
             Type: email
   rekor:
     server:
       ingress:
         hosts:
-          - host: rekor.<OPENSHIFT_BASE_DOMAIN>
+          - host: rekor.apps.$OPENSHIFT_BASE_DOMAIN
             path: /
   tuf:
     ingress:
       http:
         hosts:
-          - host: tuf.<OPENSHIFT_BASE_DOMAIN>
+          - host: tuf.apps.$OPENSHIFT_BASE_DOMAIN
             path: /

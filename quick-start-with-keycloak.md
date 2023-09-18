@@ -2,13 +2,6 @@
 
 No-Fail steps to get a working sigstore stack with OpenShift
 
-0. Obtain the cluster base domain with:
-
-```shell
-oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
-# omit the '*.'
-```
-
 1. Install RHSSO Operator and deploy Sigstore Keycloak
 
 ```shell
@@ -34,13 +27,10 @@ oc create ns rekor-system
 oc -n rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem | oc apply -f-
 ```
 
-3. Substitute base domain found above for `<OPENSHIFT_BASE_DOMAIN> in [examples/values-sigstore-openshift.yaml](./examples/values-sigstore-openshift.yaml)
-
-4.  Run the following:
+3.  Run the following:
 
 ```shell
-cd charts/scaffolding
-helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f examples/values-sigstore-openshift.yaml
+OPENSHIFT_BASE_DOMAIN=$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i scaffolding --debug charts/scaffolding -n sigstore --create-namespace --values -
 ```
 
 A good way to tell if things are progressing well is to watch `oc get jobs -A` and when the tuf-system job is complete,

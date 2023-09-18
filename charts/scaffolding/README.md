@@ -51,25 +51,17 @@ It can be customized based on an individual target environment.
 Perform the following modifications to the [example values file](./examples/values-sigstore-openshift.yaml)
 to curate the deployment of the chart:
 
-1. Update all occurrences of `<OPENSHIFT_BASE_DOMAIN>` with the value from the following command:
+1. Modify the OIDC Issuer URL in the fulcio config section of the values file as necessary.
 
-```shell
-oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
-# omit the '*.'
-```
-
-2. Modify the OIDC Issuer URL in the fulcio config section of the values file as necessary.
-
-4. Perform any additional customizations as desired
+2. Perform any additional customizations as desired
 
 ### Installing the Chart
 
 When logged in as an elevated OpenShift user, execute the following to install the chart referencing the
-customized values file:
+customized values file. The OPENSHIFT_BASE_DOMAIN will be substituted in the values file with `envsubst` below:
 
 ```shell
-cd charts/scaffolding
-helm upgrade -i scaffolding --debug . -n sigstore --create-namespace -f <values_file>
+OPENSHIFT_BASE_DOMAIN=$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i scaffolding --debug charts/scaffolding -n sigstore --create-namespace --values -
 ```
 
 ### Sign and/or verify artifacts!
@@ -88,7 +80,7 @@ Kubernetes: `>= 1.19.0-0`
 
 | Key | Description | Type | Default |
 |-----|-------------|------|---------|
-| configs.cosign.BASE_DOMAIN | DNS name to be used to generate environment variables for cosign commands. Can be obtained from OpenShift with 'oc get dnsrecords -o yaml -n openshift-ingress-operator' | string | `"BASE_DOMAIN"` |
+| configs.cosign.BASE_DOMAIN | DNS name to be used to generate environment variables for cosign commands. Can be obtained from OpenShift with "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'" | string | `"apps.BASE_DOMAIN"` |
 | configs.cosign.create | whether to create the cosign namespace | bool | `true` |
 | configs.cosign.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` |
 | configs.cosign.name | Name of deployment | string | `"cosign"` |

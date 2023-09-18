@@ -108,8 +108,8 @@ configs:
 
   cosign:
     # -- DNS name to be used to generate environment variables for cosign commands.
-    # Can be obtained from OpenShift with 'oc get dnsrecords -o yaml -n openshift-ingress-operator'
-    BASE_DOMAIN: BASE_DOMAIN
+    # Can be obtained from OpenShift with "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
+    BASE_DOMAIN: apps.BASE_DOMAIN
     # -- namespace for cosign resources
     namespace: cosign
     # -- whether to create the cosign namespace

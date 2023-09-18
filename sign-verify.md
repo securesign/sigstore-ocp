@@ -7,9 +7,8 @@ Utilize the following steps to sign a container that has been published to an OC
 The `base_hostname` can be obtained from
 
 ```shell
-oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
-# omit the '*.'
-export BASE_HOSTNAME=apps.something.something.openshiftapps.com
+oc get dns cluster -o jsonpath='{ .spec.baseDomain }'
+export BASE_HOSTNAME=apps.BASE_DOMAIN
 ```
 
 The following assumes there exists a Keycloak `keycloak` in namespace `keycloak-system`
