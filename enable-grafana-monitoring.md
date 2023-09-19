@@ -46,10 +46,8 @@ export MYSQL_DATABASE=$(oc -n trillian-system get secrets trillian-mysql -o=json
 ```
 
 ```bash
-sed -i "s/\${BEARER_TOKEN}/${BEARER_TOKEN}/g" grafana/dashboards/datasource.yaml
-sed -i "s/\${MYSQL_USER}/${MYSQL_USER}/g" grafana/dashboards/datasource.yaml
-sed -i "s/\${MYSQL_PASSWORD}/${MYSQL_PASSWORD}/g" grafana/dashboards/datasource.yaml
-sed -i "s/\${MYSQL_DATABASE}/${MYSQL_DATABASE}/g" grafana/dashboards/datasource.yaml
+envsubst < grafana/dashboards/datasource.yaml > grafana/dashboards/temp_datasource.yaml 
+mv grafana/dashboards/temp_datasource.yaml grafana/dashboards/datasource.yaml
 ```
 ## Step 5: Creating datasources & dashboards
 
