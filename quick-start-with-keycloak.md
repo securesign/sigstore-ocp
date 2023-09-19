@@ -24,7 +24,7 @@ oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=.
 ```shell
 oc create ns rekor-system
 ./rekor-create-signer-key.sh
-oc -n rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem | oc apply -f-
+oc -n rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 ```
 
 3.  Run the following:
