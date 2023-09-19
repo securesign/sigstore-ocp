@@ -9,7 +9,7 @@ This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/h
 chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
 
 If you have already read this document and want a quick no-fail path to installing a Sigstore stack with RH SSO,
-follow [quick start](./quick-start-with-keycloak.md)
+follow [quick start](../../quick-start-with-keycloak.md)
 
 The chart enhances the scaffold chart by taking care of the following:
 
@@ -38,15 +38,15 @@ scaffold:
 The following must be satisfied prior to deploying the sample implementation:
 
 * Fulcio root CA certificate and signing keys
-    * More information in [requirements-keys-certs.md](./requirements-keys-certs.md)
+    * More information in [requirements-keys-certs.md](../../requirements-keys-certs.md)
 * OpenID Token Issuer endpoint
-    * Keycloak/RHSSO requirements can be followed and deployed in OpenShift with [keycloak-example.md](./keycloak-example.md)
+    * Keycloak/RHSSO requirements can be followed and deployed in OpenShift with [keycloak-example.md](../../keycloak-example.md)
 
 #### Update the values file
 
 Helm values files are available in the examples directory that provides a baseline to work off of.
 It can be customized based on an individual target environment.
-Perform the following modifications to the [example values file](./examples/values-sigstore-openshift.yaml)
+Perform the following modifications to the [example values file](../../examples/values-sigstore-openshift.yaml)
 to curate the deployment of the chart:
 
 1. Modify the OIDC Issuer URL in the fulcio config section of the values file as necessary.
