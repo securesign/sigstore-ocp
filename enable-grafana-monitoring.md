@@ -1,21 +1,23 @@
 # Enabling Grafana Monitoring for SecureSign
 
-This guide provides step-by-step instructions to enable Grafana monitoring in a openshift cluster using the grafana operator.
+This guide provides the commands to deploy both the Grafana operator
+and a Grafana instance in OpenShift. It also adds a Prometheus Datasource
+and configures a dashboard for monitoring Sigstore components.
 
 Prerequisites
-1. Make sure you have the oc command-line tool installed.
+1. Make sure you have the [oc command-line tool](https://docs.openshift.com/container-platform/4.12/cli_reference/openshift_cli/getting-started-cli.html) installed.
 2. Ensure you are logged into your OpenShift cluster.
 
-Note: This guide assumes you are using OpenShift version 4.12.
+Note: This guide assumes you are using OpenShift version 4.12 or greater.
 
 ## Step 1: Installing the operator
 
-This installs the Grafana operator into the `grafana-operator` namespace.
+This installs the Grafana operator into the `sigstore-monitoring` namespace.
 ```bash
 oc apply -k grafana/operator
 ```
 
-Tip: Verify the installation by running `oc get pods -n grafana-operator`.
+Tip: Verify the installation by running `oc get pods -n sigstore-monitoring`.
 
 ## Step 2: Creating a grafana instance
 
@@ -27,7 +29,7 @@ oc apply -k grafana/instance
 
 ## Step 3: Configuring grafana resources
 
-Apply the necessary tokens and role bindings to the service account `grafana-serviceaccount` in the `grafana-operator` namespace
+Apply the necessary tokens and role bindings to the service account `grafana-serviceaccount` in the `sigstore-monitoring` namespace
 
 ```bash
 oc apply -k grafana/resources
@@ -37,7 +39,7 @@ oc apply -k grafana/resources
 Retrieve all necessary secrets from the OpenShift cluster and apply them to the `datasource.yaml` file found at `grafana/dashboards/datasource.yaml`.
 
 ```bash
-export BEARER_TOKEN=$(oc -n grafana-operator get secrets grafana-sa-token -o=jsonpath="{.data.token}" | base64 -d)
+export BEARER_TOKEN=$(oc -n sigstore-monitoring get secrets grafana-sa-token -o=jsonpath="{.data.token}" | base64 -d)
 export MYSQL_USER=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-user}" | base64 -d)
 export MYSQL_PASSWORD=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-password}" | base64 -d)
 export MYSQL_DATABASE=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-database}" | base64 -d)
@@ -61,7 +63,7 @@ oc apply -k grafana/dashboards
 To find the Grafana UI route, execute:
 
 ```bash
-oc -n grafana-operator get routes
+oc -n sigstore-monitoring get routes
 ```
 
-Or, navigate to Networking -> Routes in the `grafana-operator` namespace through the OpenShift cluster UI, use `rhel` as the username & password. Once logged in, navigate to the dashboard by going to Dashboards -> Browse -> grafana-operator -> Sigstore Monitoring.
+Or, navigate to Networking -> Routes in the `sigstore-monitoring` namespace through the OpenShift cluster UI, the default username and password is `sigstore-rh`, please ensure to update this to something more secure. Once logged in, navigate to the dashboard by going to Dashboards -> Browse -> sigstore-monitoring -> Sigstore Monitoring.

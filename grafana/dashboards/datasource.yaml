@@ -2,7 +2,7 @@ apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
   name: prometheus-grafana
-  namespace: grafana-operator
+  namespace: sigstore-monitoring
 spec:
   name: prometheus-grafana.yaml
   datasources:
@@ -23,8 +23,8 @@ spec:
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
-  name: trillian-datasource
-  namespace: grafana-operator
+  name: trillian-grafana
+  namespace: sigstore-monitoring
 spec:
   name: MySQL-datasource.yaml
   datasources:

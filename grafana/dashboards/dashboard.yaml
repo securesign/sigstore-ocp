@@ -1,8 +1,8 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: sigstore-monitoring
-  namespace: grafana-operator
+  name: sigstore-monitoring-dashboard
+  namespace: sigstore-monitoring
   labels:
     app: grafana
 spec:
@@ -34,7 +34,6 @@ spec:
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
       "id": 2,
-      "iteration": 1695031232719,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -63,7 +62,9 @@ spec:
             "defaults": {
               "custom": {
                 "align": "auto",
-                "displayMode": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
                 "filterable": true,
                 "inspect": false
               },
@@ -105,7 +106,7 @@ spec:
             "showHeader": true,
             "sortBy": []
           },
-          "pluginVersion": "8.5.5",
+          "pluginVersion": "10.1.2",
           "repeatDirection": "h",
           "targets": [
             {
@@ -277,7 +278,7 @@ spec:
             "text": {},
             "textMode": "auto"
           },
-          "pluginVersion": "8.5.5",
+          "pluginVersion": "10.1.2",
           "targets": [
             {
               "datasource": {
@@ -313,6 +314,8 @@ spec:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -325,6 +328,7 @@ spec:
                   "tooltip": false,
                   "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "linear",
                 "lineWidth": 1,
                 "pointSize": 5,
@@ -371,7 +375,8 @@ spec:
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "single",
@@ -403,6 +408,8 @@ spec:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -415,6 +422,7 @@ spec:
                   "tooltip": false,
                   "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "linear",
                 "lineWidth": 1,
                 "pointSize": 5,
@@ -460,7 +468,8 @@ spec:
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "single",
@@ -531,7 +540,8 @@ spec:
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             }
           },
           "targets": [
@@ -565,7 +575,9 @@ spec:
               },
               "custom": {
                 "align": "auto",
-                "displayMode": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
                 "inspect": false
               },
               "mappings": [],
@@ -575,10 +587,6 @@ spec:
                   {
                     "color": "green",
                     "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
                   }
                 ]
               }
@@ -593,7 +601,9 @@ spec:
           },
           "id": 27,
           "options": {
+            "cellHeight": "sm",
             "footer": {
+              "countRows": false,
               "fields": "",
               "reducer": [
                 "sum"
@@ -603,7 +613,7 @@ spec:
             "frameIndex": 1,
             "showHeader": true
           },
-          "pluginVersion": "8.5.5",
+          "pluginVersion": "10.1.2",
           "targets": [
             {
               "datasource": {
@@ -613,6 +623,7 @@ spec:
               "editorMode": "code",
               "exemplar": false,
               "expr": "rekor_checkpoint_publish",
+              "format": "table",
               "instant": false,
               "range": true,
               "refId": "A"
@@ -646,6 +657,12 @@ spec:
                     "aggregations": [],
                     "operation": "groupby"
                   },
+                  "rekor_checkpoint_publish": {
+                    "aggregations": [
+                      "last"
+                    ],
+                    "operation": "aggregate"
+                  },
                   "shard": {
                     "aggregations": [],
                     "operation": "groupby"
@@ -663,7 +680,8 @@ spec:
                   "shard": 1
                 },
                 "renameByName": {
-                  "Time (last)": "Time"
+                  "Time (last)": "Time",
+                  "rekor_checkpoint_publish (last)": "Checkpoint"
                 }
               }
             }
@@ -735,7 +753,7 @@ spec:
             "text": {},
             "textMode": "auto"
           },
-          "pluginVersion": "8.5.5",
+          "pluginVersion": "10.1.2",
           "targets": [
             {
               "datasource": {
@@ -773,6 +791,8 @@ spec:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -785,6 +805,7 @@ spec:
                   "tooltip": false,
                   "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "linear",
                 "lineWidth": 1,
                 "pointSize": 5,
@@ -831,7 +852,8 @@ spec:
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "single",
@@ -908,7 +930,8 @@ spec:
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             }
           },
           "targets": [
@@ -990,7 +1013,7 @@ spec:
             },
             "textMode": "auto"
           },
-          "pluginVersion": "8.5.5",
+          "pluginVersion": "10.1.2",
           "targets": [
             {
               "datasource": {
@@ -1094,7 +1117,7 @@ spec:
             },
             "textMode": "auto"
           },
-          "pluginVersion": "8.5.5",
+          "pluginVersion": "10.1.2",
           "targets": [
             {
               "datasource": {
@@ -1131,8 +1154,8 @@ spec:
           "type": "stat"
         }
       ],
-      "refresh": false,
-      "schemaVersion": 36,
+      "refresh": "",
+      "schemaVersion": 38,
       "style": "dark",
       "tags": [],
       "templating": {

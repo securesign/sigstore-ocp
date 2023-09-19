@@ -1,12 +1,12 @@
 apiVersion: integreatly.org/v1alpha1
 kind: Grafana
 metadata:
-  name: rhel-edge
-  namespace: grafana-operator
+  name: sigstore-monitoring
+  namespace: sigstore-monitoring
 spec:
   # TODO: this hard-coded image version is necessary until the currently available version
   # of grafana operator from OperatorHub (v4.7.1) pulls in a later version of grafana
-  baseImage: 'docker.io/grafana/grafana:8.5.5'
+  baseImage: 'docker.io/grafana/grafana:10.1.2'
   ingress:
     enabled: true
   config:
@@ -18,8 +18,8 @@ spec:
       level: warn
       mode: console
     security:
-      admin_password: "rhel"
-      admin_user: "rhel"
+      admin_password: "sigstore-rh" # Make sure to update to something more secure
+      admin_user: "sigstore-rh" # Make sure to update to something more secure
   dashboardLabelSelector:
     - matchExpressions:
         - key: app
