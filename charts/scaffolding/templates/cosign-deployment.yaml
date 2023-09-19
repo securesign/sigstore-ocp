@@ -17,7 +17,7 @@ spec:
         image: "{{ .Values.configs.cosign.image.registry }}/{{ .Values.configs.cosign.image.repository }}:{{ .Values.configs.cosign.image.version }}"
         env:
         - name: BASE_DOMAIN
-          value: {{ .Values.configs.cosign.BASE_DOMAIN }}
+          value: {{ .Values.configs.cosign.apps_subdomain }}
         - name: KEYCLOAK_REALM
           value: "sigstore"
         - name: FULCIO_URL

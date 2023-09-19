@@ -13,7 +13,7 @@
             "properties": {
                 "cosign": {
                     "properties": {
-                        "BASE_DOMAIN": {
+                        "appsSubdomain": {
                             "type": "string"
                         },
                         "create": {

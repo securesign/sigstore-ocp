@@ -22,7 +22,7 @@ configs:
           paste contents here
           -----END EC PRIVATE KEY-----
   cosign:
-    BASE_DOMAIN: $OPENSHIFT_APPS_SUBDOMAIN
+    appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

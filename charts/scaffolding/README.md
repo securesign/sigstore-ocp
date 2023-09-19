@@ -80,7 +80,7 @@ Kubernetes: `>= 1.19.0-0`
 
 | Key | Description | Type | Default |
 |-----|-------------|------|---------|
-| configs.cosign.BASE_DOMAIN | DNS name to be used to generate environment variables for cosign commands. Can be obtained from OpenShift with "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'" | string | `"apps.BASE_DOMAIN"` |
+| configs.cosign.appsSubdomain | DNS name to be used to generate environment variables for cosign commands. By default, in OpenShift, the value for this is apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') | string | `""` |
 | configs.cosign.create | whether to create the cosign namespace | bool | `true` |
 | configs.cosign.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` |
 | configs.cosign.name | Name of deployment | string | `"cosign"` |
@@ -176,7 +176,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.server.ingress.http.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.fulcio.server.ingress.http.className |  | string | `""` |
 | scaffold.fulcio.server.ingress.http.enabled |  | bool | `true` |
-| scaffold.fulcio.server.ingress.http.hosts[0].host |  | string | `"fulcio.BASE_DOMAIN"` |
+| scaffold.fulcio.server.ingress.http.hosts[0].host |  | string | `"fulcio.appsSubdomain"` |
 | scaffold.fulcio.server.ingress.http.hosts[0].path |  | string | `"/"` |
 | scaffold.fulcio.server.secret |  | string | `"fulcio-secret-rh"` |
 | scaffold.rekor.backfillredis.image.pullPolicy |  | string | `"IfNotPresent"` |
@@ -200,7 +200,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.server.image.version |  | string | `"v1.2.2"` |
 | scaffold.rekor.server.ingress.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.rekor.server.ingress.className |  | string | `""` |
-| scaffold.rekor.server.ingress.hosts[0].host |  | string | `"rekor.BASE_DOMAIN"` |
+| scaffold.rekor.server.ingress.hosts[0].host |  | string | `"rekor.appsSubdomain"` |
 | scaffold.rekor.server.ingress.hosts[0].path |  | string | `"/"` |
 | scaffold.rekor.server.signer |  | string | `"/key/private"` |
 | scaffold.rekor.server.signerFileSecretOptions.privateKeySecretKey |  | string | `"private"` |
@@ -284,7 +284,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.tuf.fullnameOverride |  | string | `"tuf"` |
 | scaffold.tuf.ingress.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.tuf.ingress.className |  | string | `""` |
-| scaffold.tuf.ingress.http.hosts[0].host |  | string | `"tuf.BASE_DOMAIN"` |
+| scaffold.tuf.ingress.http.hosts[0].host |  | string | `"tuf.appsSubdomain"` |
 | scaffold.tuf.ingress.http.hosts[0].path |  | string | `"/"` |
 | scaffold.tuf.namespace.create |  | bool | `false` |
 | scaffold.tuf.namespace.name |  | string | `"tuf-system"` |

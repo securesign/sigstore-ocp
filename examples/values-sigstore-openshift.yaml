@@ -9,7 +9,7 @@
 ---
 configs:
   cosign:
-    BASE_DOMAIN: $OPENSHIFT_APPS_SUBDOMAIN
+    appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
   fulcio:
     create: false
   rekor:

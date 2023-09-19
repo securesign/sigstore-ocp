@@ -108,8 +108,9 @@ configs:
 
   cosign:
     # -- DNS name to be used to generate environment variables for cosign commands.
-    # Can be obtained from OpenShift with "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
-    BASE_DOMAIN: apps.BASE_DOMAIN
+    # By default, in OpenShift, the value for this is
+    # apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
+    appsSubdomain: ""
     # -- namespace for cosign resources
     namespace: cosign
     # -- whether to create the cosign namespace
@@ -206,7 +207,7 @@ scaffold:
           annotations:
             route.openshift.io/termination: "edge"
           hosts:
-          - host: fulcio.BASE_DOMAIN
+          - host: fulcio.appsSubdomain
             path: /
 
   rekor:
@@ -240,7 +241,7 @@ scaffold:
         annotations:
           route.openshift.io/termination: "edge"
         hosts:
-          - host: rekor.BASE_DOMAIN
+          - host: rekor.appsSubdomain
             path: /
 
     createtree:
@@ -368,7 +369,7 @@ scaffold:
         route.openshift.io/termination: "edge"
       http:
         hosts:
-          - host: tuf.BASE_DOMAIN
+          - host: tuf.appsSubdomain
             path: /
     deployment:
       registry: quay.io
