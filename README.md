@@ -188,6 +188,7 @@ A good way to tell if things are progressing well is to watch `oc get jobs -A` a
 Once complete, move to the [Sign & Verify document](./sign-verify.md) to test the Sigstore stack. 
 Good Luck!
 
+*For real-time analytics through Grafana, please refer to our [enable-grafana-monitoring.md](enable-grafana-monitoring.md) guide.*
 ## Values
 
 | Key | Type | Default | Description |
