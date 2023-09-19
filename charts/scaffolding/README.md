@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -66,11 +66,11 @@ OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDoma
 
 ### Monitor Sigstore Components with Grafana
 
-For real-time analytics through Grafana, refer to our [enable-grafana-monitoring.md](enable-grafana-monitoring.md) guide.
+For real-time analytics through Grafana, refer to our [enable-grafana-monitoring.md](../../enable-grafana-monitoring.md) guide.
 
 ### Sign and/or verify artifacts!
 
-Follow [this](./sign-verify.md) to sign and/or verify artifacts.
+Follow [this](../../sign-verify.md) to sign and/or verify artifacts.
 
 ## Requirements
 
