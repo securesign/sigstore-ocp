@@ -1,0 +1,64 @@
+# With this example, the user provides the rekor private signing key content,
+# either from file path relative to this file, or by pasting its contents below.
+# It's assumed the secret 'fulcio-secret-rh' exists already in 'fulcio-system' namespace.
+# For rekor key requirements, see ../requirements-keys-certs.md
+# Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
+# Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
+---
+configs:
+  fulcio:
+    create: false
+  rekor:
+    # -- whether to create the 'rekor-system' namespace
+    # When providing the rekor signer.secret, the ns already exists
+    signer:
+      secret:
+        # must provide 1 of each, key_file path or key contents
+        # name must match rekor signer secretName in scaffold.rekor.server
+        name: rekor-private-key
+        #private_key_file: "keys-cert/rekor_key.pem"
+        private_key: |
+          -----BEGIN EC PRIVATE KEY-----
+          paste contents here
+          -----END EC PRIVATE KEY-----
+  cosign:
+    appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  fulcio:
+    server:
+      ingress:
+        http:
+          hosts:
+            - host: fulcio.$OPENSHIFT_APPS_SUBDOMAIN
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
+            ClientID: sigstore
+            Type: email
+  rekor:
+    server:
+      # when providing contents of secret with configs.rekor.signer
+      # the signer sections must also be provided here
+      signer: /key/private
+      signerFileSecretOptions:
+        secretName: rekor-private-key
+        secretMountPath: /key
+        secretMountSubPath: private
+        privateKeySecretKey: private
+      ingress:
+        hosts:
+          - host: rekor.$OPENSHIFT_APPS_SUBDOMAIN
+            path: /
+  tuf:
+    ingress:
+      http:
+        hosts:
+          - host: tuf.$OPENSHIFT_APPS_SUBDOMAIN
+            path: /
+

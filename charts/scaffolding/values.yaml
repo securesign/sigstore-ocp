@@ -1,0 +1,397 @@
+configs:
+  ctlog:
+    # -- Namespace for ctlog resources
+    namespace: ctlog-system
+    # -- Whether to create the ctlog namespace
+    create: true
+    # -- Names for rolebindings to add clusterroles to ctlog serviceaccounts.
+    # The names must match the serviceaccount names in the ctlog namespace.
+    rolebindings:
+      - ctlog
+      - ctlog-createtree
+      - scaffolding-ctlog-createctconfig
+
+  rekor:
+    # -- namespace for rekor resources
+    namespace: rekor-system
+    # -- whether to create the rekor namespace
+    create: true
+    # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
+    # The names must match the serviceaccount names in the rekor namespace.
+    rolebindings:
+      - rekor-redis
+      - rekor-server
+      - scaffolding-rekor-createtree
+    # -- Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log
+    # When this section is left out, scaffold.rekor creates the secret and key.
+    signer:
+      secret:
+        # -- Name of the secret to create with the private key data. This name must match the value in
+        # scaffold.rekor.server.signer.signerFileSecretOptions.secretName.
+        name: ""
+        # -- Private encrypted signing key
+        private_key: ""
+        # -- File containing a private encrypted signing key
+        private_key_file: ""
+    #  -- With ClusterMonitoring enabled, a ServiceMonitor and RBAC is created. This adds a  metrics target from rekor-server
+    #  in the openshift-monitoring namespace scraped by prometheus along with other cluster-monitoring targets.
+    clusterMonitoring:
+      enabled: true
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
+
+  fulcio:
+    # -- Namespace for fulcio resources
+    namespace: fulcio-system
+    # -- Whether to create the fulcio namespace
+    create: true
+    # -- Names for rolebindings to add clusterroles to fulcio serviceaccounts.
+    # The names must match the serviceaccount names in the fulcio namespace.
+    rolebindings:
+      - fulcio-createcerts
+      - fulcio-server
+    server:
+      #  -- Secret to create with fulcio signing backend certificate and keys.
+      #  Leave this section out if a secret already exists in the fulcio namespace.
+      #  The secret.name must match the value of scaffold.fulcio.server.secret and
+      #  also tuf.secrets.fulcio.name. For details on certificate and key requirements,
+      #  see https://github.com/sigstore/fulcio/blob/main/docs/setup.md#ca-certificate-requirements
+      secret:
+        name: ""
+        # -- password to decrypt the signing key
+        password: ""
+        # -- signer public key
+        public_key: ""
+        # -- a PEM-encoded encrypted signing key
+        private_key: ""
+        # -- file containing signer public key
+        public_key_file: ""
+        # -- file containing a PEM-encoded encrypted signing key
+        private_key_file: ""
+        # -- fulcio root certificate authority (CA)
+        root_cert: ""
+        # -- file containing fulcio root certificate authority (CA)
+        root_cert_file: ""
+    #  -- With ClusterMonitoring enabled, a ServiceMonitor and RBAC is created. This adds a  metrics target from fulcio-server
+    #  in the openshift-monitoring namespace scraped by prometheus along with other cluster-monitoring targets.
+    clusterMonitoring:
+      enabled: true
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
+
+  trillian:
+    # -- namespace for trillian resources
+    namespace: trillian-system
+    # -- whether to create the trillian namespace
+    create: true
+    # -- names for rolebindings to add clusterroles to trillian serviceaccounts.
+    # The names must match the serviceaccount names in the trillian namespace.
+    rolebindings:
+      - trillian-logserver
+      - trillian-logsigner
+      - trillian-mysql
+
+  tuf:
+    # -- namespace for tuf resources
+    namespace: tuf-system
+    # -- whether to create the tuf namespace
+    create: true
+    # -- names for rolebindings to add clusterroles to tuf serviceaccounts.
+    # The names must match the serviceaccount names in the tuf namespace.
+    rolebindings:
+      - tuf
+      - tuf-secret-copy-job
+
+  cosign:
+    # -- DNS name to be used to generate environment variables for cosign commands.
+    # By default, in OpenShift, the value for this is
+    # apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
+    appsSubdomain: ""
+    # -- namespace for cosign resources
+    namespace: cosign
+    # -- whether to create the cosign namespace
+    create: true
+    # -- names for rolebindings to add clusterroles to cosign serviceaccounts.
+    # The names must match the serviceaccount names in the cosign namespace.
+    rolebindings:
+      - cosign
+    # -- Name of deployment
+    name: cosign
+    # -- Image containing the cosign binary as well as environment variables with the base domain injected.
+    image:
+      registry: quay.io
+      repository: securesign/cosign
+      version: v2.1.1
+      pullPolicy: IfNotPresent
+
+rbac:
+  # -- clusterrole to be added to sigstore component serviceaccounts.
+  clusterrole: system:openshift:scc:anyuid
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  ctlog:
+    enabled: true
+    forceNamespace: ctlog-system
+    fullnameOverride: ctlog
+    namespace:
+      create: false
+      name: ctlog-system
+    server:
+      image:
+        registry: quay.io
+        repository: securesign/ct_server
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    createctconfig:
+      backoffLimit: 30
+      enabled: true
+      initContainerImage:
+        curl:
+          registry: registry.access.redhat.com
+          repository: ubi9/ubi-minimal
+          version: latest
+          imagePullPolicy: IfNotPresent
+      image:
+        registry: quay.io
+        repository: securesign/createctconfig
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    createcerts:
+      fullnameOverride: ctlog-createcerts
+    createtree:
+      fullnameOverride: ctlog-createtree
+      displayName: ctlog-tree
+      image:
+        registry: quay.io
+        repository: securesign/createtree
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+  fulcio:
+    enabled: true
+    forceNamespace: fulcio-system
+    ctlog:
+      enabled: false
+      createctconfig:
+        logPrefix: sigstorescaffolding
+    namespace:
+      name: fulcio-system
+      create: false
+    createcerts:
+      enabled: false
+      fullnameOverride: fulcio-createcerts
+      image:
+        registry: quay.io
+        repository: securesign/createcerts
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    server:
+      fullnameOverride: fulcio-server
+      image:
+        registry: quay.io
+        repository: securesign/fulcio
+        version: v1.4.0
+        pullPolicy: IfNotPresent
+      # If content and/or files not provided in configs.fulcio.secret
+      # then this secret must exist in fulcio-system ns. See ../quickstart-with-keycloak.md
+      # for how to create this secret.
+      secret: fulcio-secret-rh
+      ingress:
+        http:
+          enabled: true
+          className: ""
+          annotations:
+            route.openshift.io/termination: "edge"
+          hosts:
+          - host: fulcio.appsSubdomain
+            path: /
+
+  rekor:
+    enabled: true
+    forceNamespace: rekor-system
+    fullnameOverride: rekor
+    namespace:
+      name: rekor-system
+      create: false
+    trillian:
+      enabled: false
+    redis:
+      fullnameOverride: rekor-redis
+    server:
+      fullnameOverride: rekor-server
+      image:
+        registry: quay.io
+        repository: securesign/rekor-server
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+      # when providing contents of secret with configs.rekor.signer
+      # the signer sections must also be provided here
+      signer: /key/private
+      signerFileSecretOptions:
+        secretName: rekor-private-key
+        secretMountPath: /key
+        secretMountSubPath: private
+        privateKeySecretKey: private
+      ingress:
+        className: ""
+        annotations:
+          route.openshift.io/termination: "edge"
+        hosts:
+          - host: rekor.appsSubdomain
+            path: /
+
+    createtree:
+      image:
+        registry: quay.io
+        repository: securesign/createtree
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    backfillredis:
+      image:
+        registry: quay.io
+        repository: securesign/backfill-redis
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+  trillian:
+    enabled: true
+    forceNamespace: trillian-system
+    fullnameOverride: trillian
+    namespace:
+      create: false
+      name: trillian-system
+    createdb:
+      image:
+        registry: quay.io
+        repository: securesign/createdb
+        version: v0.6.4
+        pullPolicy: IfNotPresent
+    initContainerImage:
+      netcat:
+        registry: quay.io
+        repository: securesign/netcat
+        version: v1.0.0
+      curl:
+        registry: registry.access.redhat.com
+        repository: ubi9/ubi-minimal
+        version: latest
+        imagePullPolicy: IfNotPresent
+    redis:
+      args:
+        - /usr/bin/run-redis
+        - --bind
+        - 0.0.0.0
+        - --appendonly
+        - "yes"
+      image:
+        registry: registry.redhat.io
+        repository: rhel9/redis-6
+        version: "sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"
+        pullPolicy: IfNotPresent
+
+    logSigner:
+      name: trillian-logsigner
+      fullnameOverride: trillian-logsigner
+      image:
+        registry: quay.io
+        repository: securesign/trillian_log_signer
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+    logServer:
+      name: trillian-logserver
+      fullnameOverride: trillian-logserver
+      portHTTP: 8090
+      portRPC: 8091
+      image:
+        registry: quay.io
+        repository: securesign/trillian_log_server
+        version: v1.2.2
+        pullPolicy: IfNotPresent
+    mysql:
+      fullnameOverride: trillian-mysql
+      gcp:
+        scaffoldSQLProxy:
+          registry: quay.io
+          repository: securesign/cloudsqlproxy
+          version: v0.6.4
+      image:
+        registry: quay.io
+        repository: securesign/trillian-db
+        version: v1.5.2
+        pullPolicy: IfNotPresent
+      args: []
+      securityContext:
+        fsGroup: 0
+      livenessProbe:
+        exec:
+          command:
+          - mysqladmin
+          - ping
+          - -h
+          - localhost
+          - -u
+          - $(MYSQL_USER)
+          - -p$(MYSQL_PASSWORD)
+      readinessProbe:
+        exec:
+          command:
+          - mysqladmin
+          - ping
+          - -h
+          - localhost
+          - -u
+          - $(MYSQL_USER)
+          - -p$(MYSQL_PASSWORD)
+  tuf:
+    namespace:
+      create: false
+      name: tuf-system
+    forceNamespace: tuf-system
+    fullnameOverride: tuf
+    secrets:
+      fulcio:
+        name: fulcio-secret-rh
+        path: fulcio-cert
+      rekor:
+        name: rekor-public-key
+        path: rekor-pubkey
+      ctlog:
+        name: ctlog-public-key
+        path: ctlog-pubkey
+
+    enabled: true
+    ingress:
+      className: ""
+      annotations:
+        route.openshift.io/termination: "edge"
+      http:
+        hosts:
+          - host: tuf.appsSubdomain
+            path: /
+    deployment:
+      registry: quay.io
+      repository: securesign/tuf/server
+      version: latest
+
+  copySecretJob:
+    name: copy-secrets-job
+    enabled: true
+    # TODO: Update copy-secrets image
+    registry: quay.io
+    repository: sallyom/copy-secrets
+    version: latest
+    imagePullPolicy: Always
+    serviceaccount: tuf-secret-copy-job
+    backoffLimit: 1000
+
+  tsa:
+    enabled: false
+    forceNamespace: tsa-sytem
+    namespace:
+      create: false
+      name: tsa-system
+    server:
+      fullnameOverride: tsa-server

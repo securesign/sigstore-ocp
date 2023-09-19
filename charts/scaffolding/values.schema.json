@@ -1,0 +1,1493 @@
+{
+    "$id": "http://example.com/example.json",
+    "properties": {
+        "configs": {
+            "properties": {
+                "cosign": {
+                    "properties": {
+                        "appsSubdomain": {
+                            "type": "string"
+                        },
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "ctlog": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "fulcio": {
+                    "properties": {
+                        "clusterMonitoring": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoints": {
+                                    "items": {
+                                        "interval": {
+                                            "type": "string"
+                                        },
+                                        "port": {
+                                            "type": "string"
+                                        },
+                                        "scheme": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "server": {
+                            "properties": {
+                                "secret": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "password": {
+                                            "type": "string"
+                                        },
+                                        "private_key": {
+                                            "type": "string"
+                                        },
+                                        "private_key_file": {
+                                            "type": "string"
+                                        },
+                                        "public_key": {
+                                            "type": "string"
+                                        },
+                                        "public_key_file": {
+                                            "type": "string"
+                                        },
+                                        "root_cert": {
+                                            "type": "string"
+                                        },
+                                        "root_cert_file": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "rekor": {
+                    "properties": {
+                        "clusterMonitoring": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoints": {
+                                    "items": {
+                                        "interval": {
+                                            "type": "string"
+                                        },
+                                        "port": {
+                                            "type": "string"
+                                        },
+                                        "scheme": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "signer": {
+                            "properties": {
+                                "secret": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "private_key": {
+                                            "type": "string"
+                                        },
+                                        "private_key_file": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "trillian": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                },
+                "tuf": {
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "rbac": {
+            "properties": {
+                "clusterrole": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "scaffold": {
+            "$id": "http://example.com/example.json",
+            "default": {},
+            "examples": [
+                {
+                    "copySecretJob": {
+                        "backoffLimit": 6,
+                        "enabled": false,
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "copy-secrets-job",
+                        "registry": "docker.io",
+                        "repository": "alpine/k8s",
+                        "serviceaccount": "tuf-secret-copy-job",
+                        "version": "sha256:fb0d2db81fb0f98abb1adf5246d6f0f4d19f34031afe4759cb7ad8e2eb8d2c01"
+                    },
+                    "ctlog": {
+                        "createcerts": {
+                            "fullnameOverride": "ctlog-createcerts"
+                        },
+                        "createtree": {
+                            "displayName": "ctlog-tree",
+                            "fullnameOverride": "ctlog-createtree"
+                        },
+                        "enabled": true,
+                        "forceNamespace": "ctlog-system",
+                        "fullnameOverride": "ctlog",
+                        "namespace": {
+                            "create": true,
+                            "name": "ctlog-system"
+                        }
+                    },
+                    "fulcio": {
+                        "createcerts": {
+                            "fullnameOverride": "fulcio-createcerts"
+                        },
+                        "ctlog": {
+                            "createctconfig": {
+                                "logPrefix": "sigstorescaffolding"
+                            },
+                            "enabled": false
+                        },
+                        "enabled": true,
+                        "forceNamespace": "fulcio-system",
+                        "namespace": {
+                            "create": true,
+                            "name": "fulcio-system"
+                        },
+                        "server": {
+                            "fullnameOverride": "fulcio-server"
+                        }
+                    },
+                    "rekor": {
+                        "enabled": true,
+                        "forceNamespace": "rekor-system",
+                        "fullnameOverride": "rekor",
+                        "namespace": {
+                            "create": true,
+                            "name": "rekor-system"
+                        },
+                        "redis": {
+                            "fullnameOverride": "rekor-redis"
+                        },
+                        "server": {
+                            "fullnameOverride": "rekor-server"
+                        },
+                        "trillian": {
+                            "enabled": false
+                        }
+                    },
+                    "trillian": {
+                        "enabled": true,
+                        "forceNamespace": "trillian-system",
+                        "fullnameOverride": "trillian",
+                        "logServer": {
+                            "fullnameOverride": "trillian-logserver",
+                            "name": "trillian-logserver",
+                            "portHTTP": 8090,
+                            "portRPC": 8091
+                        },
+                        "logSigner": {
+                            "fullnameOverride": "trillian-logsigner",
+                            "name": "trillian-logsigner"
+                        },
+                        "mysql": {
+                            "fullnameOverride": "trillian-mysql"
+                        },
+                        "namespace": {
+                            "create": true,
+                            "name": "trillian-system"
+                        }
+                    },
+                    "tsa": {
+                        "enabled": true,
+                        "forceNamespace": "tsa-system",
+                        "namespace": {
+                            "create": true,
+                            "name": "tsa-system"
+                        },
+                        "server": {
+                            "fullnameOverride": "tsa-server"
+                        }
+                    },
+                    "tuf": {
+                        "enabled": false,
+                        "forceNamespace": "tuf-system",
+                        "fullnameOverride": "tuf",
+                        "namespace": {
+                            "create": true,
+                            "name": "tuf-system"
+                        },
+                        "secrets": {
+                            "ctlog": {
+                                "name": "ctlog-public-key",
+                                "path": "ctlog-pubkey"
+                            },
+                            "fulcio": {
+                                "name": "fulcio-server-secret",
+                                "path": "fulcio-cert"
+                            },
+                            "rekor": {
+                                "name": "rekor-public-key",
+                                "path": "rekor-pubkey"
+                            }
+                        }
+                    }
+                }
+            ],
+            "properties": {
+                "copySecretJob": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "backoffLimit": 6,
+                            "enabled": false,
+                            "imagePullPolicy": "IfNotPresent",
+                            "name": "copy-secrets-job",
+                            "registry": "docker.io",
+                            "repository": "alpine/k8s",
+                            "serviceaccount": "tuf-secret-copy-job",
+                            "version": "sha256:fb0d2db81fb0f98abb1adf5246d6f0f4d19f34031afe4759cb7ad8e2eb8d2c01"
+                        }
+                    ],
+                    "properties": {
+                        "backoffLimit": {
+                            "default": 0,
+                            "examples": [
+                                6
+                            ],
+                            "title": "The backoffLimit Schema",
+                            "type": "integer"
+                        },
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                false
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "imagePullPolicy": {
+                            "default": "",
+                            "examples": [
+                                "IfNotPresent"
+                            ],
+                            "title": "The imagePullPolicy Schema",
+                            "type": "string"
+                        },
+                        "name": {
+                            "default": "",
+                            "examples": [
+                                "copy-secrets-job"
+                            ],
+                            "title": "The name Schema",
+                            "type": "string"
+                        },
+                        "registry": {
+                            "default": "",
+                            "examples": [
+                                "docker.io"
+                            ],
+                            "title": "The registry Schema",
+                            "type": "string"
+                        },
+                        "repository": {
+                            "default": "",
+                            "examples": [
+                                "alpine/k8s"
+                            ],
+                            "title": "The repository Schema",
+                            "type": "string"
+                        },
+                        "serviceaccount": {
+                            "default": "",
+                            "examples": [
+                                "tuf-secret-copy-job"
+                            ],
+                            "title": "The serviceaccount Schema",
+                            "type": "string"
+                        },
+                        "version": {
+                            "default": "",
+                            "examples": [
+                                "sha256:fb0d2db81fb0f98abb1adf5246d6f0f4d19f34031afe4759cb7ad8e2eb8d2c01"
+                            ],
+                            "title": "The version Schema",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "name",
+                        "registry",
+                        "repository",
+                        "version",
+                        "imagePullPolicy",
+                        "serviceaccount",
+                        "backoffLimit"
+                    ],
+                    "title": "The copySecretJob Schema",
+                    "type": "object"
+                },
+                "ctlog": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "createcerts": {
+                                "fullnameOverride": "ctlog-createcerts"
+                            },
+                            "createtree": {
+                                "displayName": "ctlog-tree",
+                                "fullnameOverride": "ctlog-createtree"
+                            },
+                            "enabled": true,
+                            "forceNamespace": "ctlog-system",
+                            "fullnameOverride": "ctlog",
+                            "namespace": {
+                                "create": true,
+                                "name": "ctlog-system"
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "createcerts": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "ctlog-createcerts"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "ctlog-createcerts"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The createcerts Schema",
+                            "type": "object"
+                        },
+                        "createtree": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "displayName": "ctlog-tree",
+                                    "fullnameOverride": "ctlog-createtree"
+                                }
+                            ],
+                            "properties": {
+                                "displayName": {
+                                    "default": "",
+                                    "examples": [
+                                        "ctlog-tree"
+                                    ],
+                                    "title": "The displayName Schema",
+                                    "type": "string"
+                                },
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "ctlog-createtree"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride",
+                                "displayName"
+                            ],
+                            "title": "The createtree Schema",
+                            "type": "object"
+                        },
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                true
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "forceNamespace": {
+                            "default": "",
+                            "examples": [
+                                "ctlog-system"
+                            ],
+                            "title": "The forceNamespace Schema",
+                            "type": "string"
+                        },
+                        "fullnameOverride": {
+                            "default": "",
+                            "examples": [
+                                "ctlog"
+                            ],
+                            "title": "The fullnameOverride Schema",
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "create": true,
+                                    "name": "ctlog-system"
+                                }
+                            ],
+                            "properties": {
+                                "create": {
+                                    "default": false,
+                                    "examples": [
+                                        true
+                                    ],
+                                    "title": "The create Schema",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "ctlog-system"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "create"
+                            ],
+                            "title": "The namespace Schema",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "namespace",
+                        "forceNamespace",
+                        "fullnameOverride",
+                        "createcerts",
+                        "createtree"
+                    ],
+                    "title": "The ctlog Schema",
+                    "type": "object"
+                },
+                "fulcio": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "createcerts": {
+                                "fullnameOverride": "fulcio-createcerts"
+                            },
+                            "ctlog": {
+                                "createctconfig": {
+                                    "logPrefix": "sigstorescaffolding"
+                                },
+                                "enabled": false
+                            },
+                            "enabled": true,
+                            "forceNamespace": "fulcio-system",
+                            "namespace": {
+                                "create": true,
+                                "name": "fulcio-system"
+                            },
+                            "server": {
+                                "fullnameOverride": "fulcio-server"
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "createcerts": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "fulcio-createcerts"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "fulcio-createcerts"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The createcerts Schema",
+                            "type": "object"
+                        },
+                        "ctlog": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "createctconfig": {
+                                        "logPrefix": "sigstorescaffolding"
+                                    },
+                                    "enabled": false
+                                }
+                            ],
+                            "properties": {
+                                "createctconfig": {
+                                    "default": {},
+                                    "examples": [
+                                        {
+                                            "logPrefix": "sigstorescaffolding"
+                                        }
+                                    ],
+                                    "properties": {
+                                        "logPrefix": {
+                                            "default": "",
+                                            "examples": [
+                                                "sigstorescaffolding"
+                                            ],
+                                            "title": "The logPrefix Schema",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "logPrefix"
+                                    ],
+                                    "title": "The createctconfig Schema",
+                                    "type": "object"
+                                },
+                                "enabled": {
+                                    "default": false,
+                                    "examples": [
+                                        false
+                                    ],
+                                    "title": "The enabled Schema",
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "enabled",
+                                "createctconfig"
+                            ],
+                            "title": "The ctlog Schema",
+                            "type": "object"
+                        },
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                true
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "forceNamespace": {
+                            "default": "",
+                            "examples": [
+                                "fulcio-system"
+                            ],
+                            "title": "The forceNamespace Schema",
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "create": true,
+                                    "name": "fulcio-system"
+                                }
+                            ],
+                            "properties": {
+                                "create": {
+                                    "default": false,
+                                    "examples": [
+                                        true
+                                    ],
+                                    "title": "The create Schema",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "fulcio-system"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "create"
+                            ],
+                            "title": "The namespace Schema",
+                            "type": "object"
+                        },
+                        "server": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "fulcio-server"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "fulcio-server"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The server Schema",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "namespace",
+                        "forceNamespace",
+                        "server",
+                        "createcerts",
+                        "ctlog"
+                    ],
+                    "title": "The fulcio Schema",
+                    "type": "object"
+                },
+                "rekor": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "enabled": true,
+                            "forceNamespace": "rekor-system",
+                            "fullnameOverride": "rekor",
+                            "namespace": {
+                                "create": true,
+                                "name": "rekor-system"
+                            },
+                            "redis": {
+                                "fullnameOverride": "rekor-redis"
+                            },
+                            "server": {
+                                "fullnameOverride": "rekor-server"
+                            },
+                            "trillian": {
+                                "enabled": false
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                true
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "forceNamespace": {
+                            "default": "",
+                            "examples": [
+                                "rekor-system"
+                            ],
+                            "title": "The forceNamespace Schema",
+                            "type": "string"
+                        },
+                        "fullnameOverride": {
+                            "default": "",
+                            "examples": [
+                                "rekor"
+                            ],
+                            "title": "The fullnameOverride Schema",
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "create": true,
+                                    "name": "rekor-system"
+                                }
+                            ],
+                            "properties": {
+                                "create": {
+                                    "default": false,
+                                    "examples": [
+                                        true
+                                    ],
+                                    "title": "The create Schema",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "rekor-system"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "create"
+                            ],
+                            "title": "The namespace Schema",
+                            "type": "object"
+                        },
+                        "redis": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "rekor-redis"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "rekor-redis"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The redis Schema",
+                            "type": "object"
+                        },
+                        "server": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "rekor-server"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "rekor-server"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The server Schema",
+                            "type": "object"
+                        },
+                        "trillian": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "enabled": false
+                                }
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "default": false,
+                                    "examples": [
+                                        false
+                                    ],
+                                    "title": "The enabled Schema",
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "enabled"
+                            ],
+                            "title": "The trillian Schema",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "namespace",
+                        "forceNamespace",
+                        "fullnameOverride",
+                        "server",
+                        "redis",
+                        "trillian"
+                    ],
+                    "title": "The rekor Schema",
+                    "type": "object"
+                },
+                "trillian": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "enabled": true,
+                            "forceNamespace": "trillian-system",
+                            "fullnameOverride": "trillian",
+                            "logServer": {
+                                "fullnameOverride": "trillian-logserver",
+                                "name": "trillian-logserver",
+                                "portHTTP": 8090,
+                                "portRPC": 8091
+                            },
+                            "logSigner": {
+                                "fullnameOverride": "trillian-logsigner",
+                                "name": "trillian-logsigner"
+                            },
+                            "mysql": {
+                                "fullnameOverride": "trillian-mysql"
+                            },
+                            "namespace": {
+                                "create": true,
+                                "name": "trillian-system"
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                true
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "forceNamespace": {
+                            "default": "",
+                            "examples": [
+                                "trillian-system"
+                            ],
+                            "title": "The forceNamespace Schema",
+                            "type": "string"
+                        },
+                        "fullnameOverride": {
+                            "default": "",
+                            "examples": [
+                                "trillian"
+                            ],
+                            "title": "The fullnameOverride Schema",
+                            "type": "string"
+                        },
+                        "logServer": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "trillian-logserver",
+                                    "name": "trillian-logserver",
+                                    "portHTTP": 8090,
+                                    "portRPC": 8091
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "trillian-logserver"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "trillian-logserver"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                },
+                                "portHTTP": {
+                                    "default": 0,
+                                    "examples": [
+                                        8090
+                                    ],
+                                    "title": "The portHTTP Schema",
+                                    "type": "integer"
+                                },
+                                "portRPC": {
+                                    "default": 0,
+                                    "examples": [
+                                        8091
+                                    ],
+                                    "title": "The portRPC Schema",
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "fullnameOverride",
+                                "portHTTP",
+                                "portRPC"
+                            ],
+                            "title": "The logServer Schema",
+                            "type": "object"
+                        },
+                        "logSigner": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "trillian-logsigner",
+                                    "name": "trillian-logsigner"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "trillian-logsigner"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "trillian-logsigner"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "fullnameOverride"
+                            ],
+                            "title": "The logSigner Schema",
+                            "type": "object"
+                        },
+                        "mysql": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "trillian-mysql"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "trillian-mysql"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The mysql Schema",
+                            "type": "object"
+                        },
+                        "namespace": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "create": true,
+                                    "name": "trillian-system"
+                                }
+                            ],
+                            "properties": {
+                                "create": {
+                                    "default": false,
+                                    "examples": [
+                                        true
+                                    ],
+                                    "title": "The create Schema",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "trillian-system"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "create"
+                            ],
+                            "title": "The namespace Schema",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "namespace",
+                        "forceNamespace",
+                        "fullnameOverride",
+                        "logServer",
+                        "logSigner",
+                        "mysql"
+                    ],
+                    "title": "The trillian Schema",
+                    "type": "object"
+                },
+                "tsa": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "enabled": true,
+                            "forceNamespace": "tsa-system",
+                            "namespace": {
+                                "create": true,
+                                "name": "tsa-system"
+                            },
+                            "server": {
+                                "fullnameOverride": "tsa-server"
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                true
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "forceNamespace": {
+                            "default": "",
+                            "examples": [
+                                "tsa-system"
+                            ],
+                            "title": "The forceNamespace Schema",
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "create": true,
+                                    "name": "tsa-system"
+                                }
+                            ],
+                            "properties": {
+                                "create": {
+                                    "default": false,
+                                    "examples": [
+                                        true
+                                    ],
+                                    "title": "The create Schema",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "tsa-system"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "create"
+                            ],
+                            "title": "The namespace Schema",
+                            "type": "object"
+                        },
+                        "server": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "fullnameOverride": "tsa-server"
+                                }
+                            ],
+                            "properties": {
+                                "fullnameOverride": {
+                                    "default": "",
+                                    "examples": [
+                                        "tsa-server"
+                                    ],
+                                    "title": "The fullnameOverride Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "fullnameOverride"
+                            ],
+                            "title": "The server Schema",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "namespace",
+                        "forceNamespace",
+                        "server"
+                    ],
+                    "title": "The tsa Schema",
+                    "type": "object"
+                },
+                "tuf": {
+                    "default": {},
+                    "examples": [
+                        {
+                            "enabled": false,
+                            "forceNamespace": "tuf-system",
+                            "fullnameOverride": "tuf",
+                            "namespace": {
+                                "create": true,
+                                "name": "tuf-system"
+                            },
+                            "secrets": {
+                                "ctlog": {
+                                    "name": "ctlog-public-key",
+                                    "path": "ctlog-pubkey"
+                                },
+                                "fulcio": {
+                                    "name": "fulcio-server-secret",
+                                    "path": "fulcio-cert"
+                                },
+                                "rekor": {
+                                    "name": "rekor-public-key",
+                                    "path": "rekor-pubkey"
+                                }
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "default": false,
+                            "examples": [
+                                false
+                            ],
+                            "title": "The enabled Schema",
+                            "type": "boolean"
+                        },
+                        "forceNamespace": {
+                            "default": "",
+                            "examples": [
+                                "tuf-system"
+                            ],
+                            "title": "The forceNamespace Schema",
+                            "type": "string"
+                        },
+                        "fullnameOverride": {
+                            "default": "",
+                            "examples": [
+                                "tuf"
+                            ],
+                            "title": "The fullnameOverride Schema",
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "create": true,
+                                    "name": "tuf-system"
+                                }
+                            ],
+                            "properties": {
+                                "create": {
+                                    "default": false,
+                                    "examples": [
+                                        true
+                                    ],
+                                    "title": "The create Schema",
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "default": "",
+                                    "examples": [
+                                        "tuf-system"
+                                    ],
+                                    "title": "The name Schema",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "create"
+                            ],
+                            "title": "The namespace Schema",
+                            "type": "object"
+                        },
+                        "secrets": {
+                            "default": {},
+                            "examples": [
+                                {
+                                    "ctlog": {
+                                        "name": "ctlog-public-key",
+                                        "path": "ctlog-pubkey"
+                                    },
+                                    "fulcio": {
+                                        "name": "fulcio-server-secret",
+                                        "path": "fulcio-cert"
+                                    },
+                                    "rekor": {
+                                        "name": "rekor-public-key",
+                                        "path": "rekor-pubkey"
+                                    }
+                                }
+                            ],
+                            "properties": {
+                                "ctlog": {
+                                    "default": {},
+                                    "examples": [
+                                        {
+                                            "name": "ctlog-public-key",
+                                            "path": "ctlog-pubkey"
+                                        }
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "default": "",
+                                            "examples": [
+                                                "ctlog-public-key"
+                                            ],
+                                            "title": "The name Schema",
+                                            "type": "string"
+                                        },
+                                        "path": {
+                                            "default": "",
+                                            "examples": [
+                                                "ctlog-pubkey"
+                                            ],
+                                            "title": "The path Schema",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "path"
+                                    ],
+                                    "title": "The ctlog Schema",
+                                    "type": "object"
+                                },
+                                "fulcio": {
+                                    "default": {},
+                                    "examples": [
+                                        {
+                                            "name": "fulcio-server-secret",
+                                            "path": "fulcio-cert"
+                                        }
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "default": "",
+                                            "examples": [
+                                                "fulcio-server-secret"
+                                            ],
+                                            "title": "The name Schema",
+                                            "type": "string"
+                                        },
+                                        "path": {
+                                            "default": "",
+                                            "examples": [
+                                                "fulcio-cert"
+                                            ],
+                                            "title": "The path Schema",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "path"
+                                    ],
+                                    "title": "The fulcio Schema",
+                                    "type": "object"
+                                },
+                                "rekor": {
+                                    "default": {},
+                                    "examples": [
+                                        {
+                                            "name": "rekor-public-key",
+                                            "path": "rekor-pubkey"
+                                        }
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "default": "",
+                                            "examples": [
+                                                "rekor-public-key"
+                                            ],
+                                            "title": "The name Schema",
+                                            "type": "string"
+                                        },
+                                        "path": {
+                                            "default": "",
+                                            "examples": [
+                                                "rekor-pubkey"
+                                            ],
+                                            "title": "The path Schema",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "path"
+                                    ],
+                                    "title": "The rekor Schema",
+                                    "type": "object"
+                                }
+                            },
+                            "required": [
+                                "rekor",
+                                "fulcio",
+                                "ctlog"
+                            ],
+                            "title": "The secrets Schema",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "namespace",
+                        "forceNamespace",
+                        "fullnameOverride",
+                        "secrets"
+                    ],
+                    "title": "The tuf Schema",
+                    "type": "object"
+                }
+            },
+            "required": [
+                "fulcio",
+                "ctlog",
+                "rekor",
+                "trillian",
+                "tuf",
+                "copySecretJob",
+                "tsa"
+            ],
+            "title": "Root Schema",
+            "type": "object"
+        }
+    },
+    "title": "Root Schema",
+    "type": "object"
+}

@@ -1,34 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.configs.cosign.metadata.name }}
+  name: {{ .Values.configs.cosign.name }}
   namespace: {{ .Values.configs.cosign.namespace }}
 spec:
-  replicas: {{ .Values.configs.cosign.spec.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.configs.cosign.metadata.name }}
+      app: {{ .Values.configs.cosign.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.configs.cosign.metadata.name }}
+        app: {{ .Values.configs.cosign.name }}
     spec:
       containers:
-      - name: {{ .Values.configs.cosign.metadata.name }}
+      - name: {{ .Values.configs.cosign.name }}
         image: "{{ .Values.configs.cosign.image.registry }}/{{ .Values.configs.cosign.image.repository }}:{{ .Values.configs.cosign.image.version }}"
         env:
-        - name: BASE_DOMAIN
-          value: {{ .Values.configs.cosign.BASE_DOMAIN }}
+        - name: OPENSHIFT_APPS_SUBDOMAIN
+          value: {{ .Values.configs.cosign.appsSubdomain }}
         - name: KEYCLOAK_REALM
           value: "sigstore"
         - name: FULCIO_URL
-          value: "https://fulcio.$(BASE_DOMAIN)"
+          value: "https://fulcio.$(OPENSHIFT_APPS_SUBDOMAIN)"
         - name: KEYCLOAK_URL
-          value: "https://keycloak-keycloak-system.$(BASE_DOMAIN)"
+          value: "https://keycloak-keycloak-system.$(OPENSHIFT_APPS_SUBDOMAIN)"
         - name: REKOR_URL
-          value: "https://rekor.$(BASE_DOMAIN)"
+          value: "https://rekor.$(OPENSHIFT_APPS_SUBDOMAIN)"
         - name: TUF_URL
-          value: "https://tuf.$(BASE_DOMAIN)"
+          value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)"
         - name: KEYCLOAK_OIDC_ISSUER
           value: "$KEYCLOAK_URL/auth/realms/$(KEYCLOAK_REALM)"
         securityContext:

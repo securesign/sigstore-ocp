@@ -4,22 +4,20 @@ Utilize the following steps to sign a container that has been published to an OC
 
 1. Export the following environment variables substituting `base_hostname` with the value used as part of the provisioning
 
-The `base_hostname` can be obtained from
+The OpenShift subdomain can be obtained from
 
 ```shell
-oc get dnsrecords -o yaml -n openshift-ingress-operator | grep dnsName
-# omit the '*.'
-export BASE_HOSTNAME=apps.something.something.openshiftapps.com
+OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
 ```
 
 The following assumes there exists a Keycloak `keycloak` in namespace `keycloak-system`
 
 ```shell
 export KEYCLOAK_REALM=sigstore
-export FULCIO_URL=https://fulcio.$BASE_HOSTNAME
-export KEYCLOAK_URL=https://keycloak-keycloak-system.$BASE_HOSTNAME
-export REKOR_URL=https://rekor.$BASE_HOSTNAME
-export TUF_URL=https://tuf.$BASE_HOSTNAME
+export FULCIO_URL=https://fulcio.$OPENSHIFT_APPS_SUBDOMAIN
+export KEYCLOAK_URL=https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN
+export REKOR_URL=https://rekor.$OPENSHIFT_APPS_SUBDOMAIN
+export TUF_URL=https://tuf.$OPENSHIFT_APPS_SUBDOMAIN
 export KEYCLOAK_OIDC_ISSUER=$KEYCLOAK_URL/auth/realms/$KEYCLOAK_REALM
 ```
 
@@ -55,9 +53,11 @@ If the signature verification did not result in an error, the deployment of Sigs
 
 ## Signing a Container Using the Cosign pod.
 
-Follow the steps below to sign a container with the cosign pod that has been published to an OCI registry.
+Follow the steps below to sign an artifact using the cosign pod running in the cosign namespace.
 
-If the `BASE_HOSTNAME` environmental variable is not already specified in the Helm chart, make sure to set it in the cosign pod.
+The `OPENSHIFT_APPS_SUBDOMAIN` environmental variable should be specified in the scaffolding chart,
+with `configs.cosign.appsSubdomain`. If it isn't, you'll need to set that variable in the cosign
+deployment pod specification.
 
 1. Get the name of the pod.
 
