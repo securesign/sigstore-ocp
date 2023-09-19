@@ -45,17 +45,15 @@ export MYSQL_PASSWORD=$(oc -n trillian-system get secrets trillian-mysql -o=json
 export MYSQL_DATABASE=$(oc -n trillian-system get secrets trillian-mysql -o=jsonpath="{.data.mysql-database}" | base64 -d)
 ```
 
-```bash
-envsubst < grafana/dashboards/datasource.yaml > grafana/dashboards/temp_datasource.yaml 
-mv grafana/dashboards/temp_datasource.yaml grafana/dashboards/datasource.yaml
-```
 ## Step 5: Creating datasources & dashboards
 
 Finally, the datasources and dashboards can be created.
 
 ```bash
-oc apply -k grafana/dashboards
+envsubst < grafana/dashboards/datasource.yaml | oc apply -f -
+oc apply -f grafana/dashboards/dashboard.yaml
 ```
+
 ## Step 6: Access the UI
 
 To find the Grafana UI route, execute:
