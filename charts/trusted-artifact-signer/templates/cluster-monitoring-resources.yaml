@@ -48,6 +48,6 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: scaffolding
+      app.kubernetes.io/instance: trusted-artifact-signer
 {{- end }}
 {{- end }}

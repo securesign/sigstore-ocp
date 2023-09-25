@@ -12,7 +12,7 @@ annotations:
   charts.openshift.io/provider: TrustedSigner
   charts.openshift.io/supportURL: https://github.com/securesign/sigstore-ocp/issues
 apiVersion: v2
-name: scaffolding
+name: trusted-artifact-signer
 description: A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 type: application
 dependencies:
@@ -26,11 +26,11 @@ keywords:
   - cosign
 kubeVersion: ">= 1.19.0-0"
 maintainers:
-  - name: TrustedSigner
+  - name: TrustedArtifactSigner
     url: ""
 sources:
   - https://github.com/securesign/sigstore-ocp
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.1
+version: 0.1.0

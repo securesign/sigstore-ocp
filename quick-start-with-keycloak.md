@@ -30,7 +30,7 @@ oc -n rekor-system create secret generic rekor-private-key --from-file=private=.
 3.  Run the following:
 
 ```shell
-OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i scaffolding --debug charts/scaffolding -n sigstore --create-namespace --values -
+OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer -n sigstore --create-namespace --values -
 ```
 
 A good way to tell if things are progressing well is to watch `oc get jobs -A` and when the tuf-system job is complete,
