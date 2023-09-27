@@ -55,7 +55,7 @@ If the signature verification did not result in an error, the deployment of Sigs
 
 Follow the steps below to sign an artifact using the cosign pod running in the cosign namespace.
 
-The `OPENSHIFT_APPS_SUBDOMAIN` environmental variable should be specified in the scaffolding chart,
+The `OPENSHIFT_APPS_SUBDOMAIN` environmental variable should be specified in the trusted-artifact-signer chart,
 with `configs.cosign.appsSubdomain`. If it isn't, you'll need to set that variable in the cosign
 deployment pod specification.
 

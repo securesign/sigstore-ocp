@@ -13,4 +13,4 @@ Information on how to install Sigstore components on OpenShift can be found in t
 
 ## Scaffolding Chart
 
-More information can be found by inspecting the [scaffolding chart](charts/scaffolding).
+More information can be found by inspecting the [trusted-artifact-signer chart](charts/trusted-artifact-signer).

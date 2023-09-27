@@ -9,7 +9,7 @@ configs:
     rolebindings:
       - ctlog
       - ctlog-createtree
-      - scaffolding-ctlog-createctconfig
+      - trusted-artifact-signer-ctlog-createctconfig
 
   rekor:
     # -- namespace for rekor resources
@@ -21,7 +21,7 @@ configs:
     rolebindings:
       - rekor-redis
       - rekor-server
-      - scaffolding-rekor-createtree
+      - trusted-artifact-signer-rekor-createtree
     # -- Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log
     # When this section is left out, scaffold.rekor creates the secret and key.
     signer:

@@ -1,9 +1,9 @@
 
-# scaffolding
+# trusted-artifact-signer
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -61,7 +61,7 @@ When logged in as an elevated OpenShift user, execute the following to install t
 customized values file. The OPENSHIFT_APPS_SUBDOMAIN will be substituted in the values file with `envsubst` below:
 
 ```shell
-OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i scaffolding --debug charts/scaffolding -n sigstore --create-namespace --values -
+OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer -n sigstore --create-namespace --values -
 ```
 
 ### Monitor Sigstore Components with Grafana
@@ -92,7 +92,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.cosign.rolebindings | names for rolebindings to add clusterroles to cosign serviceaccounts. The names must match the serviceaccount names in the cosign namespace. | list | `["cosign"]` |
 | configs.ctlog.create | Whether to create the ctlog namespace | bool | `true` |
 | configs.ctlog.namespace | Namespace for ctlog resources | string | `"ctlog-system"` |
-| configs.ctlog.rolebindings | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. | list | `["ctlog","ctlog-createtree","scaffolding-ctlog-createctconfig"]` |
+| configs.ctlog.rolebindings | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. | list | `["ctlog","ctlog-createtree","trusted-artifact-signer-ctlog-createctconfig"]` |
 | configs.fulcio.clusterMonitoring.enabled |  | bool | `true` |
 | configs.fulcio.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.fulcio.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
@@ -114,7 +114,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.clusterMonitoring.endpoints[0].scheme |  | string | `"http"` |
 | configs.rekor.create | whether to create the rekor namespace | bool | `true` |
 | configs.rekor.namespace | namespace for rekor resources | string | `"rekor-system"` |
-| configs.rekor.rolebindings | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. | list | `["rekor-redis","rekor-server","scaffolding-rekor-createtree"]` |
+| configs.rekor.rolebindings | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. | list | `["rekor-redis","rekor-server","trusted-artifact-signer-rekor-createtree"]` |
 | configs.rekor.signer | Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log When this section is left out, scaffold.rekor creates the secret and key. | object | `{"secret":{"name":"","private_key":"","private_key_file":""}}` |
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
