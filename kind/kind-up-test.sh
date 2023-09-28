@@ -43,4 +43,4 @@ oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=.
 oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/test-keys-cert/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
 # install charts
-#OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i scaffolding --debug ./charts/scaffolding -n sigstore --create-namespace --values -
+#OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer -n sigstore --create-namespace --values -

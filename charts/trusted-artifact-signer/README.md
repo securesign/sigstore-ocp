@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -139,8 +139,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.createctconfig.enabled |  | bool | `true` |
 | scaffold.ctlog.createctconfig.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.ctlog.createctconfig.image.registry |  | string | `"quay.io"` |
-| scaffold.ctlog.createctconfig.image.repository |  | string | `"securesign/createctconfig"` |
-| scaffold.ctlog.createctconfig.image.version |  | string | `"v0.6.4"` |
+| scaffold.ctlog.createctconfig.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/createctconfig"` |
+| scaffold.ctlog.createctconfig.image.version |  | string | `"sha256:b063d921637a0fbb4af3619a6e036e8f9b2ffd40d014381dd23dcba116c9f893"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.imagePullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
@@ -149,8 +149,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.createtree.fullnameOverride |  | string | `"ctlog-createtree"` |
 | scaffold.ctlog.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.ctlog.createtree.image.registry |  | string | `"quay.io"` |
-| scaffold.ctlog.createtree.image.repository |  | string | `"securesign/createtree"` |
-| scaffold.ctlog.createtree.image.version |  | string | `"v0.6.4"` |
+| scaffold.ctlog.createtree.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/createtree"` |
+| scaffold.ctlog.createtree.image.version |  | string | `"sha256:8733633da1963bed1a1770d177bcceeea038c1a367f75802f5385a4924fe404a"` |
 | scaffold.ctlog.enabled |  | bool | `true` |
 | scaffold.ctlog.forceNamespace |  | string | `"ctlog-system"` |
 | scaffold.ctlog.fullnameOverride |  | string | `"ctlog"` |
@@ -158,14 +158,14 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.namespace.name |  | string | `"ctlog-system"` |
 | scaffold.ctlog.server.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.ctlog.server.image.registry |  | string | `"quay.io"` |
-| scaffold.ctlog.server.image.repository |  | string | `"securesign/ct_server"` |
-| scaffold.ctlog.server.image.version |  | string | `"v0.6.4"` |
+| scaffold.ctlog.server.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/ct-server"` |
+| scaffold.ctlog.server.image.version |  | string | `"sha256:40937ee100feb8187ca766063d465d168e5afdfafd69501b9dae9346fb464e47"` |
 | scaffold.fulcio.createcerts.enabled |  | bool | `false` |
 | scaffold.fulcio.createcerts.fullnameOverride |  | string | `"fulcio-createcerts"` |
 | scaffold.fulcio.createcerts.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.fulcio.createcerts.image.registry |  | string | `"quay.io"` |
-| scaffold.fulcio.createcerts.image.repository |  | string | `"securesign/createcerts"` |
-| scaffold.fulcio.createcerts.image.version |  | string | `"v0.6.4"` |
+| scaffold.fulcio.createcerts.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/createcerts"` |
+| scaffold.fulcio.createcerts.image.version |  | string | `"sha256:f0f954ea28ddab1ff8ec39ada5c04a38548367e47a9336d87bb328624736777d"` |
 | scaffold.fulcio.ctlog.createctconfig.logPrefix |  | string | `"sigstorescaffolding"` |
 | scaffold.fulcio.ctlog.enabled |  | bool | `false` |
 | scaffold.fulcio.enabled |  | bool | `true` |
@@ -175,8 +175,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.server.fullnameOverride |  | string | `"fulcio-server"` |
 | scaffold.fulcio.server.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.fulcio.server.image.registry |  | string | `"quay.io"` |
-| scaffold.fulcio.server.image.repository |  | string | `"securesign/fulcio"` |
-| scaffold.fulcio.server.image.version |  | string | `"v1.4.0"` |
+| scaffold.fulcio.server.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/fulcio/fulcio"` |
+| scaffold.fulcio.server.image.version |  | string | `"sha256:ef671ccb83e9fa23aa11f00238ae3db16a873ef2add204a8b4cc5a488eadf203"` |
 | scaffold.fulcio.server.ingress.http.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.fulcio.server.ingress.http.className |  | string | `""` |
 | scaffold.fulcio.server.ingress.http.enabled |  | bool | `true` |
@@ -185,12 +185,12 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.server.secret |  | string | `"fulcio-secret-rh"` |
 | scaffold.rekor.backfillredis.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.rekor.backfillredis.image.registry |  | string | `"quay.io"` |
-| scaffold.rekor.backfillredis.image.repository |  | string | `"securesign/backfill-redis"` |
-| scaffold.rekor.backfillredis.image.version |  | string | `"v1.2.2"` |
+| scaffold.rekor.backfillredis.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/rekor/backfill-redis"` |
+| scaffold.rekor.backfillredis.image.version |  | string | `"sha256:389e954a1d99de9c88aadd4d21e7725271e7dcb5756723e9e12404bfef7af97a"` |
 | scaffold.rekor.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.rekor.createtree.image.registry |  | string | `"quay.io"` |
-| scaffold.rekor.createtree.image.repository |  | string | `"securesign/createtree"` |
-| scaffold.rekor.createtree.image.version |  | string | `"v0.6.4"` |
+| scaffold.rekor.createtree.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/createtree"` |
+| scaffold.rekor.createtree.image.version |  | string | `"sha256:8733633da1963bed1a1770d177bcceeea038c1a367f75802f5385a4924fe404a"` |
 | scaffold.rekor.enabled |  | bool | `true` |
 | scaffold.rekor.forceNamespace |  | string | `"rekor-system"` |
 | scaffold.rekor.fullnameOverride |  | string | `"rekor"` |
@@ -214,8 +214,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.trillian.enabled |  | bool | `false` |
 | scaffold.trillian.createdb.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.createdb.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.createdb.image.repository |  | string | `"securesign/createdb"` |
-| scaffold.trillian.createdb.image.version |  | string | `"v0.6.4"` |
+| scaffold.trillian.createdb.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/createdb"` |
+| scaffold.trillian.createdb.image.version |  | string | `"sha256:06ec5784e20de10f0cdcad1277afb0a58e7041883a170e1328c1567fecf8218d"` |
 | scaffold.trillian.enabled |  | bool | `true` |
 | scaffold.trillian.forceNamespace |  | string | `"trillian-system"` |
 | scaffold.trillian.fullnameOverride |  | string | `"trillian"` |
@@ -224,31 +224,31 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
 | scaffold.trillian.initContainerImage.curl.version |  | string | `"latest"` |
 | scaffold.trillian.initContainerImage.netcat.registry |  | string | `"quay.io"` |
-| scaffold.trillian.initContainerImage.netcat.repository |  | string | `"securesign/netcat"` |
-| scaffold.trillian.initContainerImage.netcat.version |  | string | `"v1.0.0"` |
+| scaffold.trillian.initContainerImage.netcat.repository |  | string | `"redhat-user-workloads/securesign-tenant/trillian/netcat"` |
+| scaffold.trillian.initContainerImage.netcat.version |  | string | `"sha256:2c46282070e019cf44e597579cadee65e75e72b86ec57e2c87793c90ba6d15ed"` |
 | scaffold.trillian.logServer.fullnameOverride |  | string | `"trillian-logserver"` |
 | scaffold.trillian.logServer.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.logServer.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.logServer.image.repository |  | string | `"securesign/trillian_log_server"` |
-| scaffold.trillian.logServer.image.version |  | string | `"v1.2.2"` |
+| scaffold.trillian.logServer.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/trillian/trillian-logserver"` |
+| scaffold.trillian.logServer.image.version |  | string | `"sha256:5804a6021cc8809b16e99b24867b411cb3bbc7b304d60b7f178e6df2df6d215c"` |
 | scaffold.trillian.logServer.name |  | string | `"trillian-logserver"` |
 | scaffold.trillian.logServer.portHTTP |  | int | `8090` |
 | scaffold.trillian.logServer.portRPC |  | int | `8091` |
 | scaffold.trillian.logSigner.fullnameOverride |  | string | `"trillian-logsigner"` |
 | scaffold.trillian.logSigner.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.logSigner.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.logSigner.image.repository |  | string | `"securesign/trillian_log_signer"` |
-| scaffold.trillian.logSigner.image.version |  | string | `"v1.2.2"` |
+| scaffold.trillian.logSigner.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/trillian/trillian-logsigner"` |
+| scaffold.trillian.logSigner.image.version |  | string | `"sha256:bd9a953e0fead87152452cde3ab24188f2eaae48c3cd50d98f5715f28a8dc371"` |
 | scaffold.trillian.logSigner.name |  | string | `"trillian-logsigner"` |
 | scaffold.trillian.mysql.args |  | list | `[]` |
 | scaffold.trillian.mysql.fullnameOverride |  | string | `"trillian-mysql"` |
 | scaffold.trillian.mysql.gcp.scaffoldSQLProxy.registry |  | string | `"quay.io"` |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository |  | string | `"securesign/cloudsqlproxy"` |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version |  | string | `"v0.6.4"` |
+| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/cloudsqlproxy"` |
+| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version |  | string | `"sha256:fa77970362f586a40e714f9a01799a571bcd4519e354a147fa8f87cd4f498a3c"` |
 | scaffold.trillian.mysql.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.mysql.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.mysql.image.repository |  | string | `"securesign/trillian-db"` |
-| scaffold.trillian.mysql.image.version |  | string | `"v1.5.2"` |
+| scaffold.trillian.mysql.image.repository |  | string | `"redhat-user-workloads/securesign-tenant/trillian/trillian-database"` |
+| scaffold.trillian.mysql.image.version |  | string | `"sha256:b1f12da6571b57fd529d48e3d4ad43afc44a48a1cccf5f397bc7792ff0e62e38"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[0] |  | string | `"mysqladmin"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[1] |  | string | `"ping"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[2] |  | string | `"-h"` |
@@ -281,8 +281,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.tsa.namespace.name |  | string | `"tsa-system"` |
 | scaffold.tsa.server.fullnameOverride |  | string | `"tsa-server"` |
 | scaffold.tuf.deployment.registry |  | string | `"quay.io"` |
-| scaffold.tuf.deployment.repository |  | string | `"securesign/tuf/server"` |
-| scaffold.tuf.deployment.version |  | string | `"latest"` |
+| scaffold.tuf.deployment.repository |  | string | `"redhat-user-workloads/securesign-tenant/scaffolding/tuf-server"` |
+| scaffold.tuf.deployment.version |  | string | `"sha256:d277a28154d68e4c210c3bb93db8330dd8ca74568f70d40a7b93a6dbfe5f8130"` |
 | scaffold.tuf.enabled |  | bool | `true` |
 | scaffold.tuf.forceNamespace |  | string | `"tuf-system"` |
 | scaffold.tuf.fullnameOverride |  | string | `"tuf"` |
@@ -293,7 +293,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.tuf.namespace.create |  | bool | `false` |
 | scaffold.tuf.namespace.name |  | string | `"tuf-system"` |
 | scaffold.tuf.secrets.ctlog.name |  | string | `"ctlog-public-key"` |
-| scaffold.tuf.secrets.ctlog.path |  | string | `"ctlog-pubkey"` |
+| scaffold.tuf.secrets.ctlog.path |  | string | `"ctfe.pub"` |
 | scaffold.tuf.secrets.fulcio.name |  | string | `"fulcio-secret-rh"` |
 | scaffold.tuf.secrets.fulcio.path |  | string | `"fulcio-cert"` |
 | scaffold.tuf.secrets.rekor.name |  | string | `"rekor-public-key"` |

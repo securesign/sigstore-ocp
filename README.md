@@ -13,10 +13,7 @@ Information on how to install Sigstore components on OpenShift can be found in t
 
 ## Scaffolding Chart
 
-<<<<<<< HEAD
 More information can be found by inspecting the [trusted-artifact-signer chart](charts/trusted-artifact-signer).
-=======
-More information can be found by inspecting the [scaffolding chart](charts/scaffolding).
 
 ## Contributing
 
@@ -35,9 +32,7 @@ kubectl wait --namespace ingress-nginx \
   --selector=app.kubernetes.io/component=controller \
   --timeout=90s
 
-OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i scaffolding --debug ./charts/scaffolding -n sigstore --create-namespace --values -
+OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer -n sigstore --create-namespace --values -
 ```
 
 This test setup is to verify that all deployments are healthy and all jobs complete. However, this does not create a working environment to sign artifacts.
-
->>>>>>> a0f7581 (add kind)
