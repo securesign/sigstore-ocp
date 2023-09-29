@@ -1,0 +1,13 @@
+**Warning** Missing fallback target ctfe.pub, skipping
+Error: signing [quay.io/tdalton/tuf_server@sha256:c1b5466d3210ebc67ba12f99b9717e33c7c911a9a27ff2e19e4e96492b2f32a4]: getting signer: getting key from Fulcio: getting CTFE public keys: no matching targets by custom metadata, fallbacks not found: ctfe.pub
+main.go:74: error during command execution: signing [quay.io/tdalton/tuf_server@sha256:c1b5466d3210ebc67ba12f99b9717e33c7c911a9a27ff2e19e4e96492b2f32a4]: getting signer: getting key from Fulcio: getting CTFE public keys: no matching targets by custom metadata, fallbacks not found: ctfe.pub
+[tdalton@fedora sigstore-ocp]$ 
+
+
+tuf_Server Issues
+
+rekor server unknown command "serve"
+
+
+6957a1ec319e53dbc5446ddc82c53a4274350198a24479c3d9b828979904ae78985d4dcb26afeae3e26506041c2eabe7402ed0ce2697dd1e9dde01eab5cecccc
+ctfe.pub
