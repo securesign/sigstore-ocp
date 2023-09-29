@@ -374,6 +374,7 @@ scaffold:
     deployment:
       registry: quay.io
       repository: redhat-user-workloads/securesign-tenant/scaffolding/tuf-server
+
       version: "8aaabdf51fb0b7823c53bf58cda2f8beabb4fbfe"
 
   copySecretJob:
