@@ -36,3 +36,10 @@ OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.y
 ```
 
 This test setup is to verify that all deployments are healthy and all jobs complete. However, this does not create a working environment to sign artifacts.
+
+To cleanup the test kind cluster, run:
+
+```bash
+sudo kind delete cluster
+```
+

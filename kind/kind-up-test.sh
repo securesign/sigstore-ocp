@@ -28,6 +28,9 @@ mv /tmp/config ~/.kube/config
 # install ingress-nginx
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
+# add servicemonitor crd 
+kubectl apply -f ./kind/servicemonitor-crd.yaml
+
 #kubectl wait --namespace ingress-nginx \
 #  --for=condition=ready pod \
 #  --selector=app.kubernetes.io/component=controller \
@@ -38,9 +41,9 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main
 
 oc create ns fulcio-system
 oc create ns rekor-system
-oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/test-keys-cert/file_ca_key.pem --from-file=public=./kind/test-keys-cert/file_ca_pub.pem --from-file=cert=./kind/test-keys-cert/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
+oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
 
-oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/test-keys-cert/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
+oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
 # install charts
 #OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer -n sigstore --create-namespace --values -
