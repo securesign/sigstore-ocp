@@ -13,12 +13,11 @@ OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDoma
 The following assumes there exists a Keycloak `keycloak` in namespace `keycloak-system`
 
 ```shell
-export KEYCLOAK_REALM=sigstore
+export OIDC_AUTHENTICATION_REALM=sigstore
 export FULCIO_URL=https://fulcio.$OPENSHIFT_APPS_SUBDOMAIN
-export KEYCLOAK_URL=https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN
+export OIDC_ISSUER_URL=https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/$OIDC_AUTHENTICATION_REALM
 export REKOR_URL=https://rekor.$OPENSHIFT_APPS_SUBDOMAIN
 export TUF_URL=https://tuf.$OPENSHIFT_APPS_SUBDOMAIN
-export KEYCLOAK_OIDC_ISSUER=$KEYCLOAK_URL/auth/realms/$KEYCLOAK_REALM
 ```
 
 2. Initialize the TUF roots
@@ -32,10 +31,10 @@ Note: If you have used `cosign` previously, you may need to delete the `~/.sigst
 3. Sign the desired container
 
 ```shell
-cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$KEYCLOAK_OIDC_ISSUER  <image>
+cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL  <image>
 ```
 
-Authenticate with the Keycloak instance using the desired credentials.
+Authenticate with the OIDC provider (Keycloak, here)  using the desired credentials.
 
 4. Verify the signed image
 
@@ -76,7 +75,7 @@ oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize --mirror=$TUF_URL 
 oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign login <repo> -u <username> -p <password>'
 ```
 
-4. Retrieve `id_token` from the keycloak provider.
+4. Retrieve `id_token` from the OIDC provider.
 ```
 curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 -d "client_id=<client_id>" \
@@ -84,15 +83,15 @@ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 -d "password=<password>" \
 -d "grant_type=password" \
 -d "scope=openid" \
-<Keycloak_issuer_url>/auth/realms/<client_id>/protocol/openid-connect/token
+<oidc_issuer_url>/protocol/openid-connect/token
 ```
 
 5. Sign the container.
 ```
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$KEYCLOAK_OIDC_ISSUER --identity-token=<id_token> <image>'
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL --identity-token=<id_token> <image>'
 ```
 
-6. Verify the signed image.
+6. Verify the signed image. Again, this example assumes `Keycloak` is the OIDC provider.
 
 ```shell
 oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --rekor-url=$REKOR_URL --certificate-identity-regexp sigstore-user --certificate-oidc-issuer-regexp keycloak <image>'

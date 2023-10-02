@@ -5,7 +5,6 @@
 # 'fulcio-secret-rh' and 'rekor-private-key'
 # For root & key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
-# Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
 ---
 configs:
   cosign:

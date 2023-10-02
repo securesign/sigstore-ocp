@@ -124,6 +124,7 @@ configs:
     # -- Image containing the cosign binary as well as environment variables with the base domain injected.
     image:
       registry: quay.io
+      # TODO: update image
       repository: securesign/cosign
       version: v2.1.1
       pullPolicy: IfNotPresent
@@ -225,6 +226,7 @@ scaffold:
       fullnameOverride: rekor-server
       image:
         registry: quay.io
+        # TODO: update image
         repository: securesign/rekor-server
         version: v1.2.2
         pullPolicy: IfNotPresent

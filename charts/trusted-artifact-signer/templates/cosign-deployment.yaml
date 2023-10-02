@@ -12,27 +12,29 @@ spec:
       labels:
         app: {{ .Values.configs.cosign.name }}
     spec:
+      {{- if $.Values.configs.cosign.rolebindings }}
+      serviceAccountName: {{ index .Values.configs.cosign.rolebindings 0 }}
+      {{- end }}
       containers:
       - name: {{ .Values.configs.cosign.name }}
         image: "{{ .Values.configs.cosign.image.registry }}/{{ .Values.configs.cosign.image.repository }}:{{ .Values.configs.cosign.image.version }}"
         env:
         - name: OPENSHIFT_APPS_SUBDOMAIN
           value: {{ .Values.configs.cosign.appsSubdomain }}
-        - name: KEYCLOAK_REALM
+        - name: OIDC_AUTHENTICATION_REALM
           value: "sigstore"
         - name: FULCIO_URL
           value: "https://fulcio.$(OPENSHIFT_APPS_SUBDOMAIN)"
-        - name: KEYCLOAK_URL
-          value: "https://keycloak-keycloak-system.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: OIDC_ISSUER_URL
+          value: "https://keycloak-keycloak-system.$(OPENSHIFT_APPS_SUBDOMAIN)/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
         - name: REKOR_URL
           value: "https://rekor.$(OPENSHIFT_APPS_SUBDOMAIN)"
         - name: TUF_URL
           value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)"
-        - name: KEYCLOAK_OIDC_ISSUER
-          value: "$KEYCLOAK_URL/auth/realms/$(KEYCLOAK_REALM)"
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
+          runAsUser: 65533
           capabilities:
             drop:
             - ALL
