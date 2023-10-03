@@ -12,6 +12,9 @@ spec:
       labels:
         app: {{ .Values.configs.cosign.name }}
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65533
       {{- if $.Values.configs.cosign.rolebindings }}
       serviceAccountName: {{ index .Values.configs.cosign.rolebindings 0 }}
       {{- end }}
@@ -33,8 +36,6 @@ spec:
           value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)"
         securityContext:
           allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 65533
           capabilities:
             drop:
             - ALL

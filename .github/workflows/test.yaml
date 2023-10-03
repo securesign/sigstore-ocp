@@ -57,8 +57,21 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml
 
-      #- name: Create KIND Cluster
-      #  uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
+      - name: Create KinD Cluster
+        uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
+          with:
+            config: ./kind/config.yaml
 
-      #- name: Run chart-testing (install)
-      #  run: ct install --config ct-install.yaml
+      - name: Configure KinD
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+          kubectl apply -f ./kind/servicemonitor-crd.yaml
+          kubectl create ns fulcio-system
+          kubectl create ns rekor-system
+          kubectl -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
+          kubectl -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
+          kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+      shell: bash
+
+      - name: Run chart-testing (install)
+        run: ct install --helm-extra-args "--wait --wait-for-jobs" --config ct-install.yaml
