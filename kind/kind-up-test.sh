@@ -23,7 +23,16 @@ EOF
 
 sudo kind get kubeconfig > /tmp/config
 sudo chown $USER:$USER /tmp/config
-mv /tmp/config ~/.kube/config
+if [[ -d ~/.kube ]] && [[ -f ~/.kube/config ]]
+then
+  export KUBECONFIG=~/.kube/config:/tmp/config
+  kubectl config view --flatten > merged-config.yaml
+  mv merged-config.yaml ~/.kube/config
+else
+  mv /tmp/config ~/.kube/config
+fi
+
+kubectl config use-context kind-kind
 
 # install ingress-nginx
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
