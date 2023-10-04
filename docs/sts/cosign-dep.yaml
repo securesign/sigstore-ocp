@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cosign-sts
+  namespace: cosign
+spec:
+  selector:
+    matchLabels:
+      app: cosign-sts
+  template:
+    metadata:
+      labels:
+        app: cosign-sts
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65533
+      serviceAccountName: cosign-sts
+      containers:
+      - name: cosign
+        image: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign:0f24eacb77eef4d7a9f3f39f3e97e2b29adbc2ef
+        env:
+        - name: OPENSHIFT_APPS_SUBDOMAIN
+          value: apps.open-svc-sts.k1wl.p1.openshiftapps.com
+        - name: OIDC_AUTHENTICATION_REALM
+          value: "sigstore"
+        - name: FULCIO_URL
+          value: "https://fulcio.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: OIDC_ISSUER_URL
+          value: https://rh-oidc.s3.us-east-1.amazonaws.com/21o4ml1f5kchd6ee9nmh5dhc6efqba38
+        - name: REKOR_URL
+          value: "https://rekor.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: TUF_URL
+          value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      - args:
+        - -c
+        - sleep 86400
+        command:
+        - /bin/sh
+        env:
+        - name: AWS_ROLE_SESSION_NAME
+          value: signer-identity-session
+        - name: AWS_REGION
+          value: us-east-1
+        name: signer-id
+        image: amazon/aws-cli
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65533
+      serviceAccount: cosign-sts
+      serviceAccountName: cosign-sts
+      terminationGracePeriodSeconds: 30
+

@@ -3,7 +3,7 @@
 # with rekor signing keys in the 'rekor-system' namespace.
 # secret names must match secret names in scaffold.tuf, that default to
 # 'fulcio-secret-rh' and 'rekor-private-key'
-# For root & key requirements, see ../requirements-keys-certs.md
+# For root & key requirements, see ../docs/requirements-keys-certs.md
 # Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
 # Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
 ---
