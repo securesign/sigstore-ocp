@@ -266,8 +266,8 @@ scaffold:
     createdb:
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/scaffolding/createdb
-        version: "446713f9737dfe1401696d1dcf0f3ab92de77b5a"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createdb
+        version: "build-b43c0-1696275867"
         pullPolicy: IfNotPresent
     initContainerImage:
       netcat:
