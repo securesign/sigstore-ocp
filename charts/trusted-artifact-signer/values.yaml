@@ -144,8 +144,8 @@ scaffold:
     server:
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/scaffolding/ct-server
-        version: "446713f9737dfe1401696d1dcf0f3ab92de77b5a"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/ct-server
+        version: "build-68eb0-1696273861"
         pullPolicy: IfNotPresent
     createctconfig:
       backoffLimit: 30
@@ -158,8 +158,8 @@ scaffold:
           imagePullPolicy: IfNotPresent
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/scaffolding/createctconfig
-        version: "446713f9737dfe1401696d1dcf0f3ab92de77b5a"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createctconfig
+        version: "build-96ab3-1696275762"
         pullPolicy: IfNotPresent
     createcerts:
       fullnameOverride: ctlog-createcerts
@@ -168,8 +168,8 @@ scaffold:
       displayName: ctlog-tree
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/scaffolding/createtree
-        version: "446713f9737dfe1401696d1dcf0f3ab92de77b5a"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createtree
+        version: "build-1a625-1696276030"
         pullPolicy: IfNotPresent
   fulcio:
     enabled: true
@@ -186,15 +186,15 @@ scaffold:
       fullnameOverride: fulcio-createcerts
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/scaffolding/createcerts
-        version: "446713f9737dfe1401696d1dcf0f3ab92de77b5a"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createcerts
+        version: "cfd61c13698b4e73e9c389dafc082134d0ab80a5"
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: fulcio-server
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/fulcio/fulcio
-        version: "e80d2fcaf464e47ef6b60ce88cb63753e720a3c8"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/fulcio
+        version: "1187db2ca9927ceabe3a2a3fedb67d4a3f8ef323"
         pullPolicy: IfNotPresent
       # If content and/or files not provided in configs.fulcio.secret
       # then this secret must exist in fulcio-system ns. See ../quickstart-with-keycloak.md
@@ -247,14 +247,14 @@ scaffold:
     createtree:
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/scaffolding/createtree
-        version: "446713f9737dfe1401696d1dcf0f3ab92de77b5a"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createtree
+        version: "build-1a625-1696276030"
         pullPolicy: IfNotPresent
     backfillredis:
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/rekor/backfill-redis
-        version: "0bdc2250d7e441fa292ea21e32e40552e6804c97"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/backfill-redis
+        version: "ce862e267bee178fbf16ab7d181ff8f21246e346"
         pullPolicy: IfNotPresent
   trillian:
     enabled: true
@@ -272,8 +272,8 @@ scaffold:
     initContainerImage:
       netcat:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/trillian/netcat
-        version: "a1c542b955191c68fbffc6d0a8c1b53f055b3590"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-netcat
+        version: "build-3c019-1696503519"
       curl:
         registry: registry.access.redhat.com
         repository: ubi9/ubi-minimal
@@ -307,16 +307,16 @@ scaffold:
       portRPC: 8091
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/trillian/trillian-logserver
-        version: "a1c542b955191c68fbffc6d0a8c1b53f055b3590"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-logserver
+        version: "build-58a79-1696502872"
         pullPolicy: IfNotPresent
     mysql:
       fullnameOverride: trillian-mysql
       gcp:
         scaffoldSQLProxy:
           registry: quay.io
-          repository: redhat-user-workloads/securesign-tenant/scaffolding/cloudsqlproxy
-          version: "8aaabdf51fb0b7823c53bf58cda2f8beabb4fbfe"
+          repository: docker pull quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/cloudsqlproxy
+          version: "build-b9416-1696274309"
       image:
         registry: quay.io
         repository: redhat-user-workloads/securesign-tenant/trillian/trillian-database
@@ -373,9 +373,8 @@ scaffold:
             path: /
     deployment:
       registry: quay.io
-      repository: redhat-user-workloads/securesign-tenant/scaffolding/tuf-server
-
-      version: "8aaabdf51fb0b7823c53bf58cda2f8beabb4fbfe"
+      repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/tuf-server
+      version: "cfd61c13698b4e73e9c389dafc082134d0ab80a5"
 
   copySecretJob:
     name: copy-secrets-job
