@@ -62,6 +62,12 @@ jobs:
           with:
             config: ./kind/config.yaml
 
+      - name: Install OpenShift CLI
+        run: |
+          curl -L https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz | tar xvz
+          sudo mv oc /usr/local/bin/
+          oc version
+
       - name: Configure KinD
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
