@@ -80,12 +80,6 @@ jobs:
           kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
         shell: bash
 
+      # tests are in charts/trusted-artifact-signer/templates/tests
       - name: Run chart-testing (install)
-        run: ct install --helm-extra-args "--wait --wait-for-jobs" --config ct-install.yaml
-
-      - name: Helm test (install)
-        run: |
-          OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./charts/trusted-artifact-signer/ci/ci-values.yaml | helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs -n trusted-artifact-signer --create-namespace --values -
-
-          helm test -n trusted-artifact-signer trusted-artifact-signer
-          # tests are in charts/trusted-artifact-signer/templates/tests
+        run: ct install --config ct-install.yaml
