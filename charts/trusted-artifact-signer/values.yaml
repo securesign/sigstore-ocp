@@ -297,8 +297,8 @@ scaffold:
       fullnameOverride: trillian-logsigner
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/trillian/trillian-logsigner
-        version: "a1c542b955191c68fbffc6d0a8c1b53f055b3590"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-logsigner
+        version: "build-38813-1696586021"
         pullPolicy: IfNotPresent
     logServer:
       name: trillian-logserver
@@ -319,8 +319,8 @@ scaffold:
           version: "build-b9416-1696274309"
       image:
         registry: quay.io
-        repository: redhat-user-workloads/securesign-tenant/trillian/trillian-database
-        version: "a1c542b955191c68fbffc6d0a8c1b53f055b3590"
+        repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-database
+        version: "build-b3117-1696585835"
         pullPolicy: IfNotPresent
       args: []
       securityContext:
