@@ -4,6 +4,5 @@ Chart.lock
 *.swp
 
 keys-cert
-*.pem
 ./keys-cert/*.pem
 **ADMIN**

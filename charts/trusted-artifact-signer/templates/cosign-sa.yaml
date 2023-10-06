@@ -1,0 +1,8 @@
+{{- if $.Values.configs.cosign.rolebindings }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: {{ .Values.configs.cosign.namespace }}
+  name: {{ index .Values.configs.cosign.rolebindings 0 }}
+{{- end }}

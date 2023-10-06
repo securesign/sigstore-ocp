@@ -1,0 +1,49 @@
+# With this example, it is expected that there is a secret with the fulcio root & signing keys
+# named 'fulcio-secret-rh' in namespace 'fulcio-system' and a secret 'rekor-private-key'
+# with rekor signing keys in the 'rekor-system' namespace.
+# secret names must match secret names in scaffold.tuf, that default to
+# 'fulcio-secret-rh' and 'rekor-private-key'
+# For root & key requirements, see ../requirements-keys-certs.md
+# Note: User must substitute for localhost below.
+---
+configs:
+  cosign:
+    appsSubdomain: localhost
+  fulcio:
+    create: false
+  rekor:
+    create: false
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  fulcio:
+    clusterMonitoring:
+      enabled: false
+    server:
+      ingress:
+        http:
+          hosts:
+            - host: fulcio.localhost
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.apps.open-svc-sts.k1wl.p1.openshiftapps.com/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.apps.open-svc-sts.k1wl.p1.openshiftapps.com/auth/realms/sigstore
+            ClientID: sigstore
+            Type: email
+  rekor:
+    clusterMonitoring:
+      enabled: false
+    server:
+      ingress:
+        hosts:
+          - host: rekor.localhost
+            path: /
+  tuf:
+    ingress:
+      http:
+        hosts:
+          - host: tuf.localhost
+            path: /
