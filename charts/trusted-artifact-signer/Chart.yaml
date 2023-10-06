@@ -8,8 +8,8 @@ annotations:
       url: https://github.com/securesign/sigstore-ocp
     - name: Default Image Source
       url: ""
-  charts.openshift.io/name: Scaffolding
-  charts.openshift.io/provider: TrustedSigner
+  charts.openshift.io/name: TrustedArtifactSigner
+  charts.openshift.io/provider: TrustedArtifactSigner
   charts.openshift.io/supportURL: https://github.com/securesign/sigstore-ocp/issues
 apiVersion: v2
 name: trusted-artifact-signer
@@ -33,4 +33,4 @@ sources:
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.5
+version: 0.1.6
