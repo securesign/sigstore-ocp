@@ -391,7 +391,7 @@ scaffold:
 
   tsa:
     enabled: false
-    forceNamespace: tsa-sytem
+    forceNamespace: tsa-system
     namespace:
       create: false
       name: tsa-system

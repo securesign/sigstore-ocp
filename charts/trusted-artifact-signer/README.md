@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -276,7 +276,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.redis.image.repository |  | string | `"rhel9/redis-6"` |
 | scaffold.trillian.redis.image.version |  | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |
 | scaffold.tsa.enabled |  | bool | `false` |
-| scaffold.tsa.forceNamespace |  | string | `"tsa-sytem"` |
+| scaffold.tsa.forceNamespace |  | string | `"tsa-system"` |
 | scaffold.tsa.namespace.create |  | bool | `false` |
 | scaffold.tsa.namespace.name |  | string | `"tsa-system"` |
 | scaffold.tsa.server.fullnameOverride |  | string | `"tsa-server"` |
