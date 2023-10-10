@@ -243,7 +243,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.mysql.args |  | list | `[]` |
 | scaffold.trillian.mysql.fullnameOverride |  | string | `"trillian-mysql"` |
 | scaffold.trillian.mysql.gcp.scaffoldSQLProxy.registry |  | string | `"quay.io"` |
-| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository |  | string | `"docker pull quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/cloudsqlproxy"` |
+| scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/cloudsqlproxy"` |
 | scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version |  | string | `"build-b9416-1696274309"` |
 | scaffold.trillian.mysql.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.mysql.image.registry |  | string | `"quay.io"` |

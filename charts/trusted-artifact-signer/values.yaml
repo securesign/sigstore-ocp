@@ -317,7 +317,7 @@ scaffold:
       gcp:
         scaffoldSQLProxy:
           registry: quay.io
-          repository: docker pull quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/cloudsqlproxy
+          repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/cloudsqlproxy
           version: "build-b9416-1696274309"
       image:
         registry: quay.io
