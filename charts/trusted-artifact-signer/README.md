@@ -61,7 +61,7 @@ When logged in as an elevated OpenShift user, execute the following to install t
 customized values file. The OPENSHIFT_APPS_SUBDOMAIN will be substituted in the values file with `envsubst` below:
 
 ```shell
-OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer -n sigstore --create-namespace --values -
+OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer -n trusted-artifact-signer --create-namespace --values -
 ```
 
 ### Monitor Sigstore Components with Grafana
@@ -276,7 +276,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.redis.image.repository |  | string | `"rhel9/redis-6"` |
 | scaffold.trillian.redis.image.version |  | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |
 | scaffold.tsa.enabled |  | bool | `false` |
-| scaffold.tsa.forceNamespace |  | string | `"tsa-sytem"` |
+| scaffold.tsa.forceNamespace |  | string | `"tsa-system"` |
 | scaffold.tsa.namespace.create |  | bool | `false` |
 | scaffold.tsa.namespace.name |  | string | `"tsa-system"` |
 | scaffold.tsa.server.fullnameOverride |  | string | `"tsa-server"` |
