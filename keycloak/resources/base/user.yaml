@@ -5,7 +5,6 @@ metadata:
   labels:
     app: sso
   name: jdoe
-  namespace: keycloak-system
 spec:
   realmSelector:
     matchLabels:
@@ -27,7 +26,6 @@ metadata:
   labels:
     app: sso
   name: somalley
-  namespace: keycloak-system
 spec:
   realmSelector:
     matchLabels:

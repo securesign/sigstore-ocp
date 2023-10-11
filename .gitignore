@@ -6,3 +6,5 @@ Chart.lock
 keys-cert
 ./keys-cert/*.pem
 **ADMIN**
+
+.idea

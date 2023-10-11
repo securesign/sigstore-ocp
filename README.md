@@ -26,19 +26,10 @@ To set up a `kind` cluster and deploy the charts, run the following from the roo
 
 ```bash
 ./kind/kind-up-test.sh
-
-oc wait --namespace ingress-nginx \
-  --for=condition=ready pod \
-  --selector=app.kubernetes.io/component=controller \
-  --timeout=90s
-
-OPENSHIFT_APPS_SUBDOMAIN=localhost envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs -n trusted-artifact-signer --create-namespace --values -
-
-helm test -n sigstore trusted-artifact-signer
-# tests are in charts/trusted-artifact-signer/templates/tests
 ```
 
-This test setup is to verify that all deployments are healthy and all jobs complete. However, this does not create a working environment to sign artifacts.
+This script will setup new KinD cluster for you, deploy the sigstore and execute tests on the deployment.
+There are no ingress routes so the sigstore is accessible only from the container. (see https://github.com/securesign/sigstore-ocp/blob/main/sign-verify.md#signing-a-container-using-the-cosign-pod)
 
 To uninstall helm chart:
 

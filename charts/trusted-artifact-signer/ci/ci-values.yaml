@@ -6,9 +6,6 @@
 # For root & key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for localhost below.
 ---
-global:
-  appsSubdomain: localhost
-
 configs:
   clientserver:
     consoleDownload: false
@@ -27,29 +24,27 @@ scaffold:
       enabled: false
     server:
       ingress:
+        enabled: false
         http:
-          hosts:
-            - host: fulcio.localhost
-              path: /
+          enabled: false
     config:
       contents:
         OIDCIssuers:
           # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
-          ? https://keycloak-keycloak-system.apps.open-svc-sts.k1wl.p1.openshiftapps.com/auth/realms/sigstore
-          : IssuerURL: https://keycloak-keycloak-system.apps.open-svc-sts.k1wl.p1.openshiftapps.com/auth/realms/sigstore
+          ? http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
+          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
             ClientID: sigstore
             Type: email
   rekor:
     clusterMonitoring:
       enabled: false
+      http:
+        enabled: false
     server:
       ingress:
-        hosts:
-          - host: rekor.localhost
-            path: /
+        enabled: false
+        http:
+          enabled: false
   tuf:
     ingress:
-      http:
-        hosts:
-          - host: tuf.localhost
-            path: /
+      create: false
