@@ -1,9 +1,27 @@
+global:
+  # -- DNS name to generate environment variables and consoleCLIDownload urls.
+  # By default, in OpenShift, the value for this is
+  # apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
+  appsSubdomain: ""
+
 configs:
+  clientserver:
+    # -- Whether to create the OpenShift resource 'ConsoleCLIDownload' for each binary.
+    # -- This can only be enabled if the OpenShift CRD is registered.
+    consoleDownload: true
+    # -- Whether to create the OpenShift route resource
+    route: true
+    name: tas-clients
+    namespace_create: true
+    namespace: trusted-artifact-signer-clientserver
+    image:
+      registry: quay.io
+      repository: sallyom/tas-clients
+      version: httpd
+      pullPolicy: IfNotPresent
   ctlog:
-    # -- Namespace for ctlog resources
     namespace: ctlog-system
-    # -- Whether to create the ctlog namespace
-    create: true
+    namespace_create: true
     # -- Names for rolebindings to add clusterroles to ctlog serviceaccounts.
     # The names must match the serviceaccount names in the ctlog namespace.
     rolebindings:
@@ -12,10 +30,8 @@ configs:
       - trusted-artifact-signer-ctlog-createctconfig
 
   rekor:
-    # -- namespace for rekor resources
+    namespace_create: true
     namespace: rekor-system
-    # -- whether to create the rekor namespace
-    create: true
     # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
     # The names must match the serviceaccount names in the rekor namespace.
     rolebindings:
@@ -43,10 +59,8 @@ configs:
           scheme: http
 
   fulcio:
-    # -- Namespace for fulcio resources
+    namespace_create: true
     namespace: fulcio-system
-    # -- Whether to create the fulcio namespace
-    create: true
     # -- Names for rolebindings to add clusterroles to fulcio serviceaccounts.
     # The names must match the serviceaccount names in the fulcio namespace.
     rolebindings:
@@ -84,10 +98,8 @@ configs:
           scheme: http
 
   trillian:
-    # -- namespace for trillian resources
+    namespace_create: true
     namespace: trillian-system
-    # -- whether to create the trillian namespace
-    create: true
     # -- names for rolebindings to add clusterroles to trillian serviceaccounts.
     # The names must match the serviceaccount names in the trillian namespace.
     rolebindings:
@@ -96,25 +108,18 @@ configs:
       - trillian-mysql
 
   tuf:
-    # -- namespace for tuf resources
     namespace: tuf-system
-    # -- whether to create the tuf namespace
-    create: true
+    namespace_create: true
     # -- names for rolebindings to add clusterroles to tuf serviceaccounts.
     # The names must match the serviceaccount names in the tuf namespace.
     rolebindings:
       - tuf
       - tuf-secret-copy-job
 
-  cosign:
-    # -- DNS name to be used to generate environment variables for cosign commands.
-    # By default, in OpenShift, the value for this is
-    # apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
-    appsSubdomain: ""
-    # -- namespace for cosign resources
+  cosign_deploy:
+    enabled: false
     namespace: cosign
-    # -- whether to create the cosign namespace
-    create: true
+    namespace_create: true
     # -- names for rolebindings to add clusterroles to cosign serviceaccounts.
     # The names must match the serviceaccount names in the cosign namespace.
     rolebindings:

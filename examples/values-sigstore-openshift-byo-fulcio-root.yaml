@@ -5,9 +5,13 @@
 # Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
 # Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
 ---
+global:
+  appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 configs:
+  cosign_deploy:
+    enabled: true
   rekor:
-    create: false
+    namespace_create: false
   fulcio:
     # -- whether to create the 'fulcio-system' namespace
     # When providing the fulcio server.secret, the ns already exists
@@ -34,8 +38,6 @@ configs:
           -----BEGIN CERTIFICATE-----
           paste contents here
           -----END CERTIFICATE-----
-  cosign:
-    appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

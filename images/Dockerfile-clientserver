@@ -1,0 +1,20 @@
+FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign@sha256:1a34ac0ee18d144b18a3f18333216e87709018acb6fea42892b5e1a17e2c8af7 AS cosign-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/gitsign@sha256:a8e8fb362beb5a9a10f11877f676d4d6399b4f66fe9bd15c3bc352748707b98d AS gitsign-image
+
+FROM registry.redhat.io/rhel8/httpd-24:latest
+
+RUN mkdir -p /var/www/html/clients
+
+COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/
+COPY --from=gitsign-image /usr/local/bin/gitsign /var/www/html/clients/
+
+CMD run-httpd
+
+LABEL \
+      com.redhat.component="trusted-artifact-signer-serve-cli-container" \
+      name="trusted-artifact-signer-serve-cli-container" \
+      version="0.0.1" \
+      summary="Red Hat serves Trusted Artifact Signer CLI binaries" \
+      description="Serves Trusted Artifact Signer CLI binaries from server" \
+      io.k8s.display-name="Red Hat serves Trusted Artifact Signer CLI binaries" \
+      maintainer="trusted-artifact-signer@redhat.com"

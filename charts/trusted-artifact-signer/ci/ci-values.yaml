@@ -6,13 +6,19 @@
 # For root & key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for localhost below.
 ---
+global:
+  appsSubdomain: localhost
+
 configs:
-  cosign:
-    appsSubdomain: localhost
+  clientserver:
+    consoleDownload: false
+    route: false
+  cosign_deploy:
+    enabled: true
   fulcio:
-    create: false
+    namespace_create: false
   rekor:
-    create: false
+    namespace_create: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

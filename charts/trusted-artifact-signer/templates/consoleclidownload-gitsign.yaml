@@ -1,0 +1,14 @@
+{{- if .Values.configs.clientserver.consoleDownload }}
+apiVersion: console.openshift.io/v1
+kind: ConsoleCLIDownload
+metadata:
+  name: gitsign
+spec:
+  description: gitsign is a CLI tool that allows you to
+    digitally sign and verify git commits.
+  displayName: gitsign - Command Line Interface (CLI)
+  links:
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/gitsign"
+    text: Download gitsign for Linux x86_64
+{{- end }}
+

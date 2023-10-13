@@ -1,5 +1,5 @@
 {{- range $configKey, $config := .Values.configs }}
-{{- if $config.create }}
+{{- if $config.namespace_create }}
 ---
 apiVersion: v1
 kind: Namespace

@@ -6,13 +6,18 @@
 # For root & key requirements, see ../requirements-keys-certs.md
 # Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
 ---
+global:
+  appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 configs:
-  cosign:
-    appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
+  clientserver:
+    consoleDownload: false
+    route: false
+  cosign_deploy:
+    enabled: true
   fulcio:
-    create: false
+    namespace_create: false
   rekor:
-    create: false
+    namespace_create: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

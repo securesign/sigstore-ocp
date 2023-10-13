@@ -1,0 +1,13 @@
+{{- if .Values.configs.clientserver.consoleDownload }}
+apiVersion: console.openshift.io/v1
+kind: ConsoleCLIDownload
+metadata:
+  name: cosign
+spec:
+  description: cosign is a CLI tool that allows you to
+    manage sigstore artifacts.
+  displayName: cosign - Command Line Interface (CLI)
+  links:
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/cosign"
+    text: Download cosign for Linux x86_64
+{{- end }}

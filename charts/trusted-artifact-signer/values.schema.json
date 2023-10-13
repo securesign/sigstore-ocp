@@ -3,12 +3,9 @@
     "properties": {
         "configs": {
             "properties": {
-                "cosign": {
+                "clientserver": {
                     "properties": {
-                        "appsSubdomain": {
-                            "type": "string"
-                        },
-                        "create": {
+                        "consoleDownload": {
                             "type": "boolean"
                         },
                         "image": {
@@ -34,6 +31,43 @@
                         "namespace": {
                             "type": "string"
                         },
+                        "namespace_create": {
+                            "type": "boolean"
+                        },
+                        "route": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
+                "cosign_deploy": {
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
+                        },
                         "rolebindings": {
                             "items": {
                                 "type": "string"
@@ -45,11 +79,11 @@
                 },
                 "ctlog": {
                     "properties": {
-                        "create": {
-                            "type": "boolean"
-                        },
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         },
                         "rolebindings": {
                             "items": {
@@ -84,11 +118,11 @@
                             },
                             "type": "object"
                         },
-                        "create": {
-                            "type": "boolean"
-                        },
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         },
                         "rolebindings": {
                             "items": {
@@ -157,11 +191,11 @@
                             },
                             "type": "object"
                         },
-                        "create": {
-                            "type": "boolean"
-                        },
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         },
                         "rolebindings": {
                             "items": {
@@ -193,11 +227,11 @@
                 },
                 "trillian": {
                     "properties": {
-                        "create": {
-                            "type": "boolean"
-                        },
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         },
                         "rolebindings": {
                             "items": {
@@ -210,11 +244,11 @@
                 },
                 "tuf": {
                     "properties": {
-                        "create": {
-                            "type": "boolean"
-                        },
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         },
                         "rolebindings": {
                             "items": {
@@ -224,6 +258,14 @@
                         }
                     },
                     "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "global": {
+            "properties": {
+                "appsSubdomain": {
+                    "type": "string"
                 }
             },
             "type": "object"
