@@ -1,4 +1,4 @@
-{{- if .Values.configs.clientserver.enabled }}
+{{- if .Values.configs.clientserver.route }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:

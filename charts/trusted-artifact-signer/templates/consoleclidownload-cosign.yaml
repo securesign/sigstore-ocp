@@ -1,4 +1,4 @@
-{{- if .Values.configs.clientserver.enabled }}
+{{- if .Values.configs.clientserver.consoleDownload }}
 apiVersion: console.openshift.io/v1
 kind: ConsoleCLIDownload
 metadata:

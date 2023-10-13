@@ -9,6 +9,8 @@ configs:
     # -- Whether to create the OpenShift resource 'ConsoleCLIDownload' for each binary.
     # -- This can only be enabled if the OpenShift CRD is registered.
     consoleDownload: true
+    # -- Whether to create the OpenShift route resource
+    route: true
     name: tas-clients
     namespace_create: true
     namespace: trusted-artifact-signer-clientserver

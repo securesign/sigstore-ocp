@@ -33,6 +33,9 @@
                         },
                         "namespace_create": {
                             "type": "boolean"
+                        },
+                        "route": {
+                            "type": "boolean"
                         }
                     },
                     "type": "object"

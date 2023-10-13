@@ -1,4 +1,3 @@
-{{- if .Values.configs.clientserver.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,5 +32,3 @@ spec:
           capabilities:
             drop:
             - ALL
-{{- end }}
-

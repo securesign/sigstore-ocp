@@ -24,6 +24,9 @@
                         "consoleDownload": {
                             "type": "boolean"
                         },
+                        "route": {
+                            "type": "boolean"
+                        },
                         "name": {
                             "type": "string"
                         },

@@ -12,6 +12,7 @@ global:
 configs:
   clientserver:
     consoleDownload: false
+    route: false
   cosign_deploy:
     enabled: true
   fulcio:
