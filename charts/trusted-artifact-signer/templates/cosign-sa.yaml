@@ -1,8 +1,10 @@
-{{- if $.Values.configs.cosign.rolebindings }}
+{{- if .Values.configs.cosign_deploy.enabled }}
+{{- if .Values.configs.cosign_deploy.rolebindings }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  namespace: {{ .Values.configs.cosign.namespace }}
-  name: {{ index .Values.configs.cosign.rolebindings 0 }}
+  namespace: {{ .Values.configs.cosign_deploy.namespace }}
+  name: {{ index .Values.configs.cosign_deploy.rolebindings 0 }}
+{{- end }}
 {{- end }}

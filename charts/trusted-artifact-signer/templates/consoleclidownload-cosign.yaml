@@ -1,3 +1,4 @@
+{{- if .Values.configs.clientserver.enabled }}
 apiVersion: console.openshift.io/v1
 kind: ConsoleCLIDownload
 metadata:
@@ -7,5 +8,6 @@ spec:
     manage sigstore artifacts.
   displayName: cosign - Command Line Interface (CLI)
   links:
-  - href: https://tas-clients-trusted-artifact-signer.apps.open-svc-sts.k1wl.p1.openshiftapps.com/clients/cosign
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/cosign"
     text: Download cosign for Linux x86_64
+{{- end }}

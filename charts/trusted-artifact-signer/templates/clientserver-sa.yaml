@@ -1,0 +1,8 @@
+{{- if .Values.configs.clientserver.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.configs.clientserver.name }}
+  namespace: {{ .Values.configs.clientserver.namespace }}
+{{- end }}
+

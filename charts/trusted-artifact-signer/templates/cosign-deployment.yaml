@@ -1,29 +1,30 @@
+{{- if .Values.configs.cosign_deploy.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.configs.cosign.name }}
-  namespace: {{ .Values.configs.cosign.namespace }}
+  name: {{ .Values.configs.cosign_deploy.name }}
+  namespace: {{ .Values.configs.cosign_deploy.namespace }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.configs.cosign.name }}
+      app: {{ .Values.configs.cosign_deploy.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.configs.cosign.name }}
+        app: {{ .Values.configs.cosign_deploy.name }}
     spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 65533
-      {{- if $.Values.configs.cosign.rolebindings }}
-      serviceAccountName: {{ index .Values.configs.cosign.rolebindings 0 }}
+      {{- if $.Values.configs.cosign_deploy.rolebindings }}
+      serviceAccountName: {{ index .Values.configs.cosign_deploy.rolebindings 0 }}
       {{- end }}
       containers:
-      - name: {{ .Values.configs.cosign.name }}
-        image: "{{ .Values.configs.cosign.image.registry }}/{{ .Values.configs.cosign.image.repository }}:{{ .Values.configs.cosign.image.version }}"
+      - name: {{ .Values.configs.cosign_deploy.name }}
+        image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}:{{ .Values.configs.cosign_deploy.image.version }}"
         env:
         - name: OPENSHIFT_APPS_SUBDOMAIN
-          value: {{ .Values.configs.cosign.appsSubdomain }}
+          value: {{ .Values.global.appsSubdomain }}
         - name: OIDC_AUTHENTICATION_REALM
           value: "sigstore"
         - name: FULCIO_URL
@@ -39,3 +40,4 @@ spec:
           capabilities:
             drop:
             - ALL
+{{- end }}

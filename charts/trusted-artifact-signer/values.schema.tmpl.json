@@ -4,6 +4,14 @@
     "type": "object",
     "title": "Root Schema",
     "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "appsSubdomain": {
+                     "type": "string"
+                }
+            }
+        },
         "scaffold": {
             "title": "Upstream Sigstore Scaffold chart schema.",
             "$ref": "https://raw.githubusercontent.com/sigstore/helm-charts/main/charts/scaffold/values.schema.json"
@@ -11,13 +19,50 @@
         "configs": {
             "type": "object",
             "properties": {
-                "cosign": {
+                "clientserver": {
                     "properties": {
-                        "appsSubdomain": {
+                        "consoleDownload": {
+                            "type": "boolean"
+                        },
+                        "name": {
                             "type": "string"
                         },
-                        "create": {
+                        "namespace_create": {
                             "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "cosign_deploy": {
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
                         },
                         "image": {
                             "properties": {
@@ -36,12 +81,6 @@
                             },
                             "type": "object"
                         },
-                        "name": {
-                            "type": "string"
-                        },
-                        "namespace": {
-                            "type": "string"
-                        },
                         "rolebindings": {
                             "items": {
                                 "type": "string"
@@ -53,7 +92,7 @@
                 },
                 "ctlog": {
                     "properties": {
-                        "create": {
+                        "namespace_create": {
                             "type": "boolean"
                         },
                         "namespace": {
@@ -70,7 +109,7 @@
                 },
                 "fulcio": {
                     "properties": {
-                        "create": {
+                        "namespace_create": {
                             "type": "boolean"
                         },
                         "namespace": {
@@ -143,7 +182,7 @@
                 },
                 "rekor": {
                     "properties": {
-                        "create": {
+                        "namespace_create": {
                             "type": "boolean"
                         },
                         "namespace": {
@@ -201,7 +240,7 @@
                 },
                 "trillian": {
                     "properties": {
-                        "create": {
+                        "namespace_create": {
                             "type": "boolean"
                         },
                         "namespace": {
@@ -218,7 +257,7 @@
                 },
                 "tuf": {
                     "properties": {
-                        "create": {
+                        "namespace_create": {
                             "type": "boolean"
                         },
                         "namespace": {

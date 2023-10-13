@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -84,21 +84,29 @@ Kubernetes: `>= 1.19.0-0`
 
 | Key | Description | Type | Default |
 |-----|-------------|------|---------|
-| configs.cosign.appsSubdomain | DNS name to be used to generate environment variables for cosign commands. By default, in OpenShift, the value for this is apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') | string | `""` |
-| configs.cosign.create | whether to create the cosign namespace | bool | `true` |
-| configs.cosign.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` |
-| configs.cosign.name | Name of deployment | string | `"cosign"` |
-| configs.cosign.namespace | namespace for cosign resources | string | `"cosign"` |
-| configs.cosign.rolebindings | names for rolebindings to add clusterroles to cosign serviceaccounts. The names must match the serviceaccount names in the cosign namespace. | list | `["cosign"]` |
-| configs.ctlog.create | Whether to create the ctlog namespace | bool | `true` |
-| configs.ctlog.namespace | Namespace for ctlog resources | string | `"ctlog-system"` |
+| configs.clientserver.consoleDownload | This can only be enabled if the OpenShift CRD is registered. | bool | `true` |
+| configs.clientserver.image.pullPolicy |  | string | `"IfNotPresent"` |
+| configs.clientserver.image.registry |  | string | `"quay.io"` |
+| configs.clientserver.image.repository |  | string | `"sallyom/tas-clients"` |
+| configs.clientserver.image.version |  | string | `"httpd"` |
+| configs.clientserver.name |  | string | `"tas-clients"` |
+| configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
+| configs.clientserver.namespace_create |  | bool | `true` |
+| configs.cosign_deploy.enabled |  | bool | `false` |
+| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` |
+| configs.cosign_deploy.name | Name of deployment | string | `"cosign"` |
+| configs.cosign_deploy.namespace |  | string | `"cosign"` |
+| configs.cosign_deploy.namespace_create |  | bool | `true` |
+| configs.cosign_deploy.rolebindings | names for rolebindings to add clusterroles to cosign serviceaccounts. The names must match the serviceaccount names in the cosign namespace. | list | `["cosign"]` |
+| configs.ctlog.namespace |  | string | `"ctlog-system"` |
+| configs.ctlog.namespace_create |  | bool | `true` |
 | configs.ctlog.rolebindings | Names for rolebindings to add clusterroles to ctlog serviceaccounts. The names must match the serviceaccount names in the ctlog namespace. | list | `["ctlog","ctlog-createtree","trusted-artifact-signer-ctlog-createctconfig"]` |
 | configs.fulcio.clusterMonitoring.enabled |  | bool | `true` |
 | configs.fulcio.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.fulcio.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
 | configs.fulcio.clusterMonitoring.endpoints[0].scheme |  | string | `"http"` |
-| configs.fulcio.create | Whether to create the fulcio namespace | bool | `true` |
-| configs.fulcio.namespace | Namespace for fulcio resources | string | `"fulcio-system"` |
+| configs.fulcio.namespace |  | string | `"fulcio-system"` |
+| configs.fulcio.namespace_create |  | bool | `true` |
 | configs.fulcio.rolebindings | Names for rolebindings to add clusterroles to fulcio serviceaccounts. The names must match the serviceaccount names in the fulcio namespace. | list | `["fulcio-createcerts","fulcio-server"]` |
 | configs.fulcio.server.secret.name |  | string | `""` |
 | configs.fulcio.server.secret.password | password to decrypt the signing key | string | `""` |
@@ -112,19 +120,20 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
 | configs.rekor.clusterMonitoring.endpoints[0].scheme |  | string | `"http"` |
-| configs.rekor.create | whether to create the rekor namespace | bool | `true` |
-| configs.rekor.namespace | namespace for rekor resources | string | `"rekor-system"` |
+| configs.rekor.namespace |  | string | `"rekor-system"` |
+| configs.rekor.namespace_create |  | bool | `true` |
 | configs.rekor.rolebindings | names for rolebindings to add clusterroles to rekor serviceaccounts. The names must match the serviceaccount names in the rekor namespace. | list | `["rekor-redis","rekor-server","trusted-artifact-signer-rekor-createtree"]` |
 | configs.rekor.signer | Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log When this section is left out, scaffold.rekor creates the secret and key. | object | `{"secret":{"name":"","private_key":"","private_key_file":""}}` |
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
-| configs.trillian.create | whether to create the trillian namespace | bool | `true` |
-| configs.trillian.namespace | namespace for trillian resources | string | `"trillian-system"` |
+| configs.trillian.namespace |  | string | `"trillian-system"` |
+| configs.trillian.namespace_create |  | bool | `true` |
 | configs.trillian.rolebindings | names for rolebindings to add clusterroles to trillian serviceaccounts. The names must match the serviceaccount names in the trillian namespace. | list | `["trillian-logserver","trillian-logsigner","trillian-mysql"]` |
-| configs.tuf.create | whether to create the tuf namespace | bool | `true` |
-| configs.tuf.namespace | namespace for tuf resources | string | `"tuf-system"` |
+| configs.tuf.namespace |  | string | `"tuf-system"` |
+| configs.tuf.namespace_create |  | bool | `true` |
 | configs.tuf.rolebindings | names for rolebindings to add clusterroles to tuf serviceaccounts. The names must match the serviceaccount names in the tuf namespace. | list | `["tuf","tuf-secret-copy-job"]` |
+| global.appsSubdomain | DNS name to generate environment variables and consoleCLIDownload urls. By default, in OpenShift, the value for this is apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') | string | `""` |
 | rbac.clusterrole | clusterrole to be added to sigstore component serviceaccounts. | string | `"system:openshift:scc:anyuid"` |
 | scaffold.copySecretJob.backoffLimit |  | int | `1000` |
 | scaffold.copySecretJob.enabled |  | bool | `true` |

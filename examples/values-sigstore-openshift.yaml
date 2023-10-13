@@ -7,13 +7,15 @@
 # Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
 # Base domain is results of "oc get dns cluster -o jsonpath='{ .spec.baseDomain }'"
 ---
+global:
+  appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 configs:
-  cosign:
-    appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
+  cosign_deploy:
+    enabled: true
   fulcio:
-    create: false
+    namespace_create: false
   rekor:
-    create: false
+    namespace_create: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
