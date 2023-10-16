@@ -8,7 +8,7 @@ This chart extends all the features in the upstream chart in addition to includi
 
 ### Installing from the Chart Repository
 
-Information on how to install Sigstore components on OpenShift can be found in the
+For a quickstart on how to install Sigstore components on OpenShift refer to the
 [quickstart quide](./quick-start-with-keycloak.md)
 
 ## Scaffolding Chart
@@ -27,7 +27,7 @@ To set up a `kind` cluster and deploy the charts, run the following from the roo
 ```bash
 ./kind/kind-up-test.sh
 
-kubectl wait --namespace ingress-nginx \
+oc wait --namespace ingress-nginx \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller \
   --timeout=90s
