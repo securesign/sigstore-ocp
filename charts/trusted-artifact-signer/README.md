@@ -140,8 +140,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.copySecretJob.enabled |  | bool | `true` |
 | scaffold.copySecretJob.imagePullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.copySecretJob.name |  | string | `"copy-secrets-job"` |
-| scaffold.copySecretJob.registry |  | string | `"quay.io"` |
-| scaffold.copySecretJob.repository |  | string | `"sallyom/copy-secrets"` |
+| scaffold.copySecretJob.registry |  | string | `"registry.redhat.io"` |
+| scaffold.copySecretJob.repository |  | string | `"openshift4/ose-cli"` |
 | scaffold.copySecretJob.serviceaccount |  | string | `"tuf-secret-copy-job"` |
 | scaffold.copySecretJob.version |  | string | `"latest"` |
 | scaffold.ctlog.createcerts.fullnameOverride |  | string | `"ctlog-createcerts"` |

@@ -387,8 +387,8 @@ scaffold:
     name: copy-secrets-job
     enabled: true
     # TODO: Update copy-secrets image
-    registry: quay.io
-    repository: sallyom/copy-secrets
+    registry:  registry.redhat.io
+    repository: openshift4/ose-cli
     version: latest
     imagePullPolicy: IfNotPresent
     serviceaccount: tuf-secret-copy-job
