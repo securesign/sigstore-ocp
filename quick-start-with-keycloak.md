@@ -1,6 +1,7 @@
 ## Quick Start with Keycloak OIDC
 
 No-Fail steps to get a working sigstore stack with OpenShift
+Note: [This script](tas-easy-install.sh) will alternatively automate the following workflow. It will create and configure RHSSO and the Sigstore stack. It requires a connection to OpenShift with cluster-admin privileges.
 
 1. Install RHSSO Operator and deploy Sigstore Keycloak
 
