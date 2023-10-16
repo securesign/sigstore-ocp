@@ -387,7 +387,7 @@ scaffold:
     name: copy-secrets-job
     enabled: true
     # TODO: Update copy-secrets image
-    registry:  registry.redhat.io
+    registry: registry.redhat.io
     repository: openshift4/ose-cli
     version: latest
     imagePullPolicy: IfNotPresent
