@@ -78,7 +78,7 @@ Kubernetes: `>= 1.19.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.28 |
+| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.32 |
 
 ## Values
 

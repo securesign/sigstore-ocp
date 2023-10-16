@@ -17,7 +17,7 @@ description: A Helm chart for deploying Sigstore scaffold chart that is opiniona
 type: application
 dependencies:
   - name: scaffold
-    version: 0.6.28
+    version: 0.6.32
     repository: https://sigstore.github.io/helm-charts
     alias: scaffold
 keywords:
