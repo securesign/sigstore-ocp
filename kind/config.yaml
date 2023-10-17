@@ -10,7 +10,8 @@ nodes:
         node-labels: "ingress-ready=true"
   extraMounts:
   - containerPath: /var/lib/kubelet/config.json
-  hostPath: "${HOME}/.docker/config.json"
+    # This must match what is in gh action workflow file
+    hostPath: "${HOME}/.docker/config.json"
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
