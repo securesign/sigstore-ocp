@@ -12,6 +12,9 @@ nodes:
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
+  extraMounts:
+  - containerPath: /var/lib/kubelet/config.json
+    hostPath: "${HOME}/.docker/config.json"
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
@@ -26,21 +29,21 @@ sudo chown $USER:$USER /tmp/config
 if [[ -d ~/.kube ]] && [[ -f ~/.kube/config ]]
 then
   export KUBECONFIG=~/.kube/config:/tmp/config
-  kubectl config view --flatten > merged-config.yaml
+  oc config view --flatten > merged-config.yaml
   mv merged-config.yaml ~/.kube/config
 else
   mv /tmp/config ~/.kube/config
 fi
 
-kubectl config use-context kind-kind
+oc config use-context kind-kind
 
 # install ingress-nginx
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+oc apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
 # add servicemonitor crd 
-kubectl apply -f ./kind/servicemonitor-crd.yaml
+oc apply -f ./kind/servicemonitor-crd.yaml
 
-#kubectl wait --namespace ingress-nginx \
+#oc wait --namespace ingress-nginx \
 #  --for=condition=ready pod \
 #  --selector=app.kubernetes.io/component=controller \
 #  --timeout=90s

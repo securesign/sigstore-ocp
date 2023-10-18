@@ -50,13 +50,20 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@e8788873172cb653a90ca2e819d79d65a66d4e76 # renovate: tag=v2.4.0
 
-      - name: "Add Sigstore Repository"
+      - name: Add Sigstore Repository
         run: |
           helm repo add sigstore "https://sigstore.github.io/helm-charts"
           helm repo update
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml
+
+      - name: Configure registry auth
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{secrets.REGISTRY_USER}}
+          password: ${{secrets.REGISTRY_PASSWORD}}
 
       - name: Create KinD Cluster
         uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
@@ -71,15 +78,15 @@ jobs:
 
       - name: Configure KinD
         run: |
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-          kubectl apply -f ./kind/servicemonitor-crd.yaml
-          kubectl create ns fulcio-system
-          kubectl create ns rekor-system
-          kubectl -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
-          kubectl -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
-          kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+          oc apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+          oc apply -f ./kind/servicemonitor-crd.yaml
+          oc create ns fulcio-system
+          oc create ns rekor-system
+          oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
+          oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
+          oc wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
         shell: bash
 
       # tests are in charts/trusted-artifact-signer/templates/tests
       - name: Run chart-testing (install)
-        run: ct install --config ct-install.yaml
+        run: ct install --debug --config ct-install.yaml

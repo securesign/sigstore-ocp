@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -78,7 +78,7 @@ Kubernetes: `>= 1.19.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.28 |
+| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.32 |
 
 ## Values
 
@@ -140,8 +140,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.copySecretJob.enabled |  | bool | `true` |
 | scaffold.copySecretJob.imagePullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.copySecretJob.name |  | string | `"copy-secrets-job"` |
-| scaffold.copySecretJob.registry |  | string | `"quay.io"` |
-| scaffold.copySecretJob.repository |  | string | `"sallyom/copy-secrets"` |
+| scaffold.copySecretJob.registry |  | string | `"registry.redhat.io"` |
+| scaffold.copySecretJob.repository |  | string | `"openshift4/ose-cli"` |
 | scaffold.copySecretJob.serviceaccount |  | string | `"tuf-secret-copy-job"` |
 | scaffold.copySecretJob.version |  | string | `"latest"` |
 | scaffold.ctlog.createcerts.fullnameOverride |  | string | `"ctlog-createcerts"` |
