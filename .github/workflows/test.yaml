@@ -35,6 +35,10 @@ jobs:
           extra_args: --show-diff-on-failure
   test:
     runs-on: ubuntu-latest
+    env:
+      REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+      IMAGE_REGISTRY: registry.redhat.io
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
@@ -61,22 +65,18 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml
 
-      - name: Configure registry auth
-        uses: timheuer/base64-to-file@v1.2
+      - name: Log in to registry.redhat.io
+        uses: redhat-actions/podman-login@v1
         with:
-          fileName: "config.json"
-          fileDir: "$HOME/.docker"
-          encodedString: ${{ secrets.REGISTRY_AUTH }}
-
-      - name: Pull image
-        run |
-          cat "$HOME/.docker/config.json"
-          docker pull registry.redhat.io/openshift4/ose-cli:latest
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+          auth_file_path: /tmp/config.json
 
       - name: Create KinD Cluster
         uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
         with:
-            config: ./kind/config.yaml
+          config: ./kind/config.yaml
 
       - name: Install OpenShift CLI
         run: |
@@ -97,4 +97,5 @@ jobs:
 
       # tests are in charts/trusted-artifact-signer/templates/tests
       - name: Run chart-testing (install)
-        run: ct install --debug --config ct-install.yaml
+        run: |
+          ct install --debug --helm-extra-args "--timeout=360s" --config ct-install.yaml
