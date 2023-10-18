@@ -68,6 +68,11 @@ jobs:
           fileDir: "$HOME/.docker"
           encodedString: ${{ secrets.REGISTRY_AUTH }}
 
+      - name: Pull image
+        run |
+          cat "$HOME/.docker/config.json"
+          docker pull registry.redhat.io/openshift4/ose-cli:latest
+
       - name: Create KinD Cluster
         uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
         with:
