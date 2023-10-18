@@ -1,7 +1,10 @@
 name: Lint Charts
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
     paths:
       - "charts/**"
       - ".github/**"

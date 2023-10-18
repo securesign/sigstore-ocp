@@ -388,7 +388,7 @@ scaffold:
     enabled: true
     registry: quay.io
     repository: sallyom/copy-secrets
-    # TODO: uncomment when gh actions secrets are populated 
+    # TODO: uncomment when gh actions secrets are populated
     # registry: registry.redhat.io
     # repository: openshift4/ose-cli
     version: latest
