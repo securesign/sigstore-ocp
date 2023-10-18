@@ -62,11 +62,11 @@ jobs:
         run: ct lint --config ct.yaml
 
       - name: Configure registry auth
-        uses: docker/login-action@v1
+        uses: timheuer/base64-to-file@v1.2
         with:
-          registry: registry.redhat.io
-          username: ${{secrets.REGISTRY_USER}}
-          password: ${{secrets.REGISTRY_PASSWORD}}
+          fileName: "config.json"
+          fileDir: "$HOME/.docker"
+          encodedString: ${{ secrets.REGISTRY_AUTH }}
 
       - name: Create KinD Cluster
         uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
