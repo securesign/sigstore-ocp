@@ -386,11 +386,8 @@ scaffold:
   copySecretJob:
     name: copy-secrets-job
     enabled: true
-    registry: quay.io
-    repository: sallyom/copy-secrets
-    # TODO: uncomment when gh actions secrets are populated
-    # registry: registry.redhat.io
-    # repository: openshift4/ose-cli
+    registry: registry.redhat.io
+    repository: openshift4/ose-cli
     version: latest
     imagePullPolicy: IfNotPresent
     serviceaccount: tuf-secret-copy-job
