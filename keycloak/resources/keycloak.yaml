@@ -5,9 +5,6 @@ metadata:
     app: sso
   name: keycloak
 spec:
-  http:
-    httpEnabled: true
-    tlsSecret: sso-x509-https-secret 
   externalAccess:
     enabled: true
   instances: 1
