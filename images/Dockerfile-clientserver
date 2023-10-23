@@ -1,5 +1,6 @@
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign@sha256:1a34ac0ee18d144b18a3f18333216e87709018acb6fea42892b5e1a17e2c8af7 AS cosign-image
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/gitsign@sha256:a8e8fb362beb5a9a10f11877f676d4d6399b4f66fe9bd15c3bc352748707b98d AS gitsign-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/rekor-cli@sha256:7da0656cc35c0fce3e62f80d8a1e72eac78a4caf6e636b27e598b98b77d8f9b3 AS rekor-image
 
 FROM registry.redhat.io/rhel8/httpd-24:latest
 
@@ -7,6 +8,9 @@ RUN mkdir -p /var/www/html/clients
 
 COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/
 COPY --from=gitsign-image /usr/local/bin/gitsign /var/www/html/clients/
+COPY --from=rekor-image /usr/local/bin/rekor_cli_darwin_amd64 /var/www/html/clients/
+COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_amd64 /var/www/html/clients/
+COPY --from=rekor-image /usr/local/bin/rekor_cli_windows_amd64.exe /var/www/html/clients/
 
 CMD run-httpd
 
