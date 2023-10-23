@@ -26,6 +26,19 @@ To set up a `kind` cluster and deploy the charts, run the following from the roo
 
 ```bash
 ./kind/kind-up-test.sh
+<<<<<<< HEAD
+=======
+
+oc wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
+
+OPENSHIFT_APPS_SUBDOMAIN=ingress.local envsubst <  ./examples/values-kind-sigstore.yaml | helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs -n trusted-artifact-signer --create-namespace --values -
+
+helm test -n sigstore trusted-artifact-signer
+# tests are in charts/trusted-artifact-signer/templates/tests
+>>>>>>> b419522 (add doc for using self-signed cluster)
 ```
 
 This script will setup new KinD cluster for you, deploy the sigstore and execute tests on the deployment.
