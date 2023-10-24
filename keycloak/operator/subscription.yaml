@@ -10,7 +10,6 @@ spec:
   name: rhsso-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: rhsso-operator.7.6.4-opr-002
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
