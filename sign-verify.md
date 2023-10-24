@@ -1,6 +1,6 @@
-## Signing a Container
+## Signing a Container From the Local System
 
-Utilize the following steps to sign a container that has been published to an OCI registry
+Utilize the following steps to sign a container that has been published to an OCI registry, with the cosign client running on your local system and the RHTAS stack running in an OpenShift cluster as documented [here](../quick-start-with-keycloak.md).
 
 1. Export the following environment variables substituting `base_hostname` with the value used as part of the provisioning
 
@@ -22,11 +22,23 @@ export TUF_URL=https://tuf.$OPENSHIFT_APPS_SUBDOMAIN
 
 2. Initialize the TUF roots
 
+If you are using a cluster with self-signed certificates, you will first need to download the `kube-root-ca.crt` from the cluster and add it to your
+local system's trusted certificate store. On Fedora/RHEL, this will look like:
+
+```shell
+oc extract cm/kube-root-ca.crt -n openshift-ingress-operator
+mv ca.crt kube-root-ca.crt
+sudo mv kube-root-ca.crt /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust extract
+```
+On other systems, the last two commands may differ.
+
+Then you can initialize cosign, or start here if you are not using a cluster with self-signed certificates.
+Note: If you have used `cosign` previously, you may need to first delete the `~/.sigstore` directory
+
 ```shell
 cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json
 ```
-
-Note: If you have used `cosign` previously, you may need to delete the `~/.sigstore` directory
 
 3. Sign the desired container
 
