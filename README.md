@@ -20,6 +20,15 @@ More information can be found by inspecting the [trusted-artifact-signer chart](
 Install the [pre-commit](https://pre-commit.com/) package and run `pre-commit run --all-files` before pushing changes, or `pre-commit install` to automatically run the pre-commit hooks with every `git commit`. If it fails,
 run the `git commit` command again. It's likely the pre-commit hook fixed the issue and you have to bring in the new changes.
 
+### Pull Requests
+
+Testing this repository requires access to `registry.redhat.io` images. Because of this the tests depend on GitHub
+secrets. GitHub secrets are not accessible to forked repositories, so the normal workflow of submitting a PR from your
+fork against `github.com/securesign/sigstore-ocp` main branch is not possible when making changes to either the `charts`
+or `.github` directories. These directories require a run of the test suite that requires access to `registry.redhat.io`.
+PRs are welcome in this repository, however. Please reach out to one of the [OWNERS](./OWNERS) to submit a PR to
+`charts` or `.github`.
+
 ### Testing
 
 To set up a `kind` cluster and deploy the charts, run the following from the root of this repository
@@ -40,6 +49,6 @@ helm uninstall trusted-artifact-signer -n sigstore
 To cleanup the test kind cluster, run:
 
 ```bash
-sudo kind delete cluster
+kind delete cluster
 ```
 

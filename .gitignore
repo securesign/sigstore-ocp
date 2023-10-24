@@ -5,6 +5,7 @@ Chart.lock
 
 keys-cert
 ./keys-cert/*.pem
+**/clustercert/**
 **ADMIN**
 
 .idea
