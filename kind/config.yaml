@@ -2,20 +2,7 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
   extraMounts:
-  - containerPath: /var/lib/kubelet/config.json
-    # this is the path in gh action where the config is saved
-    hostPath: /tmp/config.json
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
+    - containerPath: /var/lib/kubelet/config.json
+      # this is the path in gh action where the config is saved
+      hostPath: /tmp/config.json

@@ -12,12 +12,12 @@ Follow this to deploy a Keycloak instance with the following:
 The RHSSO Operator and necessary Keycloak resources are deployed with:
 
 ```shell
-oc apply --kustomize keycloak/operator
+oc apply --kustomize keycloak/operator/base
 
 # wait for this command to succeed before going on to be sure the Keycloak CRDs are registered
 oc get keycloaks -A
 
-oc apply --kustomize keycloak/resources
+oc apply --kustomize keycloak/resources/base
 # wait for keycloak-system pods to be running before proceeding
 ```
 

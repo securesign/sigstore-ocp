@@ -6,9 +6,9 @@ Note: [This script](tas-easy-install.sh) will alternatively automate the followi
 1. Install RHSSO Operator and deploy Sigstore Keycloak
 
 ```shell
-oc apply --kustomize keycloak/operator
+oc apply --kustomize keycloak/operator/base
 # wait until the keycloak API is ready, check w/ non-erroring 'oc get keycloaks'
-oc apply --kustomize keycloak/resources
+oc apply --kustomize keycloak/resources/base
 # wait until keycloak-system pods are healthy/running
 ```
 

@@ -1,13 +1,11 @@
-# With this example, it is expected that there is a secret with the fulcio root & signing keys
+# With this example, you can see how to deploy Sigstore instance that is internal and can be use only within the cluster.
+# To sign your containers, you can use pre-deployed container in `cosign` namespace (see https://github.com/securesign/sigstore-ocp/blob/main/sign-verify.md#signing-a-container-using-the-cosign-pod).
+# It is expected that there is a secret with the fulcio root & signing keys
 # named 'fulcio-secret-rh' in namespace 'fulcio-system' and a secret 'rekor-private-key'
 # with rekor signing keys in the 'rekor-system' namespace.
 # secret names must match secret names in scaffold.tuf, that default to
 # 'fulcio-secret-rh' and 'rekor-private-key'
 # For root & key requirements, see ../requirements-keys-certs.md
-# Note: User must substitute for $OPENSHIFT_APPS_SUBDOMAIN below.
----
-global:
-  appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 configs:
   clientserver:
     consoleDownload: false
@@ -26,29 +24,27 @@ scaffold:
       enabled: false
     server:
       ingress:
+        enabled: false
         http:
-          hosts:
-            - host: fulcio.$OPENSHIFT_APPS_SUBDOMAIN
-              path: /
+          enabled: false
     config:
       contents:
         OIDCIssuers:
           # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
-          ? https://keycloak-keycloak-system.apps.open-svc-sts.k1wl.p1.openshiftapps.com/auth/realms/sigstore
-          : IssuerURL: https://keycloak-keycloak-system.apps.open-svc-sts.k1wl.p1.openshiftapps.com/auth/realms/sigstore
+          ? http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
+          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
             ClientID: sigstore
             Type: email
   rekor:
     clusterMonitoring:
       enabled: false
+      http:
+        enabled: false
     server:
       ingress:
-        hosts:
-          - host: rekor.$OPENSHIFT_APPS_SUBDOMAIN
-            path: /
+        enabled: false
+        http:
+          enabled: false
   tuf:
     ingress:
-      http:
-        hosts:
-          - host: tuf.$OPENSHIFT_APPS_SUBDOMAIN
-            path: /
+      create: false
