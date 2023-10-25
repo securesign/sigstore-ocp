@@ -1,4 +1,4 @@
-# Enabling Grafana Monitoring for SecureSign
+# Enabling Grafana Monitoring for Trusted-Artifact-Signer
 
 This guide provides the commands to deploy both the Grafana operator
 and a Grafana instance in OpenShift. It also adds a Prometheus Datasource
@@ -7,6 +7,20 @@ and configures a dashboard for monitoring Sigstore components.
 Prerequisites
 1. Make sure you have the [oc command-line tool](https://docs.openshift.com/container-platform/4.12/cli_reference/openshift_cli/getting-started-cli.html) installed.
 2. Ensure you are logged into your OpenShift cluster.
+3. Ensure workload monitoring is enabled in your OpenShift cluster. If necessary, either add the line `enableUserWorkload: true` to an already existing `configmap/cluster-monitoring-config` in `-n openshift-monitoring` _or_ create the configmap as below. For more information, refer to [OpenShift documentation](https://docs.openshift.com/container-platform/4.13/monitoring/enabling-monitoring-for-user-defined-projects.html).
+
+```yaml
+oc create --save-config -f - <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    enableUserWorkload: true
+EOF
+```
 
 Note: This guide assumes you are using OpenShift version 4.12 or greater.
 
