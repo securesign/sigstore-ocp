@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: fulcio-server
+  namespace: fulcio-system
+spec:
+  template:
+    spec:
+      containers:
+      - args:
+        - serve
+        - --port=5555
+        - --grpc-port=5554
+        - --ca=fileca
+        - --fileca-key
+        - /var/run/fulcio-secrets/key.pem
+        - --fileca-cert
+        - /var/run/fulcio-secrets/cert.pem
+        - --fileca-key-passwd
+        - $(PASSWORD)
+        - --ct-log-url=http://ctlog.ctlog-system.svc/sigstorescaffolding
+        env:
+        - name: SSL_CERT_DIR
+          value: /var/run/clustercert
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: fulcio-secret-rh
+        name: fulcio-server
+        volumeMounts:
+        - mountPath: /etc/fulcio-config
+          name: fulcio-config
+        - mountPath: /var/run/fulcio
+          name: oidc-info
+        - mountPath: /var/run/fulcio-secrets
+          name: fulcio-cert
+          readOnly: true
+        - mountPath: /var/run/clustercert
+          name: clustercert
+          readOnly: true
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: fulcio-server-config
+        name: fulcio-config
+      - name: oidc-info
+        projected:
+          defaultMode: 420
+          sources:
+          - configMap:
+              items:
+              - key: ca.crt
+                mode: 438
+                path: ca.crt
+              name: kube-root-ca.crt
+      - name: fulcio-cert
+        secret:
+          defaultMode: 420
+          items:
+          - key: private
+            path: key.pem
+          - key: cert
+            path: cert.pem
+          secretName: fulcio-secret-rh
+      - name: clustercert
+        secret:
+          defaultMode: 420
+          items:
+          - key: tls.crt
+            path: tls.crt
+          secretName: clustercert

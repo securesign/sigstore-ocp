@@ -34,7 +34,7 @@ check_pod_status() {
 
 # Install SSO Operator and Keycloak service
 install_sso_keycloak() {
-    oc apply --kustomize keycloak/operator
+    oc apply --kustomize keycloak/operator/base
     check_pod_status "keycloak-system" "rhsso-operator"
     # Check the return value from the function
     if [ $? -ne 0 ]; then
@@ -42,7 +42,7 @@ install_sso_keycloak() {
         exit 1
     fi
 
-    oc apply --kustomize keycloak/resources
+    oc apply --kustomize keycloak/resources/base
     check_pod_status "keycloak-system" "keycloak-postgresql"
     # Check the return value from the function
     if [ $? -ne 0 ]; then

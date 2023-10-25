@@ -4,7 +4,6 @@ metadata:
   labels:
     app: sso
   name: sigstore
-  namespace: keycloak-system
 spec:
   instanceSelector:
     matchLabels:
@@ -14,3 +13,4 @@ spec:
     enabled: true
     id: sigstore
     realm: sigstore
+    sslRequired: none

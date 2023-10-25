@@ -4,7 +4,6 @@ metadata:
   labels:
     app: sso
   name: sigstore
-  namespace: keycloak-system
 spec:
   client:
     attributes:
