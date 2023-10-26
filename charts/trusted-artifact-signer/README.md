@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.18](https://img.shields.io/badge/Version-0.1.18-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.19](https://img.shields.io/badge/Version-0.1.19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -94,7 +94,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.clientserver.namespace_create |  | bool | `true` |
 | configs.clientserver.route | Whether to create the OpenShift route resource | bool | `true` |
 | configs.cosign_deploy.enabled |  | bool | `false` |
-| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"securesign/cosign","version":"v2.1.1"}` |
+| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign","version":"0f24eacb77eef4d7a9f3f39f3e97e2b29adbc2ef"}` |
 | configs.cosign_deploy.name | Name of deployment | string | `"cosign"` |
 | configs.cosign_deploy.namespace |  | string | `"cosign"` |
 | configs.cosign_deploy.namespace_create |  | bool | `true` |

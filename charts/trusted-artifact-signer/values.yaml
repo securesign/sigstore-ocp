@@ -129,9 +129,8 @@ configs:
     # -- Image containing the cosign binary as well as environment variables with the base domain injected.
     image:
       registry: quay.io
-      # TODO: update image
-      repository: securesign/cosign
-      version: v2.1.1
+      repository: redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign
+      version: 0f24eacb77eef4d7a9f3f39f3e97e2b29adbc2ef
       pullPolicy: IfNotPresent
 
 rbac:
