@@ -23,9 +23,16 @@ oc apply --kustomize keycloak/resources/base
 
 ### Add keycloak user and/or credentials
 
-Check out the [user custom resource](https://github.com/redhat-et/sigstore-rhel/blob/main/helm/scaffold/overlays/keycloak/user.yaml)
+Refer to the [user custom resource](./keycloak/resources/base/user.yaml)
 for how to create a keycloak user. For testing, a user `jdoe@redhat.com` with password: `secure` is created.
 
 You can access the keycloak route and login as the admin user to set credentials in the keycloak admin console.
 To get the keycloak admin credentials, run `oc extract secret/credential-keycloak -n keycloak-system`.
 This will create an `ADMIN_PASSWORD` file with which to login.
+
+The example custom resource defined in [example-user.yaml](./keycloak/resources/example-user.yaml) can be modified and created:
+
+```bash
+# modify to include user details
+oc create --save-config -f keycloak/resources/example-user.yaml -n keycloak-system
+```
