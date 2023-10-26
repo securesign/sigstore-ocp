@@ -13,15 +13,17 @@ configs:
   cosign_deploy:
     enabled: true
   fulcio:
+    clusterMonitoring:
+      enabled: false
     namespace_create: false
   rekor:
+    clusterMonitoring:
+      enabled: false
     namespace_create: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
   fulcio:
-    clusterMonitoring:
-      enabled: false
     server:
       ingress:
         enabled: false
@@ -36,10 +38,6 @@ scaffold:
             ClientID: sigstore
             Type: email
   rekor:
-    clusterMonitoring:
-      enabled: false
-      http:
-        enabled: false
     server:
       ingress:
         enabled: false

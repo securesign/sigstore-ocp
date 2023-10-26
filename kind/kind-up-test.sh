@@ -24,9 +24,6 @@ fi
 
 oc config use-context kind-kind
 
-# add servicemonitor crd 
-oc apply -f ./kind/servicemonitor-crd.yaml
-
 oc create ns fulcio-system
 oc create ns rekor-system
 oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
