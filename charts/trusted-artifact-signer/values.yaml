@@ -16,8 +16,8 @@ configs:
     namespace: trusted-artifact-signer-clientserver
     image:
       registry: quay.io
-      repository: sallyom/tas-clients
-      version: httpd
+      repository: tdalton/serve
+      version: latest
       pullPolicy: IfNotPresent
   ctlog:
     namespace: ctlog-system
