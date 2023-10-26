@@ -12,12 +12,6 @@ oc extract secret/default-ingress-cert -n openshift-ingress
 cd ../
 ```
 
-Configure your local terminal to trust the cluster certificate.
-
-```bash
-export SSL_CERT_DIR=$(pwd)/clustercert
-```
-
 Next, run the install script as usual
 
 ```bash
