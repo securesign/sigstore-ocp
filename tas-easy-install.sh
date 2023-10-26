@@ -50,6 +50,31 @@ install_sso_keycloak() {
         exit 1
     fi
 }
+
+# Generate the script to initialize the environment variables for the service endpoints
+generate_env_script() {
+    # Write the script to a file
+cat <<EOL > tas-env-variables.sh
+#!/bin/bash
+
+export BASE_HOSTNAME=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
+echo "base hostname = \$BASE_HOSTNAME"
+
+export KEYCLOAK_REALM=sigstore
+export FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
+export KEYCLOAK_URL=https://keycloak-keycloak-system.\$BASE_HOSTNAME
+export REKOR_URL=https://rekor.\$BASE_HOSTNAME
+export TUF_URL=https://tuf.\$BASE_HOSTNAME
+export OIDC_ISSUER_URL=\$KEYCLOAK_URL/auth/realms/\$KEYCLOAK_REALM
+EOL
+
+    # Make the generated script executable
+    chmod +x tas-env-variables.sh
+    echo "A script 'tas-env-variables.sh' to set a local signing environment has been created in the current directory."
+    echo "To initialize the environment variables, run 'source ./tas-env-variables.sh' from the terminal."
+}
+
+# Install Red Hat SSO Operator and setup Keycloak service
 install_sso_keycloak
 
 
@@ -86,3 +111,7 @@ oc -n rekor-system create secret generic rekor-private-key --from-file=private=.
 #helm repo update
 #OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm install --debug trusted-artifact-signer trusted-artifact-signer/trusted-artifact-signer -n trusted-artifact-signer --create-namespace --values -
 OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n trusted-artifact-signer --create-namespace --values -
+
+# Create the script to initialize the environment variables for the service endpoints
+generate_env_script
+
