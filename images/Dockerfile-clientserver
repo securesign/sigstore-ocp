@@ -30,6 +30,19 @@ COPY --from=rekor-image /usr/local/bin/rekor_cli_darwin_amd64 /var/www/html/clie
 COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_amd64 /var/www/html/clients/linux
 COPY --from=rekor-image /usr/local/bin/rekor_cli_windows_amd64.exe /var/www/html/clients/windows
 
+RUN mv /var/www/html/clients/darwin/gitsign_cli_darwin_amd64 /var/www/html/clients/darwin/gitsign
+RUN mv /var/www/html/clients/linux/gitsign_cli_linux_amd64 /var/www/html/clients/linux/gitsign
+RUN mv /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe /var/www/html/clients/windows/gitsign
+
+RUN mv /var/www/html/clients/darwin/rekor_cli_darwin_amd64 /var/www/html/clients/darwin/rekor-cli
+RUN mv /var/www/html/clients/linux/rekor_cli_linux_amd64 /var/www/html/clients/linux/rekor-cli
+RUN mv /var/www/html/clients/windows/rekor_cli_windows_amd64.exe /var/www/html/clients/windows/rekor-cli
+
+RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64 /var/www/html/clients/darwin/cosign
+RUN mv /var/www/html/clients/linux/cosign-linux-amd64 /var/www/html/clients/linux/cosign
+RUN mv /var/www/html/clients/windows/cosign-windows-amd64 /var/www/html/clients/windows/cosign
+
+
 CMD run-httpd
 
 LABEL \
