@@ -1,6 +1,6 @@
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign@sha256:7c62ad9672ece28b44dc7abb61b055c30c8fd197b23ffa2437334ce0012a9322 AS cosign-image
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/gitsign@sha256:f89115971b1ede4cfa5874f90c90c8c2d79de534fd84094b1a9e626c80394f1b AS gitsign-image
-FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/rekor-cli@sha256:7da0656cc35c0fce3e62f80d8a1e72eac78a4caf6e636b27e598b98b77d8f9b3 AS rekor-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/rekor-cli@sha256:9b1cf84cf89e539350257d9b3914f92bb87263f078185c606ab5e4b8ea6af924 AS rekor-image
 
 FROM registry.redhat.io/rhel8/httpd-24:latest
 
@@ -14,31 +14,26 @@ COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/linux
 COPY --from=cosign-image /usr/local/bin/cosign-darwin-amd64.gz /var/www/html/clients/darwin
 COPY --from=cosign-image /usr/local/bin/cosign-windows-amd64.gz /var/www/html/clients/windows
 
-RUN gzip -d /var/www/html/clients/darwin/cosign-darwin-amd64.gz
-RUN gzip -d /var/www/html/clients/windows/cosign-windows-amd64.gz
+RUN gzip /var/www/html/clients/linux/cosign
 
 COPY --from=gitsign-image /usr/local/bin/gitsign_cli_darwin_amd64.gz /var/www/html/clients/darwin
 COPY --from=gitsign-image /usr/local/bin/gitsign_cli_linux_amd64.gz /var/www/html/clients/linux
 COPY --from=gitsign-image /usr/local/bin/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows
 
-RUN gzip -d /var/www/html/clients/darwin/gitsign_cli_darwin_amd64.gz
-RUN gzip -d /var/www/html/clients/linux/gitsign_cli_linux_amd64.gz
-RUN gzip -d /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe.gz
+COPY --from=rekor-image /usr/local/bin/rekor_cli_darwin_amd64.gz /var/www/html/clients/darwin
+COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_amd64.gz /var/www/html/clients/linux
+COPY --from=rekor-image /usr/local/bin/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows
 
-COPY --from=rekor-image /usr/local/bin/rekor_cli_darwin_amd64 /var/www/html/clients/darwin
-COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_amd64 /var/www/html/clients/linux
-COPY --from=rekor-image /usr/local/bin/rekor_cli_windows_amd64.exe /var/www/html/clients/windows
+RUN mv /var/www/html/clients/darwin/gitsign_cli_darwin_amd64.gz /var/www/html/clients/darwin/gitsign.gz
+RUN mv /var/www/html/clients/linux/gitsign_cli_linux_amd64.gz /var/www/html/clients/linux/gitsign.gz
+RUN mv /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows/gitsign.gz
 
-RUN mv /var/www/html/clients/darwin/gitsign_cli_darwin_amd64 /var/www/html/clients/darwin/gitsign
-RUN mv /var/www/html/clients/linux/gitsign_cli_linux_amd64 /var/www/html/clients/linux/gitsign
-RUN mv /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe /var/www/html/clients/windows/gitsign
+RUN mv /var/www/html/clients/darwin/rekor_cli_darwin_amd64.gz /var/www/html/clients/darwin/rekor-cli.gz
+RUN mv /var/www/html/clients/linux/rekor_cli_linux_amd64.gz /var/www/html/clients/linux/rekor-cli.gz
+RUN mv /var/www/html/clients/windows/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows/rekor-cli.gz
 
-RUN mv /var/www/html/clients/darwin/rekor_cli_darwin_amd64 /var/www/html/clients/darwin/rekor-cli
-RUN mv /var/www/html/clients/linux/rekor_cli_linux_amd64 /var/www/html/clients/linux/rekor-cli
-RUN mv /var/www/html/clients/windows/rekor_cli_windows_amd64.exe /var/www/html/clients/windows/rekor-cli
-
-RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64 /var/www/html/clients/darwin/cosign
-RUN mv /var/www/html/clients/windows/cosign-windows-amd64 /var/www/html/clients/windows/cosign
+RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64.gz /var/www/html/clients/darwin/cosign.gz
+RUN mv /var/www/html/clients/windows/cosign-windows-amd64.gz /var/www/html/clients/windows/cosign.gz
 
 
 CMD run-httpd

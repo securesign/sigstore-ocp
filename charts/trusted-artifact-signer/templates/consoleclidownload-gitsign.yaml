@@ -8,10 +8,10 @@ spec:
     digitally sign and verify git commits.
   displayName: gitsign - Command Line Interface (CLI)
   links:
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/gitsign"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/gitsign.gz"
     text: Download gitsign for Linux x86_64
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/gitsign"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/gitsign.gz"
     text: Download gitsign for Mac x86_64
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/gitsign"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/gitsign.gz"
     text: Download gitsign for Windows x86_64
 {{- end }}

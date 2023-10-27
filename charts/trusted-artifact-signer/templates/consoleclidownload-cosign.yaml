@@ -8,10 +8,10 @@ spec:
     manage sigstore artifacts.
   displayName: cosign - Command Line Interface (CLI)
   links:
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/cosign"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/cosign.gz"
     text: Download cosign for Linux x86_64
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/cosign"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/cosign.gz"
     text: Download cosign for Windows x86_64
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/cosign"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/cosign.gz"
     text: Download cosign for Mac x86_64
 {{- end }}
