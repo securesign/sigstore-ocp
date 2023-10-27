@@ -130,8 +130,8 @@ configs:
     image:
       registry: quay.io
       # TODO: update image
-      repository: securesign/cosign
-      version: v2.1.1
+      repository: redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign
+      version: 3df04256b64d249ad0db28521ffdeb2e4ad3a696
       pullPolicy: IfNotPresent
 
 rbac:

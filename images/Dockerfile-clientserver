@@ -1,4 +1,4 @@
-FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign@sha256:82812a94eb64f6359c5a3adc43be03844b54a6ebe9c025cf010e88067c1ac5f3 AS cosign-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign@sha256:7c62ad9672ece28b44dc7abb61b055c30c8fd197b23ffa2437334ce0012a9322 AS cosign-image
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/gitsign@sha256:f89115971b1ede4cfa5874f90c90c8c2d79de534fd84094b1a9e626c80394f1b AS gitsign-image
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/rekor-cli@sha256:7da0656cc35c0fce3e62f80d8a1e72eac78a4caf6e636b27e598b98b77d8f9b3 AS rekor-image
 
