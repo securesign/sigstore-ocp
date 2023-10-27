@@ -25,7 +25,7 @@ fulcio:
 
 ### Create a service account and signer deployment
 
-For this you will need to have an `IAM>Role` for your AWS Identity Provider with
+For this you will need to have an `IAM role` for your AWS Identity Provider with
 permissions to list S3 buckets. From the AWS Console, choose
 `Roles-> Create Role -> Web Identity`.
 From here you'll need to choose your Identity provider from the dropdown list in your account and Audience.
