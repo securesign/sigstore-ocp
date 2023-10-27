@@ -10,11 +10,10 @@ RUN mkdir -p /var/www/html/clients/linux
 RUN mkdir -p /var/www/html/clients/windows
 
 
-COPY --from=cosign-image /usr/local/bin/cosign-linux-amd64.gz /var/www/html/clients/linux
+COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/linux
 COPY --from=cosign-image /usr/local/bin/cosign-darwin-amd64.gz /var/www/html/clients/darwin
 COPY --from=cosign-image /usr/local/bin/cosign-windows-amd64.gz /var/www/html/clients/windows
 
-RUN gzip -d /var/www/html/clients/linux/cosign-linux-amd64.gz
 RUN gzip -d /var/www/html/clients/darwin/cosign-darwin-amd64.gz
 RUN gzip -d /var/www/html/clients/windows/cosign-windows-amd64.gz
 
@@ -39,7 +38,6 @@ RUN mv /var/www/html/clients/linux/rekor_cli_linux_amd64 /var/www/html/clients/l
 RUN mv /var/www/html/clients/windows/rekor_cli_windows_amd64.exe /var/www/html/clients/windows/rekor-cli
 
 RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64 /var/www/html/clients/darwin/cosign
-RUN mv /var/www/html/clients/linux/cosign-linux-amd64 /var/www/html/clients/linux/cosign
 RUN mv /var/www/html/clients/windows/cosign-windows-amd64 /var/www/html/clients/windows/cosign
 
 
