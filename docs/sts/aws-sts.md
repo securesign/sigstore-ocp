@@ -28,8 +28,8 @@ fulcio:
 For this you will need to have an `IAM role` for your AWS Identity Provider with
 permissions to list S3 buckets. From the AWS Console, choose
 `Roles-> Create Role -> Web Identity`.
-Choose your Identity provider from the dropdown list in your account and Audience.
-Next, add the Policy `AmazonS3ReadOnlyAccess`.
+Choose your Identity provider from the dropdown list in your account and
+set the  Audience to "sigstore". Next, add the Policy `AmazonS3ReadOnlyAccess`.
 Note the ARN `arn:aws:iam::xxxx:role/xxxxxxxx`, to add to the cosign service account.
 
 Inspect the cosign deployment manifests and make any necessary changes. These are in `./docs/sts`.
@@ -42,7 +42,7 @@ oc apply -f docs/sts/cosign-dep.yaml
 ```
 
 Finally, [cosign](https://github.com/sigstore/cosign) can be used in the pod to sign and verify artifacts.
-As a PoC, here we will exec into the cosigin-sts pod in the cosign amespace
+As a PoC, here we will exec into the cosigin-sts pod in the cosign namespace
 and run the following:
 
 ```bash
@@ -51,12 +51,6 @@ oc get pods -n cosign | grep cosign-sts
 ```
 
 ### Sign and verify images
-
-First, initialize the TUF roots.
-
-```shell
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json'
-```
 
 Login to the image repository of your choice using cosign.
 

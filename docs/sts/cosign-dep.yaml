@@ -19,8 +19,7 @@ spec:
       containers:
       - args:
         - -c
-        - env; cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json; sleep
-          365d
+        - env; cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json; while true; do sleep 86400; done
         command:
         - /bin/sh
         name: cosign
@@ -45,7 +44,7 @@ spec:
             - ALL
       - args:
         - -c
-        - sleep 365d
+        - while true; do sleep 86400; done
         command:
         - /bin/sh
         env:
