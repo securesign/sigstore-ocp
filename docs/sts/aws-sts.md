@@ -42,10 +42,12 @@ oc apply -f docs/sts/cosign-dep.yaml
 ```
 
 Finally, [cosign](https://github.com/sigstore/cosign) can be used in the pod to sign and verify artifacts.
-As a PoC, here we will exec into `cosign-sts-* -n cosign` pod and run the following:
+As a PoC, here we will exec into the cosigin-sts pod in the cosign amespace
+and run the following:
 
 ```bash
 oc get pods -n cosign | grep cosign-sts
+# note the pod name for below commands
 ```
 
 ### Sign and verify images

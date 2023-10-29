@@ -17,7 +17,13 @@ spec:
         runAsUser: 65533
       serviceAccountName: cosign-sts
       containers:
-      - name: cosign
+      - args:
+        - -c
+        - env; cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json; sleep
+          365d
+        command:
+        - /bin/sh
+        name: cosign
         image: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign:0f24eacb77eef4d7a9f3f39f3e97e2b29adbc2ef
         env:
         - name: OPENSHIFT_APPS_SUBDOMAIN
@@ -39,7 +45,7 @@ spec:
             - ALL
       - args:
         - -c
-        - sleep 86400
+        - sleep 365d
         command:
         - /bin/sh
         env:
