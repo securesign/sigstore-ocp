@@ -29,7 +29,7 @@ For this you will need to have an `IAM role` for your AWS Identity Provider with
 permissions to list S3 buckets. From the AWS Console, choose
 `Roles-> Create Role -> Web Identity`.
 Choose your Identity provider from the dropdown list in your account and Audience.
-Next, you'll need to add the Policy `AmazonS3ReadOnlyAccess`.
+Next, add the Policy `AmazonS3ReadOnlyAccess`.
 Note the ARN `arn:aws:iam::xxxx:role/xxxxxxxx`, to add to the cosign service account.
 
 Inspect the cosign deployment manifests and make any necessary changes. These are in `./docs/sts`.
