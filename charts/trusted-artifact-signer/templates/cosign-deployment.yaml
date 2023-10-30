@@ -20,7 +20,12 @@ spec:
       serviceAccountName: {{ index .Values.configs.cosign_deploy.rolebindings 0 }}
       {{- end }}
       containers:
-      - name: {{ .Values.configs.cosign_deploy.name }}
+      - args:
+        - -c
+        - cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json; while true; do sleep 86400; done
+        command:
+        - /bin/sh
+        name: {{ .Values.configs.cosign_deploy.name }}
         image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}:{{ .Values.configs.cosign_deploy.image.version }}"
         env:
         - name: OPENSHIFT_APPS_SUBDOMAIN

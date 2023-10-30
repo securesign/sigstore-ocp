@@ -33,7 +33,7 @@ sudo update-ca-trust extract
 ```
 On other systems, the last two commands may differ.
 
-Then you can initialize cosign, or start here if you are not using a cluster with self-signed certificates.
+Start here if you are not using a cluster with self-signed certificates.
 Note: If you have used `cosign` previously, you may need to first delete the `~/.sigstore` directory
 
 ```shell
@@ -76,34 +76,28 @@ deployment pod specification.
 oc get pods -n cosign 
 ```
 
-2. Initialize the TUF roots.
-
-```shell
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json'
-```
-
-3. Login to the image repository of your choice using cosign.
+2. Login to the image repository of your choice using cosign.
 ```
 oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign login <repo> -u <username> -p <password>'
 ```
 
-4. Retrieve `id_token` from the OIDC provider.
+3. Retrieve `id_token` from the OIDC provider.
 ```
 curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
--d "client_id=<client_id>" \
+-d "client_id=sigstore" \
 -d "username=<username>" \
 -d "password=<password>" \
 -d "grant_type=password" \
 -d "scope=openid" \
-<oidc_issuer_url>/protocol/openid-connect/token
+"${OIDC_ISSUER_URL}/protocol/openid-connect/token"
 ```
 
-5. Sign the container.
+4. Sign the container.
 ```
 oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL --identity-token=<id_token> <image>'
 ```
 
-6. Verify the signed image. Again, this example assumes `Keycloak` is the OIDC provider.
+5. Verify the signed image. Again, this example assumes `Keycloak` is the OIDC provider.
 
 ```shell
 oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --rekor-url=$REKOR_URL --certificate-identity-regexp sigstore-user --certificate-oidc-issuer-regexp keycloak <image>'
