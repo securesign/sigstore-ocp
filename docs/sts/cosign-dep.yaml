@@ -23,8 +23,12 @@ spec:
         command:
         - /bin/sh
         name: cosign
-        image: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign:0f24eacb77eef4d7a9f3f39f3e97e2b29adbc2ef
+        image: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign:3df04256b64d249ad0db28521ffdeb2e4ad3a696
         env:
+        - name: AWS_ROLE_SESSION_NAME
+          value: signer-identity-session
+        - name: AWS_REGION
+          value: us-east-1
         - name: OPENSHIFT_APPS_SUBDOMAIN
           value: apps.open-svc-sts.k1wl.p1.openshiftapps.com
         - name: OIDC_AUTHENTICATION_REALM
@@ -42,27 +46,6 @@ spec:
           capabilities:
             drop:
             - ALL
-      - args:
-        - -c
-        - while true; do sleep 86400; done
-        command:
-        - /bin/sh
-        env:
-        - name: AWS_ROLE_SESSION_NAME
-          value: signer-identity-session
-        - name: AWS_REGION
-          value: us-east-1
-        name: signer-id
-        image: amazon/aws-cli
-        imagePullPolicy: IfNotPresent
-        resources: {}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
