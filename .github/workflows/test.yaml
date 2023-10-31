@@ -55,7 +55,7 @@ jobs:
           python-version: 3.7
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@e8788873172cb653a90ca2e819d79d65a66d4e76 # renovate: tag=v2.4.0
+        uses: helm/chart-testing-action@v2.6.0
 
       - name: Add Sigstore Repository
         run: |
