@@ -9,9 +9,9 @@ spec:
   displayName: rekor - Command Line Interface (CLI)
   links:
   - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/rekor-cli.gz"
-    text: Download gitsign for Linux x86_64
+    text: Download rekor-cli for Linux x86_64
   - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/rekor-cli.gz"
-    text: Download gitsign for Mac x86_64
+    text: Download rekor-cli for Mac x86_64
   - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/rekor-cli.gz"
-    text: Download gitsign for Windows x86_64
+    text: Download rekor-cli for Windows x86_64
 {{- end }}

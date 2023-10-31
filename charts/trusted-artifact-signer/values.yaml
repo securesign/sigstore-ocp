@@ -131,7 +131,7 @@ configs:
       registry: quay.io
       # TODO: update image
       repository: redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign
-      version: 3df04256b64d249ad0db28521ffdeb2e4ad3a696
+      version: d866dfcf39487daf81cee2407244a7f6202466b9
       pullPolicy: IfNotPresent
 
 rbac:
