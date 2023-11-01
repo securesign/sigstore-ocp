@@ -55,7 +55,7 @@ jobs:
           python-version: 3.7
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.6.0
+        uses: helm/chart-testing-action@b43128a8b25298e1e7b043b78ea6613844e079b1 # v2.6.0
 
       - name: Add Sigstore Repository
         run: |
@@ -66,7 +66,7 @@ jobs:
         run: ct lint --config ct.yaml
 
       - name: Log in to registry.redhat.io
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@9184318aae1ee5034fbfbacc0388acf12669171f # v1
         with:
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
