@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
-      - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4
+      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4
         with:
           python-version: 3.7
 
@@ -50,7 +50,7 @@ jobs:
         with:
           version: v3.12.3
 
-      - uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4
+      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4
         with:
           python-version: 3.7
 
