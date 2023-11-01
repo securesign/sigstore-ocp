@@ -16,8 +16,8 @@ configs:
     namespace: trusted-artifact-signer-clientserver
     image:
       registry: quay.io
-      repository: tdalton/serve
-      version: latest
+      repository: redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/client-server
+      version: bff6f5235d945d63e81e1d63e611f83dcba24428
       pullPolicy: IfNotPresent
   ctlog:
     namespace: ctlog-system
@@ -151,7 +151,7 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/ct-server
-        version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+        version: "fb6be794b30baacf579278116a63a1e2cbaa9a79"
         pullPolicy: IfNotPresent
     createctconfig:
       backoffLimit: 30
@@ -165,7 +165,7 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createctconfig
-        version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+        version: "fb6be794b30baacf579278116a63a1e2cbaa9a79"
         pullPolicy: IfNotPresent
     createcerts:
       fullnameOverride: ctlog-createcerts
@@ -175,7 +175,7 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createtree
-        version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+        version: "fb6be794b30baacf579278116a63a1e2cbaa9a79"
         pullPolicy: IfNotPresent
   fulcio:
     enabled: true
@@ -193,14 +193,14 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createcerts
-        version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+        version: "fb6be794b30baacf579278116a63a1e2cbaa9a79"
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: fulcio-server
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/fulcio
-        version: "30bf1017fa75195c051d92bf3b896c2f3f8016c8"
+        version: "8c6b0c4348ca65a6abac07b8707a1f1275cf0384"
         pullPolicy: IfNotPresent
       # If content and/or files not provided in configs.fulcio.secret
       # then this secret must exist in fulcio-system ns. See ../quickstart-with-keycloak.md
@@ -233,7 +233,7 @@ scaffold:
         registry: quay.io
         # TODO: update image
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/rekor-server
-        version: "c1953fbfae65154ef43e6d4da01f9d0a5c44be11"
+        version: "23afe9522e2a13505430146af5bce1fcff39b9c9"
         pullPolicy: IfNotPresent
       # when providing contents of secret with configs.rekor.signer
       # the signer sections must also be provided here
@@ -255,13 +255,13 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createtree
-        version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+        version: fb6be794b30baacf579278116a63a1e2cbaa9a79
         pullPolicy: IfNotPresent
     backfillredis:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/backfill-redis
-        version: "c1953fbfae65154ef43e6d4da01f9d0a5c44be11"
+        version: 23afe9522e2a13505430146af5bce1fcff39b9c9
         pullPolicy: IfNotPresent
   trillian:
     enabled: true
@@ -274,13 +274,13 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/createdb
-        version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+        version: fb6be794b30baacf579278116a63a1e2cbaa9a79
         pullPolicy: IfNotPresent
     initContainerImage:
       netcat:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-netcat
-        version: "da426b96919bcc346e9a927d8e6fa96b9a5cb240"
+        version: cb9ef28701b583cf241520dba4690126fd9520fc
       curl:
         registry: registry.access.redhat.com
         repository: ubi9/ubi-minimal
@@ -305,7 +305,7 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-logsigner
-        version: "da426b96919bcc346e9a927d8e6fa96b9a5cb240"
+        version: cb9ef28701b583cf241520dba4690126fd9520fc
         pullPolicy: IfNotPresent
     logServer:
       name: trillian-logserver
@@ -315,7 +315,7 @@ scaffold:
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-logserver
-        version: "da426b96919bcc346e9a927d8e6fa96b9a5cb240"
+        version: cb9ef28701b583cf241520dba4690126fd9520fc
         pullPolicy: IfNotPresent
     mysql:
       fullnameOverride: trillian-mysql
@@ -323,11 +323,11 @@ scaffold:
         scaffoldSQLProxy:
           registry: quay.io
           repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/cloudsqlproxy
-          version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+          version: fb6be794b30baacf579278116a63a1e2cbaa9a79
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/trillian-database
-        version: "da426b96919bcc346e9a927d8e6fa96b9a5cb240"
+        version: cb9ef28701b583cf241520dba4690126fd9520fc
         pullPolicy: IfNotPresent
       args: []
       securityContext:
@@ -381,7 +381,7 @@ scaffold:
     deployment:
       registry: quay.io
       repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/tuf-server
-      version: "80894dcf5afe60bacfe0d07d23c536cf4ccb556d"
+      version: fb6be794b30baacf579278116a63a1e2cbaa9a79
 
   copySecretJob:
     name: copy-secrets-job
