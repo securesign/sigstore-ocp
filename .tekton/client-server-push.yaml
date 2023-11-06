@@ -10,7 +10,7 @@ metadata:
       == "main"
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: rhtas-cli-1-0-beta
+    appstudio.openshift.io/application: rhtas-stack-1-0-beta
     appstudio.openshift.io/component: client-server
     pipelines.appstudio.openshift.io/type: build
   name: client-server-on-push
@@ -18,13 +18,13 @@ metadata:
 spec:
   params:
   - name: dockerfile
-    value: images/Dockerfile-clientserver
+    value: Dockerfile-clientserver
   - name: git-url
     value: '{{repo_url}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/client-server:{{revision}}
+    value: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/client-server:{{revision}}
   - name: path-context
-    value: .
+    value: images
   - name: revision
     value: '{{revision}}'
   pipelineSpec:
@@ -227,7 +227,7 @@ spec:
         - name: name
           value: buildah
         - name: bundle
-          value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:f41166f57c7bf33f598d6c7436af8890c4d483419f4346e67037c7a5f850c367
+          value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:fabd9af8e999f2d11b024fbe21dd5ed2dcf029b71b4d7e21de3b106c3d6ff74d
         - name: kind
           value: task
         resolver: bundles
