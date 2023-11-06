@@ -11,7 +11,7 @@ metadata:
       == "main"
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: rhtas-cli-1-0-beta
+    appstudio.openshift.io/application: rhtas-stack-1-0-beta
     appstudio.openshift.io/component: client-server
     pipelines.appstudio.openshift.io/type: build
   name: client-server-on-pull-request
@@ -25,11 +25,13 @@ spec:
   - name: image-expires-after
     value: 5d
   - name: output-image
-    value: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/client-server:on-pr-{{revision}}
+    value: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/client-server:on-pr-{{revision}}
   - name: path-context
     value: .
   - name: revision
     value: '{{revision}}'
+  - name: prefetch-input
+    value: ''
   pipelineSpec:
     finally:
     - name: show-sbom
@@ -200,10 +202,10 @@ spec:
           value: task
         resolver: bundles
       when:
-      - input: $(params.hermetic)
-        operator: in
+      - input: $(params.prefetch-input)
+        operator: notin
         values:
-        - "true"
+        - "{}"
       workspaces:
       - name: source
         workspace: workspace
