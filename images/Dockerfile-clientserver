@@ -43,6 +43,8 @@ LABEL \
       name="trusted-artifact-signer-serve-cli-container" \
       version="0.0.1" \
       summary="Red Hat serves Trusted Artifact Signer CLI binaries" \
-      description="Serves Trusted Artifact Signer CLI binaries from server" \
+      description="Serves Trusted Artifact Signer CLI binaries from an HTTP server" \
+      io.k8s.description="Serves Trusted Artifact Signer CLI binaries from an HTTP server" \
       io.k8s.display-name="Red Hat serves Trusted Artifact Signer CLI binaries" \
+      io.openshift.tags="cosign, gitsign, rekor, cli, rhtas, trusted, artifact, signer, sigstore" \
       maintainer="trusted-artifact-signer@redhat.com"
