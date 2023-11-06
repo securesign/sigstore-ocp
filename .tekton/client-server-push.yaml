@@ -10,7 +10,7 @@ metadata:
       == "main"
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: rhtas-cli-1-0-beta
+    appstudio.openshift.io/application: rhtas-stack-1-0-beta
     appstudio.openshift.io/component: client-server
     pipelines.appstudio.openshift.io/type: build
   name: client-server-on-push
@@ -22,7 +22,7 @@ spec:
   - name: git-url
     value: '{{repo_url}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/client-server:{{revision}}
+    value: quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/client-server:{{revision}}
   - name: path-context
     value: .
   - name: revision
