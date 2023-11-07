@@ -121,10 +121,6 @@ spec:
       description: Build a source image
       name: build-source-image
       type: string
-    - default: "false"
-      description: Build a source image.
-      name: build-source-image
-      type: string
     results:
     - description: ""
       name: IMAGE_URL
