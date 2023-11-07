@@ -21,7 +21,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ .Values.configs.cosign_deploy.name }}
-        image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}:{{ .Values.configs.cosign_deploy.image.version }}"
+        image: "{{ template "image" .Values.configs.cosign_deploy.image }}"
         env:
         - name: OPENSHIFT_APPS_SUBDOMAIN
           value: {{ .Values.global.appsSubdomain }}
