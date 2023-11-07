@@ -129,9 +129,8 @@ configs:
     # -- Image containing the cosign binary as well as environment variables with the base domain injected.
     image:
       registry: registry.redhat.io
-      # TODO: update image
-      repository: securesign/cosign
-      version: v2.1.1
+      repository: rhtas/cosign
+      version: "sha256:468aebee57be796c1d540b928297a1893b7fec5aeb4b7f295bfb214951026c1a"
       pullPolicy: IfNotPresent
 
 rbac:
