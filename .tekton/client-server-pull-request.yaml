@@ -32,6 +32,8 @@ spec:
     value: '{{revision}}'
   - name: prefetch-input
     value: ''
+  - name: build-source-image
+    value: "true"
   pipelineSpec:
     finally:
     - name: show-sbom
@@ -116,7 +118,7 @@ spec:
         1h, 2d, 3w for hours, days, and weeks, respectively.
       name: image-expires-after
     - default: "false"
-      description: Build a source image.
+      description: Build a source image
       name: build-source-image
       type: string
     results:
