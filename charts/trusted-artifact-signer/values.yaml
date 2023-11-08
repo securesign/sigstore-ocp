@@ -5,6 +5,14 @@ global:
   appsSubdomain: ""
 
 configs:
+  segment-backup-job:
+    name: segment-backup-job
+    namespace: sigstore-monitoring
+    image:
+      registry: quay.io
+      repository: ubi9/python-311
+      version: sha256:92416840a0361bf5c8ed6071f50098ddbdd1d14285793d4bcd8e761658c97df8
+      pullPolicy: IfNotPresent
   clientserver:
     # -- Whether to create the OpenShift resource 'ConsoleCLIDownload' for each binary.
     # -- This can only be enabled if the OpenShift CRD is registered.
@@ -137,6 +145,8 @@ configs:
 rbac:
   # -- clusterrole to be added to sigstore component serviceaccounts.
   clusterrole: system:openshift:scc:anyuid
+
+  https://github.com/securesign/sigstore-ocp/blob/dc536fd05432421742f1952cc0c8ff04f64bb97f/charts/trusted-artifact-signer/values.yaml#L139C3-L139C43
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

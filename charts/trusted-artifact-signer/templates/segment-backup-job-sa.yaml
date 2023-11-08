@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: segment-backup-sa
+  namespace: sigstore-monitoring
+secrets:
+- name: pull-secret
+imagePullSecrets:
+- name: pull-secret

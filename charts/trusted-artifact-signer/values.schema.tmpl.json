@@ -19,6 +19,32 @@
         "configs": {
             "type": "object",
             "properties": {
+                "segment-backup-job":{
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type" : "string"
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
                 "clientserver": {
                     "properties": {
                         "consoleDownload": {
