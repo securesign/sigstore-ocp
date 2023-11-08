@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.20](https://img.shields.io/badge/Version-0.1.20-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.21](https://img.shields.io/badge/Version-0.1.21-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -87,8 +87,8 @@ Kubernetes: `>= 1.19.0-0`
 | configs.clientserver.consoleDownload | This can only be enabled if the OpenShift CRD is registered. | bool | `true` |
 | configs.clientserver.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.clientserver.image.registry |  | string | `"quay.io"` |
-| configs.clientserver.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/client-server"` |
-| configs.clientserver.image.version |  | string | `"bff6f5235d945d63e81e1d63e611f83dcba24428"` |
+| configs.clientserver.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/client-server"` |
+| configs.clientserver.image.version |  | string | `"f343867c5e3c85cc28bf70bc4bb990bdd1fee8ef"` |
 | configs.clientserver.name |  | string | `"tas-clients"` |
 | configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
 | configs.clientserver.namespace_create |  | bool | `true` |

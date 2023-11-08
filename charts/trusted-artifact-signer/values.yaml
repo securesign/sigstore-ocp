@@ -16,8 +16,8 @@ configs:
     namespace: trusted-artifact-signer-clientserver
     image:
       registry: quay.io
-      repository: redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/client-server
-      version: bff6f5235d945d63e81e1d63e611f83dcba24428
+      repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/client-server
+      version: f343867c5e3c85cc28bf70bc4bb990bdd1fee8ef
       pullPolicy: IfNotPresent
   ctlog:
     namespace: ctlog-system
