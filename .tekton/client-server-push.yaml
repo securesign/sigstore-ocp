@@ -29,6 +29,8 @@ spec:
     value: '{{revision}}'
   - name: prefetch-input
     value: ''
+  - name: build-source-image
+    value: 'true'
   pipelineSpec:
     finally:
     - name: show-sbom
