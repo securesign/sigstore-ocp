@@ -87,7 +87,35 @@ common_name=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
 # Prompt for the password
 read -s -p "Enter the password for the private key: " password
 
-#
+read -p -n1 "Will you use the default pull secret in the cluster (Y/N, for no you will have to provide your pullsecret): " use_default_pull_secret
+
+if [[ $use_default_pull_secret == "N" || $use_default_pull_secret == "n" ]]
+    pull_secret_exists=$(oc get secret pull-secret -n sigstore-monitoring --ignore-not-found=true)
+    read -p "Please enter the path to the pull-secret.json file:
+    " pull_secret_path
+    file_exists=$(ls $pull_secret_path 2>/dev/null)
+    if [[ -n $file_exists ]]; then
+        if [[ -z $pull_secret_exists ]]; then
+            oc create secret generic pull-secret -n sigstore-monitoring --from-file=$pull_secret_path
+        else
+            oc create secret generic pull-secret -n sigstore-monitoring --from-file=$pull_secret_path --dry-run=client -o yaml | oc replace -f -
+        fi
+    else
+        echo "pull secret was not found based on the path provided: $pull_secret_path"
+        exit 0
+    fi
+elif [[$use_default_pull_secret == "N" || $use_default_pull_secret == "n"  ]]; then
+    pull_secret_exists=$(oc get secret pull-secret -n sigstore-monitoring --ignore-not-found=true)
+    pull_secret_literal=$(oc get secret pull-secret -n openshift-config -o "jsonpath={.data.\.dockerconfigjson}" | base64 -d)
+    echo $pull_secret_literal > ./pull-secret.json
+    if [[ -z $pull_secret_exists ]]; then
+        oc create secret generic pull-secret -n sigstore-monitoring --from-file=./pull-secret.json
+    else
+        oc create secret generic pull-secret -n sigstore-monitoring --from-file=./pull-secret.json --dry-run=client -o yaml | oc replace -f -
+    fi
+    rm ./pull-secret.json
+fi
+
 mkdir -p keys-cert
 pushd keys-cert > /dev/null
 
