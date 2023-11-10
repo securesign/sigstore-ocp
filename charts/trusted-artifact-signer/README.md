@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.23](https://img.shields.io/badge/Version-0.1.23-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.24](https://img.shields.io/badge/Version-0.1.24-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -117,12 +117,15 @@ Kubernetes: `>= 1.19.0-0`
 | configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
 | configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
 | configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
-| configs.nightlymetrics.image.pullPolicy |  | string | `"IfNotPresent"` |
-| configs.nightlymetrics.image.registry |  | string | `"registry.access.redhat.com"` |
-| configs.nightlymetrics.image.repository |  | string | `"ubi9/python-311"` |
-| configs.nightlymetrics.image.version |  | string | `"sha256:92416840a0361bf5c8ed6071f50098ddbdd1d14285793d4bcd8e761658c97df8"` |
-| configs.nightlymetrics.name |  | string | `"nightlyMetricsCollection"` |
-| configs.nightlymetrics.namespace |  | string | `"sigstore-monitoring"` |
+| configs.sigstore_monitoring.namespace |  | string | `"sigstore-monitoring"` |
+| configs.sigstore_monitoring.namespace_create |  | bool | `true` |
+| configs.segment_backup_job.image.registry |  | string | `"registry.access.redhat.com"` |
+| configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
+| configs.segment_backup_job.image.registry |  | string | `"registry.access.redhat.com"` |
+| configs.segment_backup_job.image.repository |  | string | `"ubi9/python-311"` |
+| configs.segment_backup_job.image.version |  | string | `"sha256:92416840a0361bf5c8ed6071f50098ddbdd1d14285793d4bcd8e761658c97df8"` |
+| configs.segment_backup_job.name |  | string | `"nightlyMetricsCollection"` |
+| configs.segment_backup_job.namespace |  | string | `"sigstore-monitoring"` |
 | configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |

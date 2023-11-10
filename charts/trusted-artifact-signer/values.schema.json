@@ -3,7 +3,17 @@
     "properties": {
         "configs": {
             "properties": {
-                "segment-backup-job":{
+                "sigstore_monitoring": {
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "segment_backup_job":{
                     "properties": {
                         "name": {
                             "type": "string"
@@ -26,6 +36,12 @@
                                     "type": "string"
                                 }
                             }
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
                         }
                     }
                 },

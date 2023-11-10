@@ -21,6 +21,7 @@ then
 else
   mv /tmp/config ~/.kube/config
 fi
+chmod go-r ~/.kube/config
 
 oc config use-context kind-kind
 

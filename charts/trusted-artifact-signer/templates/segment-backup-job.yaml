@@ -1,24 +1,33 @@
 apiVersion: batch/v1
-kind: Cronjob
+kind: Job
 metadata:
-  name: {{ .Values.configs.segment-backup-job.name }}
-spec:
-  schedule: "0 0 * * *"  
-  concurrencyPolicy: "Replace"
-  startingDeadlineSeconds: 200
-  suspend: false
-  successfulJobsHistoryLimit: 7
-  failedJobsHistoryLimit: 3
-  jobTemplate:                  
+  name: {{ .Values.configs.segment_backup_job.name }}
+  namespace: {{ .Values.configs.segment_backup_job.namespace }}
+spec:  
+  parallelism: 1    
+  completions: 1
+  activeDeadlineSeconds: 600
+  backoffLimit: 5
+  template:
+    metadata:
+      name: {{ .Values.configs.segment_backup_job.name }}
+      labels:               
+        parent: "segment-backup-job"
     spec:
-      template:
-        serviceAccountName: segment-backup-sa
-        metadata:
-          labels:               
-            parent: "segment-backup-job"
-        spec:
-          containers:
-          - name: {{ .Values.configs.segment-backup-job.name }}
-            image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}:{{ .Values.configs.cosign_deploy.image.version }}"
-            command: ["/bin/bash",  "/opt/app-root/src/script.sh"]
-          restartPolicy: OnFailure 
+      restartPolicy: OnFailure 
+      serviceAccountName: segment-backup-job
+      containers:
+        - name: {{ .Values.configs.segment_backup_job.name }}
+          # image: "{{ .Values.configs.segment_backup_job.image.registry }}/{{ .Values.configs.segment_backup_job.image.repository }}/{{ .Values.configs.segment_backup_job.image.version }}"
+          image: "{{ .Values.configs.segment_backup_job.image.registry }}/{{ .Values.configs.segment_backup_job.image.repository }}@{{ .Values.configs.segment_backup_job.image.version }}"
+          command: ["/bin/bash",  "/opt/app-root/src/script.sh"]
+          env:
+            - name: RUN_TYPE
+              value: "installation"
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+              - ALL
