@@ -102,6 +102,8 @@ if [[ -n $segment_backup_job ]]; then
     oc delete job $segment_backup_job -n sigstore-monitoring
 fi
 
+oc new-project sigstore-monitoring > /dev/null 2>&1
+
 pull_secret_exists=$(oc get secret pull-secret -n sigstore-monitoring --ignore-not-found=true)
 if [[ -n $pull_secret_exists ]]; then
     read -p "Secret \"pull-secret\" in namespace \"sigstore-monitoring\" already exists. Overwrite it (Y/N)?: " -n1 overwrite_pull_secret

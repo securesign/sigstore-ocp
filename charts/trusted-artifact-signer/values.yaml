@@ -7,7 +7,6 @@ global:
 configs:
   sigstore_monitoring:
     namespace: sigstore-monitoring
-    namespace_create: true
   segment_backup_job:
     name: segment-backup-job
     namespace: sigstore-monitoring
