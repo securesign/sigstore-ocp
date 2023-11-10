@@ -21,7 +21,7 @@ spec:
       serviceAccountName: {{ .Values.configs.clientserver.name }}
       containers:
       - name: tas-clients
-        image: "{{ .Values.configs.clientserver.image.registry }}/{{ .Values.configs.clientserver.image.repository }}:{{ .Values.configs.clientserver.image.version }}"
+        image: "{{ template "image" .Values.configs.clientserver.image }}"
         #image: quay.io/sallyom/tas-clients:httpd
         imagePullPolicy: IfNotPresent
         ports:
