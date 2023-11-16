@@ -11,8 +11,8 @@ configs:
     name: segment-backup-job
     namespace: sigstore-monitoring
     image:
-      registry: quay.io
-      repository: redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/segment-backup-job
+      registry:  registry.redhat.io
+      repository: rhtas-tech-preview/segment-backup-job-rhel9
       version: sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44
       pullPolicy: IfNotPresent
     rolebindings:
