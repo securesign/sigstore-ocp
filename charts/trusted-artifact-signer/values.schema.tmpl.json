@@ -19,6 +19,45 @@
         "configs": {
             "type": "object",
             "properties": {
+                "sigstore_monitoring": {
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "segment_backup_job":{
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type" : "string"
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
                 "clientserver": {
                     "properties": {
                         "consoleDownload": {
@@ -275,8 +314,7 @@
                     },
                     "type": "object"
                 }
-            },
-            "type": "object"
+            }
         },
         "rbac": {
             "properties": {
