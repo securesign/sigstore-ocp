@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: curl
-      image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+      image: registry.access.redhat.com/ubi9/ubi-minimal@sha256:3e313209ac617a92b50350286752311d99ea2dafc429ef0e5311889294b0bc21
       command: ["/bin/sh", "-c"]
       args:
         - |

@@ -9,12 +9,12 @@ metadata:
 spec:
     initContainers:
       - name: buildah
-        image: quay.io/buildah/stable
+        image: registry.redhat.io/rhel9/buildah@sha256:a65949e6654dee640634f2c86f7ec36ba9530f0e8160368d0711f2af2ee7587f
         command: ["/bin/sh", "-c"]
         args:
         - |
-            buildah pull alpine:latest
-            buildah tag alpine:latest ttl.sh/sigstore-test:5m
+            buildah pull alpine@sha256:48d9183eb12a05c99bcc0bf44a003607b8e941e1d4f41f9ad12bdcc4b5672f86
+            buildah tag alpine@sha256:48d9183eb12a05c99bcc0bf44a003607b8e941e1d4f41f9ad12bdcc4b5672f86 ttl.sh/sigstore-test:5m
             buildah push ttl.sh/sigstore-test:5m
         securityContext:
             privileged: true
