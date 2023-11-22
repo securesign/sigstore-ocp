@@ -7,7 +7,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func PullSecretExists(secretName, namespace string) (bool, error) {
+func SecretExists(secretName, namespace string) (bool, error) {
 	secrets, err := Clientset.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return false, err
@@ -22,27 +22,23 @@ func PullSecretExists(secretName, namespace string) (bool, error) {
 	return false, nil
 }
 
-func CreatePullSecret(secretName, namespace, filename string, secretData []byte) error {
-	exists, err := PullSecretExists(secretName, namespace)
+func CreateSecret(secretName, namespace string, secret *v1.Secret) error {
+	exists, err := SecretExists(secretName, namespace)
 	if err != nil {
 		return err
 	}
-
-	secret := &v1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      secretName,
-			Namespace: namespace,
-		},
-		Data: map[string][]byte{
-			filename: secretData,
-		},
-	}
-
-	if exists {
-		_, err = Clientset.CoreV1().Secrets(namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
-	} else {
+	if !exists {
 		_, err = Clientset.CoreV1().Secrets(namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 	}
+	return err
+}
 
+func UpdateSecretData(secretName, namespace, key string, data []byte) error {
+	secret, err := Clientset.CoreV1().Secrets(namespace).Get(context.TODO(), secretName, metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+	secret.Data[key] = data
+	_, err = Clientset.CoreV1().Secrets(namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
 	return err
 }

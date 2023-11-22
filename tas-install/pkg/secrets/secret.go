@@ -7,10 +7,13 @@ import (
 	"path/filepath"
 	"securesign/sigstore-ocp/tas-install/pkg/kubernetes"
 	"strings"
+
+	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func ConfigurePullSecret(pullSecretName, namespace string) error {
-	secretExistsInCluster, err := kubernetes.PullSecretExists(pullSecretName, namespace)
+	secretExistsInCluster, err := kubernetes.SecretExists(pullSecretName, namespace)
 	if err != nil {
 		return err
 	}
@@ -22,7 +25,7 @@ func ConfigurePullSecret(pullSecretName, namespace string) error {
 		}
 
 		if overWrite {
-			err := handleSecretCreation(pullSecretName, namespace)
+			err := handleSecretOverwrite(pullSecretName, namespace)
 			if err != nil {
 				return err
 			}
@@ -32,7 +35,7 @@ func ConfigurePullSecret(pullSecretName, namespace string) error {
 		}
 
 	} else {
-		err := handleSecretCreation(pullSecretName, namespace)
+		err := ConfigureSystemSecrets(namespace, pullSecretName, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -42,29 +45,80 @@ func ConfigurePullSecret(pullSecretName, namespace string) error {
 	return nil
 }
 
-func handleSecretCreation(pullSecretName, namespace string) error {
-	secretPath, err := promptForSecretPath()
+func ConfigureSystemSecrets(namespace, secretName string, literals, filepaths map[string]string) error {
+	secret := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: namespace,
+		},
+		Data: make(map[string][]byte),
+	}
+
+	if literals == nil && filepaths == nil {
+		secretData, fileName, err := processSecretFile("")
+		if err != nil {
+			return err
+		}
+		secret.Data[fileName] = secretData
+	}
+
+	for key, filePath := range filepaths {
+		secretData, _, err := processSecretFile(filePath)
+		if err != nil {
+			return err
+		}
+		secret.Data[key] = secretData
+	}
+
+	for key, value := range literals {
+		secret.Data[key] = []byte(value)
+	}
+
+	err := kubernetes.CreateSecret(secretName, namespace, secret)
 	if err != nil {
 		return err
-	}
-	secretFileExists := pullSecretFileExists(secretPath)
-	if secretFileExists {
-		secretData, err := readSecretFile(secretPath)
-		if err != nil {
-			return err
-		}
-		fileName := filepath.Base(secretPath)
-		err = kubernetes.CreatePullSecret(pullSecretName, namespace, fileName, secretData)
-		if err != nil {
-			return err
-		}
-	} else {
-		return fmt.Errorf("pull secret was not found based on the path provided: %s\n", secretPath)
 	}
 	return nil
 }
 
-func promptForSecretPath() (string, error) {
+func handleSecretOverwrite(pullSecretName, namespace string) error {
+	secretData, fileName, err := processSecretFile("")
+	if err != nil {
+		return err
+	}
+	err = kubernetes.UpdateSecretData(pullSecretName, namespace, fileName, secretData)
+	return nil
+}
+
+func processSecretFile(secretPath string) ([]byte, string, error) {
+	var err error
+
+	if secretPath == "" {
+		secretPath, err = promptForPullSecretPath()
+		if err != nil {
+			return nil, "", err
+		}
+	}
+
+	if secretPath == "" {
+		return nil, "", fmt.Errorf("no secret path provided")
+	}
+
+	secretFileExists := pullSecretFileExists(secretPath)
+	if !secretFileExists {
+		return nil, "", fmt.Errorf("pull secret was not found based on the path provided: %s", secretPath)
+	}
+
+	secretData, err := readSecretFile(secretPath)
+	if err != nil {
+		return nil, "", err
+	}
+
+	fileName := filepath.Base(secretPath)
+	return secretData, fileName, nil
+}
+
+func promptForPullSecretPath() (string, error) {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Please enter the absolute path to the pull-secret.json file:")
 	filePath, err := reader.ReadString('\n')

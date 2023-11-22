@@ -12,6 +12,10 @@ import (
 	"golang.org/x/term"
 )
 
+var (
+	CertPassword = ""
+)
+
 func SetupCerts() error {
 	orgName, email, commonName, password, err := promptForCertInfo()
 	if err != nil {
@@ -79,6 +83,7 @@ func promptForCertInfo() (string, string, string, string, error) {
 	}
 
 	password := string(bytePassword)
+	CertPassword = password
 
 	fmt.Println("\nOrganization Name:", orgName)
 	fmt.Println("Email Address:", email)
