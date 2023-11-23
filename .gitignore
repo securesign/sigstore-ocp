@@ -13,3 +13,4 @@ keys-cert
 
 tas-install/tas-install
 tas-install/keys-cert
+pull-secret.json

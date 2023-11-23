@@ -14,6 +14,7 @@ import (
 
 var (
 	CertPassword = ""
+	CommonName = ""
 )
 
 func SetupCerts() error {
@@ -84,6 +85,8 @@ func promptForCertInfo() (string, string, string, string, error) {
 
 	password := string(bytePassword)
 	CertPassword = password
+	CommonName = commonName
+	
 
 	fmt.Println("\nOrganization Name:", orgName)
 	fmt.Println("Email Address:", email)

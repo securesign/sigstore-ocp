@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"securesign/sigstore-ocp/tas-install/pkg/certs"
+	"securesign/sigstore-ocp/tas-install/pkg/helm"
 	"securesign/sigstore-ocp/tas-install/pkg/keycloak"
 	"securesign/sigstore-ocp/tas-install/pkg/kubernetes"
 	"securesign/sigstore-ocp/tas-install/pkg/secrets"
@@ -51,5 +52,9 @@ func main() {
 
 	if err := secrets.ConfigureSystemSecrets("rekor-system", "rekor-private-key", nil, map[string]string{"private": "./keys-cert/rekor_key.pem"}); err != nil {
 		log.Fatalf("Failed to create secrets: %v", err)
+	}
+
+	if err := helm.InstallTrustedArtifactSigner(certs.CommonName); err != nil {
+		log.Fatalf("Failed to Install helm chart: %v", err)
 	}
 }
