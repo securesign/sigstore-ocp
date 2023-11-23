@@ -3,7 +3,7 @@ package keycloak
 import (
 	"fmt"
 	"os/exec"
-	"securesign/sigstore-ocp/tas-install/pkg/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 )
 
 func InstallSSOKeycloak() error {
