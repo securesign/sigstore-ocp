@@ -41,6 +41,7 @@ func installTas() error {
 		kubernetes.InitKubeClient,
 		keycloak.InstallSSOKeycloak,
 		certs.SetupCerts,
+		func() error { return checkSegmentBackupJob("sigstore-monitoring", "segment-backup-job") },
 		func() error { return kubernetes.CreateNamespace("sigstore-monitoring") },
 		func() error { return secrets.ConfigurePullSecret("pull-secret", "sigstore-monitoring") },
 		func() error { return kubernetes.CreateNamespace("fulcio-system") },
@@ -79,4 +80,20 @@ func getRekorSecrets() map[string]string {
 	return map[string]string{
 		"private": "./keys-cert/rekor_key.pem",
 	}
+}
+
+func checkSegmentBackupJob(namespace, jobName string) error {
+	job, err := kubernetes.GetJob(namespace, jobName)
+	if err != nil {
+		return err
+	}
+
+	if job != nil {
+		err := kubernetes.DeleteJob(namespace, jobName)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
