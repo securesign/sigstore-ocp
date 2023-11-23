@@ -8,8 +8,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func CreateNamespace(ns string) error {
-	exists, err := namespaceExists(ns)
+func (kc *KubernetesClient) CreateNamespace(ns string) error {
+	exists, err := kc.namespaceExists(ns)
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func CreateNamespace(ns string) error {
 			},
 		}
 
-		_, err := Clientset.CoreV1().Namespaces().Create(context.TODO(), namespace, metav1.CreateOptions{})
+		_, err := kc.Clientset.CoreV1().Namespaces().Create(context.TODO(), namespace, metav1.CreateOptions{})
 		if err != nil {
 			return err
 		}
@@ -30,8 +30,8 @@ func CreateNamespace(ns string) error {
 	return nil
 }
 
-func namespaceExists(namespace string) (bool, error) {
-	namespaces, err := Clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+func (kc *KubernetesClient) namespaceExists(namespace string) (bool, error) {
+	namespaces, err := kc.Clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		return false, err
 	}

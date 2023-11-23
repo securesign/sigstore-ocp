@@ -12,8 +12,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func ConfigurePullSecret(pullSecretName, namespace string) error {
-	secretExistsInCluster, err := kubernetes.SecretExists(pullSecretName, namespace)
+func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
+	secretExistsInCluster, err := kc.SecretExists(pullSecretName, namespace)
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func ConfigurePullSecret(pullSecretName, namespace string) error {
 		}
 
 		if overWrite {
-			err := handleSecretOverwrite(pullSecretName, namespace)
+			err := handleSecretOverwrite(kc, pullSecretName, namespace)
 			if err != nil {
 				return err
 			}
@@ -35,7 +35,7 @@ func ConfigurePullSecret(pullSecretName, namespace string) error {
 		}
 
 	} else {
-		err := ConfigureSystemSecrets(namespace, pullSecretName, nil, nil)
+		err := ConfigureSystemSecrets(kc, namespace, pullSecretName, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -45,7 +45,7 @@ func ConfigurePullSecret(pullSecretName, namespace string) error {
 	return nil
 }
 
-func ConfigureSystemSecrets(namespace, secretName string, literals, filepaths map[string]string) error {
+func ConfigureSystemSecrets(kc *kubernetes.KubernetesClient, namespace, secretName string, literals, filepaths map[string]string) error {
 	secret := &v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      secretName,
@@ -74,19 +74,19 @@ func ConfigureSystemSecrets(namespace, secretName string, literals, filepaths ma
 		secret.Data[key] = []byte(value)
 	}
 
-	err := kubernetes.CreateSecret(secretName, namespace, secret)
+	err := kc.CreateSecret(secretName, namespace, secret)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func handleSecretOverwrite(pullSecretName, namespace string) error {
+func handleSecretOverwrite(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
 	secretData, fileName, err := processSecretFile("")
 	if err != nil {
 		return err
 	}
-	err = kubernetes.UpdateSecretData(pullSecretName, namespace, fileName, secretData)
+	err = kc.UpdateSecretData(pullSecretName, namespace, fileName, secretData)
 	return nil
 }
 

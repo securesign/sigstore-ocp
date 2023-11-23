@@ -37,20 +37,25 @@ func init() {
 }
 
 func installTas() error {
+
+	kc, err := kubernetes.InitKubeClient()
+	if err != nil {
+		return fmt.Errorf("failed to initialize Kubernetes client: %v", err)
+	}
+
 	installSteps := []func() error{
-		kubernetes.InitKubeClient,
-		keycloak.InstallSSOKeycloak,
+		func() error { return keycloak.InstallSSOKeycloak(kc) },
 		certs.SetupCerts,
-		func() error { return checkSegmentBackupJob("sigstore-monitoring", "segment-backup-job") },
-		func() error { return kubernetes.CreateNamespace("sigstore-monitoring") },
-		func() error { return secrets.ConfigurePullSecret("pull-secret", "sigstore-monitoring") },
-		func() error { return kubernetes.CreateNamespace("fulcio-system") },
+		func() error { return checkSegmentBackupJob(kc, "sigstore-monitoring", "segment-backup-job") },
+		func() error { return kc.CreateNamespace("sigstore-monitoring") },
+		func() error { return secrets.ConfigurePullSecret(kc, "pull-secret", "sigstore-monitoring") },
+		func() error { return kc.CreateNamespace("fulcio-system") },
 		func() error {
-			return secrets.ConfigureSystemSecrets("fulcio-system", "fulcio-secret-rh", getFulcioLiteralSecrets(), getFulcioFileSecrets())
+			return secrets.ConfigureSystemSecrets(kc, "fulcio-system", "fulcio-secret-rh", getFulcioLiteralSecrets(), getFulcioFileSecrets())
 		},
-		func() error { return kubernetes.CreateNamespace("rekor-system") },
+		func() error { return kc.CreateNamespace("rekor-system") },
 		func() error {
-			return secrets.ConfigureSystemSecrets("rekor-system", "rekor-private-key", nil, getRekorSecrets())
+			return secrets.ConfigureSystemSecrets(kc, "rekor-system", "rekor-private-key", nil, getRekorSecrets())
 		},
 		func() error { return helm.InstallTrustedArtifactSigner(certs.CommonName) },
 	}
@@ -82,18 +87,17 @@ func getRekorSecrets() map[string]string {
 	}
 }
 
-func checkSegmentBackupJob(namespace, jobName string) error {
-	job, err := kubernetes.GetJob(namespace, jobName)
+func checkSegmentBackupJob(kc *kubernetes.KubernetesClient, namespace, jobName string) error {
+	job, err := kc.GetJob(namespace, jobName)
 	if err != nil {
 		return err
 	}
 
 	if job != nil {
-		err := kubernetes.DeleteJob(namespace, jobName)
+		err := kc.DeleteJob(namespace, jobName)
 		if err != nil {
 			return err
 		}
 	}
-
 	return nil
 }

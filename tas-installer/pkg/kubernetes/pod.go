@@ -16,8 +16,8 @@ var (
 	ErrPodNotFound = errors.New("pod not found")
 )
 
-func CheckPodStatus(namespace, podNamePrefix string) (string, error) {
-	pods, err := Clientset.CoreV1().Pods(namespace).List(context.Background(), v1.ListOptions{})
+func (kc *KubernetesClient) CheckPodStatus(namespace, podNamePrefix string) (string, error) {
+	pods, err := kc.Clientset.CoreV1().Pods(namespace).List(context.Background(), v1.ListOptions{})
 	if err != nil {
 		return "", err
 	}
@@ -31,11 +31,11 @@ func CheckPodStatus(namespace, podNamePrefix string) (string, error) {
 	return "", ErrPodNotFound
 }
 
-func WaitForPodStatusRunning(namespace, podNamePrefix string) error {
+func (kc *KubernetesClient) WaitForPodStatusRunning(namespace, podNamePrefix string) error {
 	CurrentAttempt := 0
 	fmt.Printf("Waiting for %s to reach a running state\n", podNamePrefix)
 	for CurrentAttempt < MaxAttempts {
-		phase, err := CheckPodStatus(namespace, podNamePrefix)
+		phase, err := kc.CheckPodStatus(namespace, podNamePrefix)
 		if err != nil {
 			if err == ErrPodNotFound {
 				fmt.Printf("Pod %s not found, retrying...\n", podNamePrefix)

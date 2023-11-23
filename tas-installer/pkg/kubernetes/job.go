@@ -8,8 +8,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func GetJob(namespace, jobName string) (*v1.Job, error) {
-	jobs, err := Clientset.BatchV1().Jobs(namespace).List(context.TODO(), metav1.ListOptions{})
+func (kc *KubernetesClient) GetJob(namespace, jobName string) (*v1.Job, error) {
+	jobs, err := kc.Clientset.BatchV1().Jobs(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
 			return nil, nil
@@ -26,14 +26,14 @@ func GetJob(namespace, jobName string) (*v1.Job, error) {
 	return nil, nil
 }
 
-func DeleteJob(namespace, jobName string) error {
+func (kc *KubernetesClient) DeleteJob(namespace, jobName string) error {
 
 	deletePolicy := metav1.DeletePropagationBackground
 	deleteOptions := metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
 	}
 
-	err := Clientset.BatchV1().Jobs(namespace).Delete(context.TODO(), jobName, deleteOptions)
+	err := kc.Clientset.BatchV1().Jobs(namespace).Delete(context.TODO(), jobName, deleteOptions)
 	if err != nil {
 		return err
 	}

@@ -6,13 +6,13 @@ import (
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 )
 
-func InstallSSOKeycloak() error {
+func InstallSSOKeycloak(kc *kubernetes.KubernetesClient) error {
 
 	fmt.Println("Installing keycloak operator")
 	if err := applyKustomize("keycloak/operator/base"); err != nil {
 		return err
 	}
-	if err := kubernetes.WaitForPodStatusRunning("keycloak-system", "rhsso-operator"); err != nil {
+	if err := kc.WaitForPodStatusRunning("keycloak-system", "rhsso-operator"); err != nil {
 		return err
 	}
 
@@ -20,12 +20,12 @@ func InstallSSOKeycloak() error {
 	if err := applyKustomize("keycloak/resources/base"); err != nil {
 		return err
 	}
-	if err := kubernetes.WaitForPodStatusRunning("keycloak-system", "keycloak-postgresql"); err != nil {
+	if err := kc.WaitForPodStatusRunning("keycloak-system", "keycloak-postgresql"); err != nil {
 		return err
 	}
 	fmt.Println("Keycloak has successfully been installed")
 
-	if err := kubernetes.WaitForPodStatusRunning("keycloak-system", "keycloak"); err != nil {
+	if err := kc.WaitForPodStatusRunning("keycloak-system", "keycloak"); err != nil {
 		return err
 	}
 	fmt.Println("Keycloak is up and running")

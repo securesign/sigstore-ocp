@@ -9,25 +9,31 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-var Clientset *kubernetes.Clientset
+type KubernetesClient struct {
+	Clientset *kubernetes.Clientset
+}
 
-func InitKubeClient() error {
+func InitKubeClient() (*KubernetesClient, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("error getting user home dir: %w", err)
+		return nil, fmt.Errorf("error getting user home dir: %w", err)
 	}
 	kubeConfigPath := filepath.Join(homeDir, ".kube", "config")
 	fmt.Printf("Using kube config found at %s\n", kubeConfigPath)
 
 	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 	if err != nil {
-		return fmt.Errorf("error getting Kubernetes config: %w", err)
+		return nil, fmt.Errorf("error getting Kubernetes config: %w", err)
 	}
 
-	Clientset, err = kubernetes.NewForConfig(kubeConfig)
+	clientset, err := kubernetes.NewForConfig(kubeConfig)
 	if err != nil {
-		return fmt.Errorf("error getting Kubernetes clientset: %w", err)
+		return nil, fmt.Errorf("error getting Kubernetes clientset: %w", err)
 	}
 
-	return nil
+	return &KubernetesClient{Clientset: clientset}, nil
+}
+
+func GetClusterDNS() (string, error) {
+	return "", nil //need to finish this
 }
