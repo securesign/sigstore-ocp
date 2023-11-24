@@ -10,8 +10,8 @@ import (
 
 var envgenCmd = &cobra.Command{
 	Use:   "envgen",
-	Short: "Generates env vars to communicate with TAS",
-	Long: `The 'envgenCmd' command will generate the following Environmental Variables that will allow you to communicate with the TAS stack
+	Short: "Generates a script to define env vars to communicate with TAS",
+	Long: `The 'envgen' command will generate a script which will define the following Environmental Variables that will allow you to communicate with the TAS stack
 	
 	Env Vars Generated:
 	1. BASE_HOSTNAME=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
@@ -35,24 +35,34 @@ func init() {
 }
 
 func generateEnvVars() error {
+	baseHostname := kc.ClusterCommonName
 
-	keycloakRealm := "sigstore"
-	envVars := map[string]string{
-		"BASE_HOSTNAME":   kc.ClusterCommonName,
-		"KEYCLOAK_REALM":  keycloakRealm,
-		"FULCIO_URL":      "https://fulcio." + kc.ClusterCommonName,
-		"KEYCLOAK_URL":    "https://keycloak-keycloak-system." + kc.ClusterCommonName,
-		"REKOR_URL":       "https://rekor." + kc.ClusterCommonName,
-		"TUF_URL":         "https://tuf." + kc.ClusterCommonName,
-		"OIDC_ISSUER_URL": "https://" + "keycloak-keycloak-system." + kc.ClusterCommonName + "/auth/realms/" + keycloakRealm,
+	scriptContent := `#!/bin/bash
+	export BASE_HOSTNAME=` + baseHostname + `
+	echo "Base hostname = $BASE_HOSTNAME"
+	export KEYCLOAK_REALM=sigstore
+	export FULCIO_URL=https://fulcio.` + baseHostname + `
+	export KEYCLOAK_URL=https://keycloak-keycloak-system.` + baseHostname + `
+	export REKOR_URL=https://rekor.` + baseHostname + `
+	export TUF_URL=https://tuf.` + baseHostname + `
+	export OIDC_ISSUER_URL=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/sigstore`
+
+	fileName := "tas-env-variables.sh"
+	file, err := os.Create(fileName)
+	if err != nil {
+		return fmt.Errorf("failed to create file: %w", err)
+	}
+	_, err = file.WriteString(scriptContent)
+	if err != nil {
+		return fmt.Errorf("failed to write to file: %w", err)
 	}
 
-	for key, value := range envVars {
-		if err := os.Setenv(key, value); err != nil {
-			return fmt.Errorf("failed to set env var %s: %w", key, err)
-		}
-		fmt.Printf("Set %s=%s\n", key, value)
+	err = os.Chmod(fileName, 0755)
+	if err != nil {
+		return fmt.Errorf("failed to make script executable: %w", err)
 	}
 
+	fmt.Printf("A script '%s' to set environment variables has been created.\n", fileName)
+	fmt.Println("To initialize the environment variables, run 'source ./" + fileName + "' from the terminal.")
 	return nil
 }

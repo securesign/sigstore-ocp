@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"fmt"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,6 +30,9 @@ func (kc *KubernetesClient) CreateSecret(secretName, namespace string, secret *v
 	}
 	if !exists {
 		_, err = kc.Clientset.CoreV1().Secrets(namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
+		if err == nil {
+			fmt.Printf("Secret: %s created successfully\n", secretName)
+		}
 	}
 	return err
 }

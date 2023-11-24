@@ -25,7 +25,9 @@ func (kc *KubernetesClient) CreateNamespace(ns string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%s namespace created successfully\n", ns)
+		fmt.Printf("%s namespace created successfully \n", ns)
+	} else {
+		fmt.Printf("%s namespace already exists, skipping create \n", ns)
 	}
 	return nil
 }

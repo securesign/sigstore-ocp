@@ -41,7 +41,6 @@ func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namesp
 		}
 	}
 
-	fmt.Printf("Secret: %s created successfully\n", pullSecretName)
 	return nil
 }
 
@@ -120,7 +119,7 @@ func processSecretFile(secretPath string) ([]byte, string, error) {
 
 func promptForPullSecretPath() (string, error) {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Please enter the absolute path to the pull-secret.json file:")
+	fmt.Print("Please enter the absolute path to the pull-secret.json file: ")
 	filePath, err := reader.ReadString('\n')
 	if err != nil {
 		return "", err
@@ -132,7 +131,7 @@ func promptForSecretOverwrite(secretName, namespace string) (bool, error) {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Printf("Secret %s in namespace %s already exists. Overwrite it (Y/N)?: \n", secretName, namespace)
+		fmt.Printf("Secret %s in namespace %s already exists. Overwrite it (Y/N)?:", secretName, namespace)
 		overwrite, err := reader.ReadString('\n')
 		if err != nil {
 			return false, err

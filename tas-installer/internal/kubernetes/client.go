@@ -3,6 +3,7 @@ package kubernetes
 import (
 	"fmt"
 	"net/url"
+	"strings"
 
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
@@ -23,7 +24,7 @@ func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
 
 	dns := kubeConfig.Host
 	baseDomain, err := parseClusterDNS(dns)
-	commonName := "apps." + baseDomain
+	commonName := "apps.rosa" + baseDomain
 
 	clientset, err := kubernetes.NewForConfig(kubeConfig)
 	if err != nil {
@@ -39,5 +40,6 @@ func parseClusterDNS(dns string) (string, error) {
 		panic(err)
 	}
 	domain := parsedURL.Hostname()
+	domain = strings.TrimPrefix(domain, "api")
 	return domain, nil
 }

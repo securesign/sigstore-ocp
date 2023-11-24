@@ -51,7 +51,7 @@ func installTas() error {
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "rekor-system", "rekor-private-key", nil, getRekorSecrets())
 		},
-		func() error { return helm.InstallTrustedArtifactSigner(kc.ClusterBaseDomain) },
+		func() error { return helm.InstallTrustedArtifactSigner(kc.ClusterCommonName) },
 	}
 	for _, step := range installSteps {
 		if err := step(); err != nil {

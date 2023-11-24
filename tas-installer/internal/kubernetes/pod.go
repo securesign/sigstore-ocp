@@ -33,22 +33,22 @@ func (kc *KubernetesClient) CheckPodStatus(namespace, podNamePrefix string) (str
 
 func (kc *KubernetesClient) WaitForPodStatusRunning(namespace, podNamePrefix string) error {
 	CurrentAttempt := 0
-	fmt.Printf("Waiting for %s to reach a running state\n", podNamePrefix)
+	fmt.Printf("Waiting for %s to reach a running state \n", podNamePrefix)
 	for CurrentAttempt < MaxAttempts {
 		phase, err := kc.CheckPodStatus(namespace, podNamePrefix)
 		if err != nil {
 			if err == ErrPodNotFound {
-				fmt.Printf("Pod %s not found, retrying...\n", podNamePrefix)
+				fmt.Printf("No pods with the prefix '%s' found in namespace %s. Retrying in %d seconds... \n", podNamePrefix, namespace, SleepInterval)
 			} else {
 				return err
 			}
 		} else if phase == "Running" {
-			fmt.Printf("Pod %s has reached a running state\n", podNamePrefix)
+			fmt.Printf("%s is up and running in namespace %s. \n", podNamePrefix, namespace)
 			return nil
 		}
 
 		CurrentAttempt++
 		time.Sleep(time.Duration(SleepInterval) * time.Second)
 	}
-	return fmt.Errorf("%s pod in namespace %s did not reach the 'Running' phase after %d attempts\n", podNamePrefix, namespace, MaxAttempts)
+	return fmt.Errorf("Timed out. No pods with the prefix '%s' reached the 'Running' state within the specified time.", podNamePrefix)
 }
