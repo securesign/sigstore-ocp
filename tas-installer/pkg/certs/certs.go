@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"strings"
 	"syscall"
 
@@ -14,11 +15,10 @@ import (
 
 var (
 	CertPassword = ""
-	CommonName = ""
 )
 
-func SetupCerts() error {
-	orgName, email, commonName, password, err := promptForCertInfo()
+func SetupCerts(kc *kubernetes.KubernetesClient) error {
+	orgName, email, commonName, password, err := promptForCertInfo(kc)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func executeCommand(command string) error {
 	return cmd.Run()
 }
 
-func promptForCertInfo() (string, string, string, string, error) {
+func promptForCertInfo(kc *kubernetes.KubernetesClient) (string, string, string, string, error) {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Print("Enter the organization name for the certificate: ")
@@ -70,13 +70,6 @@ func promptForCertInfo() (string, string, string, string, error) {
 	}
 	email = strings.TrimSpace(email)
 
-	cmd := exec.Command("oc", "get", "dns", "cluster", "-o", "jsonpath={.spec.baseDomain}")
-	cmdOutput, err := cmd.Output()
-	if err != nil {
-		return "", "", "", "", fmt.Errorf("error getting CN: %v", err)
-	}
-	commonName := "apps." + strings.TrimSpace(string(cmdOutput))
-
 	fmt.Print("Enter the password for the private key: ")
 	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
@@ -85,12 +78,10 @@ func promptForCertInfo() (string, string, string, string, error) {
 
 	password := string(bytePassword)
 	CertPassword = password
-	CommonName = commonName
-	
 
 	fmt.Println("\nOrganization Name:", orgName)
 	fmt.Println("Email Address:", email)
-	fmt.Println("Common Name (CN):", commonName)
+	fmt.Println("Common Name (CN):", kc.ClusterCommonName)
 
-	return orgName, email, commonName, password, nil
+	return orgName, email, kc.ClusterCommonName, password, nil
 }

@@ -45,7 +45,7 @@ func installTas() error {
 
 	installSteps := []func() error{
 		func() error { return keycloak.InstallSSOKeycloak(kc) },
-		certs.SetupCerts,
+		func() error { return certs.SetupCerts(kc) },
 		func() error { return checkSegmentBackupJob(kc, "sigstore-monitoring", "segment-backup-job") },
 		func() error { return kc.CreateNamespace("sigstore-monitoring") },
 		func() error { return secrets.ConfigurePullSecret(kc, "pull-secret", "sigstore-monitoring") },
@@ -57,7 +57,7 @@ func installTas() error {
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "rekor-system", "rekor-private-key", nil, getRekorSecrets())
 		},
-		func() error { return helm.InstallTrustedArtifactSigner(certs.CommonName) },
+		func() error { return helm.InstallTrustedArtifactSigner(kc.ClusterBaseDomain) },
 	}
 	for _, step := range installSteps {
 		if err := step(); err != nil {

@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -10,7 +11,9 @@ import (
 )
 
 type KubernetesClient struct {
-	Clientset *kubernetes.Clientset
+	Clientset         *kubernetes.Clientset
+	ClusterBaseDomain string
+	ClusterCommonName string
 }
 
 func InitKubeClient() (*KubernetesClient, error) {
@@ -26,14 +29,23 @@ func InitKubeClient() (*KubernetesClient, error) {
 		return nil, fmt.Errorf("error getting Kubernetes config: %w", err)
 	}
 
+	dns := kubeConfig.Host
+	baseDomain, err := parseClusterDNS(dns)
+	commonName := "apps." + baseDomain
+
 	clientset, err := kubernetes.NewForConfig(kubeConfig)
 	if err != nil {
 		return nil, fmt.Errorf("error getting Kubernetes clientset: %w", err)
 	}
 
-	return &KubernetesClient{Clientset: clientset}, nil
+	return &KubernetesClient{Clientset: clientset, ClusterBaseDomain: baseDomain, ClusterCommonName: commonName}, nil
 }
 
-func GetClusterDNS() (string, error) {
-	return "", nil //need to finish this
+func parseClusterDNS(dns string) (string, error) {
+	parsedURL, err := url.Parse(dns)
+	if err != nil {
+		panic(err)
+	}
+	domain := parsedURL.Hostname()
+	return domain, nil
 }
