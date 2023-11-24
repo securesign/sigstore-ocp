@@ -3,8 +3,6 @@ package kubernetes
 import (
 	"fmt"
 	"net/url"
-	"os"
-	"path/filepath"
 
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
@@ -16,14 +14,8 @@ type KubernetesClient struct {
 	ClusterCommonName string
 }
 
-func InitKubeClient() (*KubernetesClient, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, fmt.Errorf("error getting user home dir: %w", err)
-	}
-	kubeConfigPath := filepath.Join(homeDir, ".kube", "config")
+func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
 	fmt.Printf("Using kube config found at %s\n", kubeConfigPath)
-
 	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 	if err != nil {
 		return nil, fmt.Errorf("error getting Kubernetes config: %w", err)

@@ -37,12 +37,6 @@ func init() {
 }
 
 func installTas() error {
-
-	kc, err := kubernetes.InitKubeClient()
-	if err != nil {
-		return fmt.Errorf("failed to initialize Kubernetes client: %v", err)
-	}
-
 	installSteps := []func() error{
 		func() error { return keycloak.InstallSSOKeycloak(kc) },
 		func() error { return certs.SetupCerts(kc) },

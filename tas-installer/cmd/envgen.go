@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 
 	"github.com/spf13/cobra"
 )
 
-var envVarsCmd = &cobra.Command{
-	Use:   "envVars",
+var envgenCmd = &cobra.Command{
+	Use:   "envgen",
 	Short: "Generates env vars to communicate with TAS",
-	Long: `The 'envVars' command will generate the following Environmental Variables that will allow you to communicate with the TAS stack
+	Long: `The 'envgenCmd' command will generate the following Environmental Variables that will allow you to communicate with the TAS stack
 	
 	Env Vars Generated:
 	1. BASE_HOSTNAME=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
@@ -32,15 +31,10 @@ var envVarsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(envVarsCmd)
+	rootCmd.AddCommand(envgenCmd)
 }
 
 func generateEnvVars() error {
-
-	kc, err := kubernetes.InitKubeClient()
-	if err != nil {
-		return fmt.Errorf("failed to initialize Kubernetes client: %v", err)
-	}
 
 	keycloakRealm := "sigstore"
 	envVars := map[string]string{
