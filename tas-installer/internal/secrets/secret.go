@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
 	"strings"
 
 	v1 "k8s.io/api/core/v1"

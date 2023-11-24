@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
 	"strings"
 	"syscall"
 
@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	CertPassword = ""
+	certPassword = ""
 )
 
 func SetupCerts(kc *kubernetes.KubernetesClient) error {
@@ -77,11 +77,15 @@ func promptForCertInfo(kc *kubernetes.KubernetesClient) (string, string, string,
 	}
 
 	password := string(bytePassword)
-	CertPassword = password
+	certPassword = password
 
 	fmt.Println("\nOrganization Name:", orgName)
 	fmt.Println("Email Address:", email)
 	fmt.Println("Common Name (CN):", kc.ClusterCommonName)
 
 	return orgName, email, kc.ClusterCommonName, password, nil
+}
+
+func GetCertPassword() string {
+	return certPassword
 }

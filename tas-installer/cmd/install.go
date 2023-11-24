@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"securesign/sigstore-ocp/tas-installer/pkg/certs"
-	"securesign/sigstore-ocp/tas-installer/pkg/helm"
-	"securesign/sigstore-ocp/tas-installer/pkg/keycloak"
-	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
-	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
+	"securesign/sigstore-ocp/tas-installer/internal/certs"
+	"securesign/sigstore-ocp/tas-installer/internal/helm"
+	"securesign/sigstore-ocp/tas-installer/internal/keycloak"
+	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/internal/secrets"
 
 	"github.com/spf13/cobra"
 )
@@ -71,7 +71,7 @@ func getFulcioFileSecrets() map[string]string {
 
 func getFulcioLiteralSecrets() map[string]string {
 	return map[string]string{
-		"password": certs.CertPassword,
+		"password": certs.GetCertPassword(),
 	}
 }
 
