@@ -38,7 +38,7 @@ func init() {
 
 func installTas() error {
 	installSteps := []func() error{
-		func() error { return keycloak.InstallSSOKeycloak(kc) },
+		func() error { return keycloak.InstallSSOKeycloak(kc, "keycloak-system") },
 		func() error { return certs.SetupCerts(kc) },
 		func() error { return checkSegmentBackupJob(kc, "sigstore-monitoring", "segment-backup-job") },
 		func() error { return kc.CreateNamespace("sigstore-monitoring") },

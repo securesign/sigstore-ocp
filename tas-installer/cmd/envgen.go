@@ -14,13 +14,12 @@ var envgenCmd = &cobra.Command{
 	Long: `The 'envgen' command will generate a script which will define the following Environmental Variables that will allow you to communicate with the TAS stack
 	
 	Env Vars Generated:
-	1. BASE_HOSTNAME=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
-	2. KEYCLOAK_REALM=sigstore
-	3. FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
-	4. KEYCLOAK_URL=https://keycloak-keycloak-system.\$BASE_HOSTNAME
-	5. REKOR_URL=https://rekor.\$BASE_HOSTNAME
-	6. TUF_URL=https://tuf.\$BASE_HOSTNAME
-	7. OIDC_ISSUER_URL=\$KEYCLOAK_URL/auth/realms/\$KEYCLOAK_REALM`,
+	1. KEYCLOAK_REALM=sigstore
+	2. FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
+	3. KEYCLOAK_URL=https://keycloak-keycloak-system.\$BASE_HOSTNAME
+	4. REKOR_URL=https://rekor.\$BASE_HOSTNAME
+	5. TUF_URL=https://tuf.\$BASE_HOSTNAME
+	6. OIDC_ISSUER_URL=\$KEYCLOAK_URL/auth/realms/\$KEYCLOAK_REALM`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		err := generateEnvVars()
