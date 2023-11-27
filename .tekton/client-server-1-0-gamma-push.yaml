@@ -27,6 +27,10 @@ spec:
     value: images
   - name: revision
     value: '{{revision}}'
+  - name: prefetch-input
+    value: ''
+  - name: hermetic
+    value: "true"
   pipelineSpec:
     finally:
     - name: show-sbom
