@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"time"
 
 	v1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -9,7 +10,10 @@ import (
 )
 
 func (kc *KubernetesClient) GetJob(namespace, jobName string) (*v1.Job, error) {
-	jobs, err := kc.Clientset.BatchV1().Jobs(namespace).List(context.TODO(), metav1.ListOptions{})
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	jobs, err := kc.Clientset.BatchV1().Jobs(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
 			return nil, nil
@@ -27,13 +31,15 @@ func (kc *KubernetesClient) GetJob(namespace, jobName string) (*v1.Job, error) {
 }
 
 func (kc *KubernetesClient) DeleteJob(namespace, jobName string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	deletePolicy := metav1.DeletePropagationBackground
 	deleteOptions := metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
 	}
 
-	err := kc.Clientset.BatchV1().Jobs(namespace).Delete(context.TODO(), jobName, deleteOptions)
+	err := kc.Clientset.BatchV1().Jobs(namespace).Delete(ctx, jobName, deleteOptions)
 	if err != nil {
 		return err
 	}

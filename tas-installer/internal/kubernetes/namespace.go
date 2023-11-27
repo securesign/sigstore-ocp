@@ -3,13 +3,17 @@ package kubernetes
 import (
 	"context"
 	"fmt"
+	"time"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func (kc *KubernetesClient) CreateNamespace(ns string) error {
-	exists, err := kc.namespaceExists(ns)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	exists, err := kc.namespaceExists(ctx, ns)
 	if err != nil {
 		return err
 	}
@@ -21,7 +25,7 @@ func (kc *KubernetesClient) CreateNamespace(ns string) error {
 			},
 		}
 
-		_, err := kc.Clientset.CoreV1().Namespaces().Create(context.TODO(), namespace, metav1.CreateOptions{})
+		_, err := kc.Clientset.CoreV1().Namespaces().Create(ctx, namespace, metav1.CreateOptions{})
 		if err != nil {
 			return err
 		}
@@ -32,8 +36,8 @@ func (kc *KubernetesClient) CreateNamespace(ns string) error {
 	return nil
 }
 
-func (kc *KubernetesClient) namespaceExists(namespace string) (bool, error) {
-	namespaces, err := kc.Clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+func (kc *KubernetesClient) namespaceExists(ctx context.Context, namespace string) (bool, error) {
+	namespaces, err := kc.Clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return false, err
 	}

@@ -17,7 +17,10 @@ var (
 )
 
 func (kc *KubernetesClient) CheckPodStatus(namespace, podNamePrefix string) (string, error) {
-	pods, err := kc.Clientset.CoreV1().Pods(namespace).List(context.Background(), v1.ListOptions{})
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	pods, err := kc.Clientset.CoreV1().Pods(namespace).List(ctx, v1.ListOptions{})
 	if err != nil {
 		return "", err
 	}

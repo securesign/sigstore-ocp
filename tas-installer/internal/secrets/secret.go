@@ -2,18 +2,23 @@ package secrets
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
 	"strings"
+	"time"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
-	secretExistsInCluster, err := kc.SecretExists(pullSecretName, namespace)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	secretExistsInCluster, err := kc.SecretExists(ctx, pullSecretName, namespace)
 	if err != nil {
 		return err
 	}
@@ -131,7 +136,7 @@ func promptForSecretOverwrite(secretName, namespace string) (bool, error) {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Printf("Secret %s in namespace %s already exists. Overwrite it (Y/N)?:", secretName, namespace)
+		fmt.Printf("Secret %s in namespace %s already exists. Overwrite it (Y/N)?: ", secretName, namespace)
 		overwrite, err := reader.ReadString('\n')
 		if err != nil {
 			return false, err
