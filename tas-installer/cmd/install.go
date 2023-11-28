@@ -39,14 +39,14 @@ func installTas() error {
 	installSteps := []func() error{
 		func() error { return keycloak.InstallSSOKeycloak(kc, "keycloak-system") },
 		func() error { return certs.SetupCerts(kc) },
-		func() error { return checkSegmentBackupJob(kc, "sigstore-monitoring", "segment-backup-job") },
-		func() error { return kc.CreateNamespace("sigstore-monitoring") },
+		func() error { return deleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job") },
+		func() error { return kc.CreateNamespaceIfExists("sigstore-monitoring") },
 		func() error { return secrets.ConfigurePullSecret(kc, "pull-secret", "sigstore-monitoring") },
-		func() error { return kc.CreateNamespace("fulcio-system") },
+		func() error { return kc.CreateNamespaceIfExists("fulcio-system") },
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "fulcio-system", "fulcio-secret-rh", getFulcioLiteralSecrets(), getFulcioFileSecrets())
 		},
-		func() error { return kc.CreateNamespace("rekor-system") },
+		func() error { return kc.CreateNamespaceIfExists("rekor-system") },
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "rekor-system", "rekor-private-key", nil, getRekorSecrets())
 		},
@@ -80,7 +80,7 @@ func getRekorSecrets() map[string]string {
 	}
 }
 
-func checkSegmentBackupJob(kc *kubernetes.KubernetesClient, namespace, jobName string) error {
+func deleteSegmentBackupJobIfExists(kc *kubernetes.KubernetesClient, namespace, jobName string) error {
 	job, err := kc.GetJob(namespace, jobName)
 	if err != nil {
 		return err

@@ -9,7 +9,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func (kc *KubernetesClient) CreateNamespace(ns string) error {
+func (kc *KubernetesClient) CreateNamespaceIfExists(ns string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 

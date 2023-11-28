@@ -12,12 +12,10 @@ func InstallTrustedArtifactSigner(commonName string) error {
 		cmd.Stderr = os.Stderr
 
 		if err := cmd.Start(); err != nil {
-			fmt.Printf("Error starting command: %s\n", err)
 			return err
 		}
 
 		if err := cmd.Wait(); err != nil {
-			fmt.Printf("Command finished with error: %s\n", err)
 			return err
 		}
 

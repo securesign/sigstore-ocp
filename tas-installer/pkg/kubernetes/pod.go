@@ -16,7 +16,7 @@ var (
 	ErrPodNotFound = errors.New("pod not found")
 )
 
-func (kc *KubernetesClient) CheckPodStatus(namespace, podNamePrefix string) (string, error) {
+func (kc *KubernetesClient) getPodStatus(namespace, podNamePrefix string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -38,7 +38,7 @@ func (kc *KubernetesClient) WaitForPodStatusRunning(namespace, podNamePrefix str
 	CurrentAttempt := 0
 	fmt.Printf("Waiting for %s to reach a running state \n", podNamePrefix)
 	for CurrentAttempt < MaxAttempts {
-		phase, err := kc.CheckPodStatus(namespace, podNamePrefix)
+		phase, err := kc.getPodStatus(namespace, podNamePrefix)
 		if err != nil {
 			if err == ErrPodNotFound {
 				fmt.Printf("No pods with the prefix '%s' found in namespace %s. Retrying in %d seconds... \n", podNamePrefix, namespace, SleepInterval)

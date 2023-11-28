@@ -39,9 +39,5 @@ func (kc *KubernetesClient) DeleteJob(namespace, jobName string) error {
 		PropagationPolicy: &deletePolicy,
 	}
 
-	err := kc.Clientset.BatchV1().Jobs(namespace).Delete(ctx, jobName, deleteOptions)
-	if err != nil {
-		return err
-	}
-	return nil
+	return kc.Clientset.BatchV1().Jobs(namespace).Delete(ctx, jobName, deleteOptions)
 }

@@ -18,7 +18,7 @@ func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namesp
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	secretExistsInCluster, err := kc.SecretExists(ctx, pullSecretName, namespace)
+	secretExistsInCluster, err := kc.CreateSecretIfNotExists(ctx, pullSecretName, namespace)
 	if err != nil {
 		return err
 	}
