@@ -3,7 +3,7 @@ package keycloak
 import (
 	"fmt"
 	"os/exec"
-	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 )
 
 func InstallSSOKeycloak(kc *kubernetes.KubernetesClient, namespace string) error {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 
 	"github.com/spf13/cobra"
 )

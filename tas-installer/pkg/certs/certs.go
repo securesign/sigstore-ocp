@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"securesign/sigstore-ocp/tas-installer/internal/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"strings"
 	"syscall"
 
