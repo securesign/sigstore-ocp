@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
@@ -16,14 +16,21 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "tas-installer",
-	Short: "Allows for easy installation of TAS",
-	Long:  `The tas-installer cli tool allows for easy installation of the Trusted Artifact Signer stack.`,
+	Short: "Installer for Red Hat Trusted Artifact Signer (TAS) on Kubernetes",
+	Long: `Installs Red Hat Trusted Artifact Signer (TAS) on Kubernetes
+	
+	For a successful installation, you must have provide the path to a kubeconfig file, or have 
+	one in $HOME/.kube/config. Additionally, the following CLI tools must all be in your $PATH environment.
+	
+	helm - used to install TAS helm charts
+	oc - used to install Keycloak
+	openssl - used to create the root certificates	`,
+
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
 		kc, err = kubernetes.InitKubeClient(kubeconfigPath)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 		return nil
 	},
@@ -33,8 +40,7 @@ func init() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error finding user home directory: %v\n", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 	defaultKubeConfigPath := filepath.Join(homeDir, ".kube/config")
 	rootCmd.PersistentFlags().StringVar(&kubeconfigPath, "kubeconfig", defaultKubeConfigPath, "Specify the kubeconfig path")
@@ -43,7 +49,6 @@ func init() {
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }
