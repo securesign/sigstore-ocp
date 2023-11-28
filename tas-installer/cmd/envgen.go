@@ -10,10 +10,10 @@ import (
 
 var envgenCmd = &cobra.Command{
 	Use:   "envgen",
-	Short: "Generates a script to define env vars to communicate with TAS",
-	Long: `The 'envgen' command will generate a script which will define the following Environmental Variables that will allow you to communicate with the TAS stack
+	Short: "Creates a shell script defining configuration environment variables for TAS",
+	Long: `Creates a shell script defining configuration environment variables for TAS command line binaries. This script can be used to configure "cosign" and other CLI binaries that communicate with the TAS infrastructure.
 	
-	Env Vars Generated:
+	Environment Variables:
 	1. KEYCLOAK_REALM=sigstore
 	2. FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
 	3. KEYCLOAK_URL=https://keycloak-keycloak-system.\$BASE_HOSTNAME
@@ -24,7 +24,7 @@ var envgenCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := generateEnvVars()
 		if err != nil {
-			log.Fatal("Failed to generate env vars")
+			log.Fatal(err)
 		}
 	},
 }
