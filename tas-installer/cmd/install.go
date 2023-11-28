@@ -81,16 +81,8 @@ func getRekorSecrets() map[string]string {
 }
 
 func deleteSegmentBackupJobIfExists(kc *kubernetes.KubernetesClient, namespace, jobName string) error {
-	job, err := kc.GetJob(namespace, jobName)
-	if err != nil {
+	if err := kc.DeleteJobIfExists(namespace, jobName); err != nil {
 		return err
-	}
-
-	if job != nil {
-		err := kc.DeleteJob(namespace, jobName)
-		if err != nil {
-			return err
-		}
 	}
 	return nil
 }
