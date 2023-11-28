@@ -15,18 +15,17 @@ import (
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Installs Trusted Artifact Signer",
-	Long: `The 'install' command is designed to set up the Trusted Artifact Signer (TAS).
+	Long: `Installs Trusted Artifact Signer (TAS) on a Kubernetes cluster.
 
 	This command performs a series of actions:
-	1. Initializes the Kubernetes client to interact with your cluster.
-	2. Installs Keycloak for SSO.
-	3. Sets up necessary certificates.
-	4. Configures secrets.
+	1. Initializes the Kubernetes client to interact with your cluster
+	2. Installs Keycloak for SSO
+	3. Sets up necessary certificates
+	4. Configures secrets
 	5. Deploys TAS to openshift`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		err := installTas()
-		if err != nil {
+		if err := installTas(); err != nil {
 			log.Fatal(err)
 		}
 	},

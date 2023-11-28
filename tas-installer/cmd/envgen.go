@@ -22,8 +22,7 @@ var envgenCmd = &cobra.Command{
 	6. OIDC_ISSUER_URL=\$KEYCLOAK_URL/auth/realms/\$KEYCLOAK_REALM`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		err := generateEnvVars()
-		if err != nil {
+		if err := generateEnvVars(); err != nil {
 			log.Fatal(err)
 		}
 	},
