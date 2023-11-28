@@ -54,7 +54,7 @@ func installTas() error {
 	}
 	for _, step := range installSteps {
 		if err := step(); err != nil {
-			return fmt.Errorf("Installation step failed: %v", err)
+			return fmt.Errorf("install step failed: %v", err)
 		}
 	}
 	return nil

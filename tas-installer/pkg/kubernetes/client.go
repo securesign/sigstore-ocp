@@ -24,6 +24,9 @@ func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
 
 	dns := kubeConfig.Host
 	baseDomain, err := parseClusterDNS(dns)
+	if err != nil {
+		return nil, err
+	}
 	commonName := "apps.rosa" + baseDomain
 
 	clientset, err := kubernetes.NewForConfig(kubeConfig)
@@ -37,7 +40,7 @@ func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
 func parseClusterDNS(dns string) (string, error) {
 	parsedURL, err := url.Parse(dns)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	domain := parsedURL.Hostname()
 	domain = strings.TrimPrefix(domain, "api")
