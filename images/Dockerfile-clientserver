@@ -2,7 +2,7 @@ FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/cosign@sha256
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/gitsign@sha256:62a3e34b0b918aaa60dc6a0647548ae89da3597121fcc4be8cb571fb89bbe278 AS gitsign-image
 FROM quay.io/redhat-user-workloads/rhtas-tenant/rhtas-cli-1-0-beta/rekor-cli@sha256:2e0287e5d37d32ef6751fc018573eb954456cd1c6227dfbc9ff5fcdcab59e07c AS rekor-image
 
-FROM registry.redhat.io/rhel8/httpd-24:latest
+FROM registry.access.redhat.com/ubi9/httpd-24@sha256:9aa4397b4bb4ceea9daa6eb24fe124bec0451a029bd571c06575906a1451e432
 
 RUN mkdir -p /var/www/html/clients
 RUN mkdir -p /var/www/html/clients/darwin
