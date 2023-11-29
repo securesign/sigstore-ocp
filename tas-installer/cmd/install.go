@@ -8,6 +8,7 @@ import (
 	"securesign/sigstore-ocp/tas-installer/pkg/keycloak"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
+	"securesign/sigstore-ocp/tas-installer/ui"
 
 	"github.com/spf13/cobra"
 )
@@ -38,7 +39,7 @@ func init() {
 func installTas() error {
 	installSteps := []func() error{
 		func() error { return handleKeycloakInstall(kc, "keycloak/operator/base", "keycloak/resources/base") },
-		func() error { return certs.SetupCerts(kc) },
+		func() error { return handleCertSetup(kc) },
 		func() error { return deleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job") },
 		func() error { return handleNamespaceCreate(kc, "sigstore-monitoring") },
 		func() error { return secrets.ConfigurePullSecret(kc, "pull-secret", "sigstore-monitoring") },
@@ -60,7 +61,7 @@ func installTas() error {
 	return nil
 }
 
-func handleKeycloakInstall(kc *kubernetes.KubernetesClient, operatorConfig, resourceConfig string) error { 
+func handleKeycloakInstall(kc *kubernetes.KubernetesClient, operatorConfig, resourceConfig string) error {
 	fmt.Println("Installing keycloak operator in namespace: 'keycloak-system'")
 
 	if err := keycloak.ApplyAndWaitForKeycloakResources(kc, operatorConfig, "keycloak-system", "rhsso-operator", func(err error) {
@@ -108,6 +109,15 @@ func handleNamespaceCreate(kc *kubernetes.KubernetesClient, namespace string) er
 		return err
 	}
 	fmt.Printf("namespace: %s successfully created \n", namespace)
+	return nil
+}
+
+func handleCertSetup(kc *kubernetes.KubernetesClient) error {
+	certConfig, err := ui.PromptForCertInfo(kc)
+	if err != nil {
+		return err
+	}
+	certs.SetupCerts(kc, certConfig)
 	return nil
 }
 

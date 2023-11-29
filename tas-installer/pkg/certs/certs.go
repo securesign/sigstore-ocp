@@ -12,14 +12,9 @@ var (
 	certPassword string
 )
 
-func SetupCerts(kc *kubernetes.KubernetesClient) error {
-	certConfig, err := ui.PromptForCertInfo(kc)
-	if err != nil {
-		return err
-	}
+func SetupCerts(kc *kubernetes.KubernetesClient, certConfig *ui.CertConfig) error {
 	certPassword = certConfig.CertPassword
-
-	err = os.MkdirAll("./keys-cert", 0755)
+	err := os.MkdirAll("./keys-cert", 0755)
 	if err != nil {
 		return err
 	}
