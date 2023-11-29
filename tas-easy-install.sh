@@ -102,7 +102,7 @@ if [[ -n $segment_backup_job ]]; then
     oc delete job $segment_backup_job -n sigstore-monitoring
 fi
 
-oc new-project sigstore-monitoring > /dev/null 2>&1
+oc apply -f ../grafana/resources/namespace.yaml
 
 pull_secret_exists=$(oc get secret pull-secret -n sigstore-monitoring --ignore-not-found=true)
 if [[ -n $pull_secret_exists ]]; then

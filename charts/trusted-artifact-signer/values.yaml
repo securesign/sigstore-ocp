@@ -7,6 +7,7 @@ global:
 configs:
   sigstore_monitoring:
     namespace: sigstore-monitoring
+    create_namespace: false
   segment_backup_job:
     name: segment-backup-job
     namespace: sigstore-monitoring
@@ -238,6 +239,20 @@ scaffold:
       enabled: false
     redis:
       fullnameOverride: rekor-redis
+      args: []
+      image:
+        registry: registry.redhat.io
+        repository: rhel9/redis-6
+        version: "sha256:63da4136f2c8579a9e3971c8a335dd2bc1279e4afb15f5a8d63bf66c49f9c34a"
+        pullPolicy: IfNotPresent
+    initContainerImage:
+      curl:
+        registry: registry.access.redhat.com
+        repository: ubi9/ubi-minimal
+        version: "sha256:3e313209ac617a92b50350286752311d99ea2dafc429ef0e5311889294b0bc21"
+        imagePullPolicy: IfNotPresent
+
+
     server:
       fullnameOverride: rekor-server
       image:
@@ -294,19 +309,14 @@ scaffold:
       curl:
         registry: registry.access.redhat.com
         repository: ubi9/ubi-minimal
-        version: latest
+        version: "sha256:3e313209ac617a92b50350286752311d99ea2dafc429ef0e5311889294b0bc21"
         imagePullPolicy: IfNotPresent
     redis:
-      args:
-        - /usr/bin/run-redis
-        - --bind
-        - 0.0.0.0
-        - --appendonly
-        - "yes"
+      args: []
       image:
         registry: registry.redhat.io
         repository: rhel9/redis-6
-        version: "sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"
+        version: "sha256:63da4136f2c8579a9e3971c8a335dd2bc1279e4afb15f5a8d63bf66c49f9c34a"
         pullPolicy: IfNotPresent
 
     logSigner:

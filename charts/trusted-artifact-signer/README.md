@@ -163,7 +163,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.createctconfig.initContainerImage.curl.imagePullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
-| scaffold.ctlog.createctconfig.initContainerImage.curl.version |  | string | `"latest"` |
+| scaffold.ctlog.createctconfig.initContainerImage.curl.version |  | string | `"3e313209ac617a92b50350286752311d99ea2dafc429ef0e5311889294b0bc21"` |
 | scaffold.ctlog.createtree.displayName |  | string | `"ctlog-tree"` |
 | scaffold.ctlog.createtree.fullnameOverride |  | string | `"ctlog-createtree"` |
 | scaffold.ctlog.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |

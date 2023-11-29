@@ -7,6 +7,9 @@
                     "properties": {
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         }
                     }
                 },

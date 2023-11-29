@@ -23,6 +23,9 @@
                     "properties": {
                         "namespace": {
                             "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "string"
                         }
                     }
                 },

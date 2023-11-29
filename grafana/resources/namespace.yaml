@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: sigstore-monitoring
+    app.kubernetes.io/managed-by: Helm
+    meta.helm.sh/release-name: trusted-artifact-signer
+    meta.helm.sh/release-namespace: trusted-artifact-signer
+  name: sigstore-monitoring
+spec:
+  finalizers:
+  - kubernetes
