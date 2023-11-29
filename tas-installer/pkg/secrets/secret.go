@@ -1,13 +1,12 @@
 package secrets
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
-	"strings"
+	"securesign/sigstore-ocp/tas-installer/ui"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
@@ -18,13 +17,13 @@ func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namesp
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	secretExistsInCluster, err := kc.CreateSecretIfNotExists(ctx, pullSecretName, namespace)
+	secretExistsInCluster, err := kc.SecretExists(ctx, pullSecretName, namespace)
 	if err != nil {
 		return err
 	}
 
 	if secretExistsInCluster {
-		overWrite, err := promptForSecretOverwrite(pullSecretName, namespace)
+		overWrite, err := ui.PromptForPullSecretOverwrite(pullSecretName, namespace)
 		if err != nil {
 			return err
 		}
@@ -35,7 +34,6 @@ func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namesp
 				return err
 			}
 		} else {
-			fmt.Println("Skipping overwriting pull-secret...")
 			return nil
 		}
 
@@ -78,7 +76,7 @@ func ConfigureSystemSecrets(kc *kubernetes.KubernetesClient, namespace, secretNa
 		secret.Data[key] = []byte(value)
 	}
 
-	err := kc.CreateSecret(secretName, namespace, secret)
+	err := kc.CreateSecretIfNotExists(secretName, namespace, secret)
 	if err != nil {
 		return err
 	}
@@ -98,7 +96,7 @@ func processSecretFile(secretPath string) ([]byte, string, error) {
 	var err error
 
 	if secretPath == "" {
-		secretPath, err = promptForPullSecretPath()
+		secretPath, err = ui.PromptForPullSecretPath()
 		if err != nil {
 			return nil, "", err
 		}
@@ -120,38 +118,6 @@ func processSecretFile(secretPath string) ([]byte, string, error) {
 
 	fileName := filepath.Base(secretPath)
 	return secretData, fileName, nil
-}
-
-func promptForPullSecretPath() (string, error) {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Please enter the absolute path to the pull-secret.json file: ")
-	filePath, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(filePath), nil
-}
-
-func promptForSecretOverwrite(secretName, namespace string) (bool, error) {
-	reader := bufio.NewReader(os.Stdin)
-
-	for {
-		fmt.Printf("Secret %s in namespace %s already exists. Overwrite it (Y/N)?: ", secretName, namespace)
-		overwrite, err := reader.ReadString('\n')
-		if err != nil {
-			return false, err
-		}
-
-		overwrite = strings.TrimSpace(strings.ToLower(overwrite))
-
-		if overwrite == "y" {
-			return true, nil
-		} else if overwrite == "n" {
-			return false, nil
-		} else {
-			fmt.Println("Invalid input. Please enter 'Y' for Yes or 'N' for No.")
-		}
-	}
 }
 
 func pullSecretFileExists(secretFilePath string) bool {

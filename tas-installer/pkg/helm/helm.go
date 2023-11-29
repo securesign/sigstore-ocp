@@ -1,7 +1,6 @@
 package helm
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -28,6 +27,5 @@ func InstallTrustedArtifactSigner(commonName string) error {
 		return err
 	}
 
-	fmt.Println("Helm chart installed successfully")
 	return nil
 }

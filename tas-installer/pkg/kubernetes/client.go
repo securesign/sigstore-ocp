@@ -16,7 +16,6 @@ type KubernetesClient struct {
 }
 
 func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
-	fmt.Printf("Using kube config found at %s\n", kubeConfigPath)
 	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 	if err != nil {
 		return nil, fmt.Errorf("error getting Kubernetes config: %w", err)

@@ -2,11 +2,14 @@ package kubernetes
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+var (
+	ErrNamespaceAlreadyExists error
 )
 
 func (kc *KubernetesClient) CreateNamespaceIfExists(ns string) error {
@@ -29,9 +32,8 @@ func (kc *KubernetesClient) CreateNamespaceIfExists(ns string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%s namespace created successfully \n", ns)
 	} else {
-		fmt.Printf("%s namespace already exists, skipping create \n", ns)
+		return ErrNamespaceAlreadyExists
 	}
 	return nil
 }

@@ -2,7 +2,6 @@ package kubernetes
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -11,9 +10,10 @@ import (
 )
 
 var (
-	MaxAttempts    = 30
-	SleepInterval  = 10
-	ErrPodNotFound = errors.New("pod not found")
+	MaxAttempts      = 30
+	SleepInterval    = 10
+	ErrPodNotRunning error
+	ErrPodNotFound   error
 )
 
 func (kc *KubernetesClient) getPodStatus(namespace, podNamePrefix string) (string, error) {
@@ -34,20 +34,22 @@ func (kc *KubernetesClient) getPodStatus(namespace, podNamePrefix string) (strin
 	return "", ErrPodNotFound
 }
 
-func (kc *KubernetesClient) WaitForPodStatusRunning(namespace, podNamePrefix string) error {
+func (kc *KubernetesClient) WaitForPodStatusRunning(namespace, podNamePrefix string, status func(error)) error {
 	CurrentAttempt := 0
-	fmt.Printf("Waiting for %s to reach a running state \n", podNamePrefix)
 	for CurrentAttempt < MaxAttempts {
 		phase, err := kc.getPodStatus(namespace, podNamePrefix)
 		if err != nil {
 			if err == ErrPodNotFound {
-				fmt.Printf("No pods with the prefix '%s' found in namespace %s. Retrying in %d seconds... \n", podNamePrefix, namespace, SleepInterval)
+				status(ErrPodNotFound)
 			} else {
 				return err
 			}
-		} else if phase == "Running" {
-			fmt.Printf("%s is up and running in namespace %s. \n", podNamePrefix, namespace)
+		}
+
+		if phase == "Running" {
 			return nil
+		} else {
+			status(ErrPodNotRunning)
 		}
 
 		CurrentAttempt++
