@@ -1,14 +1,17 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/pkg/certs"
 	"securesign/sigstore-ocp/tas-installer/pkg/helm"
 	"securesign/sigstore-ocp/tas-installer/pkg/keycloak"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
 	"securesign/sigstore-ocp/tas-installer/ui"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -42,7 +45,7 @@ func installTas() error {
 		func() error { return handleCertSetup(kc) },
 		func() error { return deleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job") },
 		func() error { return handleNamespaceCreate(kc, "sigstore-monitoring") },
-		func() error { return secrets.ConfigurePullSecret(kc, "pull-secret", "sigstore-monitoring") },
+		func() error { return handlePullSecretSetup(kc, "pull-secret", "sigstore-monitoring") },
 		func() error { return handleNamespaceCreate(kc, "fulcio-system") },
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "fulcio-system", "fulcio-secret-rh", getFulcioLiteralSecrets(), getFulcioFileSecrets())
@@ -109,6 +112,52 @@ func handleNamespaceCreate(kc *kubernetes.KubernetesClient, namespace string) er
 		return err
 	}
 	fmt.Printf("namespace: %s successfully created \n", namespace)
+	return nil
+}
+
+func handlePullSecretSetup(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	secretExistsInCluster, err := kc.SecretExists(ctx, pullSecretName, namespace)
+	if err != nil {
+		return err
+	}
+
+	if secretExistsInCluster {
+		overWrite, err := ui.PromptForPullSecretOverwrite(pullSecretName, namespace)
+		if err != nil {
+			return err
+		}
+
+		if overWrite {
+			pullSecretPath, err := ui.PromptForPullSecretPath()
+			if err != nil {
+				return err
+			}
+
+			err = secrets.OverwritePullSecret(kc, pullSecretName, namespace, pullSecretPath)
+			if err != nil {
+				return err
+			}
+		} else {
+			fmt.Println("Skipping secret overwrite")
+			return nil
+		}
+
+	} else {
+		pullSecretPath, err := ui.PromptForPullSecretPath()
+		if err != nil {
+			return err
+		}
+
+		fileName := filepath.Base(pullSecretPath)
+		err = secrets.ConfigureSystemSecrets(kc, namespace, pullSecretName, nil, map[string]string{fileName: pullSecretPath})
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

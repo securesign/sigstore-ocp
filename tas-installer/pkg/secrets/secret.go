@@ -1,51 +1,14 @@
 package secrets
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
-	"securesign/sigstore-ocp/tas-installer/ui"
-	"time"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-func ConfigurePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	secretExistsInCluster, err := kc.SecretExists(ctx, pullSecretName, namespace)
-	if err != nil {
-		return err
-	}
-
-	if secretExistsInCluster {
-		overWrite, err := ui.PromptForPullSecretOverwrite(pullSecretName, namespace)
-		if err != nil {
-			return err
-		}
-
-		if overWrite {
-			err := handleSecretOverwrite(kc, pullSecretName, namespace)
-			if err != nil {
-				return err
-			}
-		} else {
-			return nil
-		}
-
-	} else {
-		err := ConfigureSystemSecrets(kc, namespace, pullSecretName, nil, nil)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
 
 func ConfigureSystemSecrets(kc *kubernetes.KubernetesClient, namespace, secretName string, literals, filepaths map[string]string) error {
 	secret := &v1.Secret{
@@ -54,14 +17,6 @@ func ConfigureSystemSecrets(kc *kubernetes.KubernetesClient, namespace, secretNa
 			Namespace: namespace,
 		},
 		Data: make(map[string][]byte),
-	}
-
-	if literals == nil && filepaths == nil {
-		secretData, fileName, err := processSecretFile("")
-		if err != nil {
-			return err
-		}
-		secret.Data[fileName] = secretData
 	}
 
 	for key, filePath := range filepaths {
@@ -83,8 +38,8 @@ func ConfigureSystemSecrets(kc *kubernetes.KubernetesClient, namespace, secretNa
 	return nil
 }
 
-func handleSecretOverwrite(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
-	secretData, fileName, err := processSecretFile("")
+func OverwritePullSecret(kc *kubernetes.KubernetesClient, pullSecretName, namespace, pullSecretPath string) error {
+	secretData, fileName, err := processSecretFile(pullSecretPath)
 	if err != nil {
 		return err
 	}
@@ -93,15 +48,6 @@ func handleSecretOverwrite(kc *kubernetes.KubernetesClient, pullSecretName, name
 }
 
 func processSecretFile(secretPath string) ([]byte, string, error) {
-	var err error
-
-	if secretPath == "" {
-		secretPath, err = ui.PromptForPullSecretPath()
-		if err != nil {
-			return nil, "", err
-		}
-	}
-
 	if secretPath == "" {
 		return nil, "", fmt.Errorf("no secret path provided")
 	}
