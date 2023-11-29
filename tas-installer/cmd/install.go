@@ -1,17 +1,11 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"log"
-	"path/filepath"
+	"securesign/sigstore-ocp/tas-installer/internal/install"
 	"securesign/sigstore-ocp/tas-installer/pkg/certs"
-	"securesign/sigstore-ocp/tas-installer/pkg/helm"
-	"securesign/sigstore-ocp/tas-installer/pkg/keycloak"
-	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
-	"securesign/sigstore-ocp/tas-installer/ui"
-	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -41,132 +35,30 @@ func init() {
 
 func installTas() error {
 	installSteps := []func() error{
-		func() error { return handleKeycloakInstall(kc, "keycloak/operator/base", "keycloak/resources/base") },
-		func() error { return handleCertSetup(kc) },
-		func() error { return deleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job") },
-		func() error { return handleNamespaceCreate(kc, "sigstore-monitoring") },
-		func() error { return handlePullSecretSetup(kc, "pull-secret", "sigstore-monitoring") },
-		func() error { return handleNamespaceCreate(kc, "fulcio-system") },
+		func() error {
+			return install.HandleKeycloakInstall(kc, "keycloak/operator/base", "keycloak/resources/base")
+		},
+		func() error { return install.HandleCertSetup(kc) },
+		func() error {
+			return install.DeleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job")
+		},
+		func() error { return install.HandleNamespaceCreate(kc, "sigstore-monitoring") },
+		func() error { return install.HandlePullSecretSetup(kc, "pull-secret", "sigstore-monitoring") },
+		func() error { return install.HandleNamespaceCreate(kc, "fulcio-system") },
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "fulcio-system", "fulcio-secret-rh", getFulcioLiteralSecrets(), getFulcioFileSecrets())
 		},
-		func() error { return handleNamespaceCreate(kc, "rekor-system") },
+		func() error { return install.HandleNamespaceCreate(kc, "rekor-system") },
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "rekor-system", "rekor-private-key", nil, getRekorSecrets())
 		},
-		func() error { return handleHelmChartInstall(kc.ClusterCommonName) },
+		func() error { return install.HandleHelmChartInstall(kc.ClusterCommonName) },
 	}
 	for _, step := range installSteps {
 		if err := step(); err != nil {
 			return fmt.Errorf("install step failed: %v", err)
 		}
 	}
-	return nil
-}
-
-func handleKeycloakInstall(kc *kubernetes.KubernetesClient, operatorConfig, resourceConfig string) error {
-	fmt.Println("Installing keycloak operator in namespace: 'keycloak-system'")
-
-	if err := keycloak.ApplyAndWaitForKeycloakResources(kc, operatorConfig, "keycloak-system", "rhsso-operator", func(err error) {
-		switch {
-		case err == kubernetes.ErrPodNotFound:
-			fmt.Println("No pods with the prefix 'rhsso-operator' found in namespace keycloak-system. Retrying in 10 seconds...")
-		case err == kubernetes.ErrPodNotRunning:
-			fmt.Println("Waiting for pod with prefix 'rhsso-operator' to reach a running state...")
-		}
-	}); err != nil {
-		return err
-	}
-	fmt.Println("Pod with prefix 'rhsso-operator' has reached a running state")
-
-	fmt.Println("Installing keycloak resources in namespace: 'keycloak-system'")
-	if err := keycloak.ApplyAndWaitForKeycloakResources(kc, resourceConfig, "keycloak-system", "keycloak-postgresql", func(err error) {
-		switch {
-		case err == kubernetes.ErrPodNotFound:
-			fmt.Println("No pods with the prefix 'keycloak-postgresql' found in namespace keycloak-system. Retrying in 10 seconds...")
-		case err == kubernetes.ErrPodNotRunning:
-			fmt.Println("Waiting for pod with prefix 'keycloak-postgresql' to reach a running state...")
-		}
-	}); err != nil {
-		return err
-	}
-	fmt.Println("Pod with prefix 'keycloak-postgresql' has reached a running state")
-
-	fmt.Println("Keycloak installed successfully")
-	return nil
-}
-
-func handleHelmChartInstall(clusterCommonName string) error {
-	if err := helm.InstallTrustedArtifactSigner(clusterCommonName); err != nil {
-		return err
-	}
-	fmt.Println("Helm Chart Successfully installed ")
-	return nil
-}
-
-func handleNamespaceCreate(kc *kubernetes.KubernetesClient, namespace string) error {
-	if err := kc.CreateNamespaceIfExists(namespace); err != nil {
-		if err == kubernetes.ErrNamespaceAlreadyExists {
-			fmt.Printf("namespace %s already exists skipping create", namespace)
-		}
-		return err
-	}
-	fmt.Printf("namespace: %s successfully created \n", namespace)
-	return nil
-}
-
-func handlePullSecretSetup(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	secretExistsInCluster, err := kc.SecretExists(ctx, pullSecretName, namespace)
-	if err != nil {
-		return err
-	}
-
-	if secretExistsInCluster {
-		overWrite, err := ui.PromptForPullSecretOverwrite(pullSecretName, namespace)
-		if err != nil {
-			return err
-		}
-
-		if overWrite {
-			pullSecretPath, err := ui.PromptForPullSecretPath()
-			if err != nil {
-				return err
-			}
-
-			err = secrets.OverwritePullSecret(kc, pullSecretName, namespace, pullSecretPath)
-			if err != nil {
-				return err
-			}
-		} else {
-			fmt.Println("Skipping secret overwrite")
-			return nil
-		}
-
-	} else {
-		pullSecretPath, err := ui.PromptForPullSecretPath()
-		if err != nil {
-			return err
-		}
-
-		fileName := filepath.Base(pullSecretPath)
-		err = secrets.ConfigureSystemSecrets(kc, namespace, pullSecretName, nil, map[string]string{fileName: pullSecretPath})
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func handleCertSetup(kc *kubernetes.KubernetesClient) error {
-	certConfig, err := ui.PromptForCertInfo(kc)
-	if err != nil {
-		return err
-	}
-	certs.SetupCerts(kc, certConfig)
 	return nil
 }
 
@@ -188,11 +80,4 @@ func getRekorSecrets() map[string]string {
 	return map[string]string{
 		"private": "./keys-cert/rekor_key.pem",
 	}
-}
-
-func deleteSegmentBackupJobIfExists(kc *kubernetes.KubernetesClient, namespace, jobName string) error {
-	if err := kc.DeleteJobIfExists(namespace, jobName); err != nil {
-		return err
-	}
-	return nil
 }
