@@ -32,7 +32,7 @@ spec:
   - name: hermetic
     value: "true"
   - name: build-source-image
-    value: 'true'
+    value: "true"
   pipelineSpec:
     finally:
     - name: show-sbom
