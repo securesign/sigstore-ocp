@@ -12,11 +12,11 @@ var (
 	ErrNamespaceAlreadyExists error
 )
 
-func (kc *KubernetesClient) CreateNamespaceIfExists(ns string) error {
+func (kc *KubernetesClient) CreateNamespaceIfNotExists(ns string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	exists, err := kc.namespaceExists(ctx, ns)
+	exists, err := kc.NamespaceExists(ctx, ns)
 	if err != nil {
 		return err
 	}
@@ -25,6 +25,13 @@ func (kc *KubernetesClient) CreateNamespaceIfExists(ns string) error {
 		namespace := &v1.Namespace{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: ns,
+				Labels: map[string]string{
+					"app.kubernetes.io/managed-by": "Helm",
+				},
+				Annotations: map[string]string{
+					"meta.helm.sh/release-name":      "trusted-artifact-signer",
+					"meta.helm.sh/release-namespace": "trusted-artifact-signer",
+				},
 			},
 		}
 
@@ -38,7 +45,7 @@ func (kc *KubernetesClient) CreateNamespaceIfExists(ns string) error {
 	return nil
 }
 
-func (kc *KubernetesClient) namespaceExists(ctx context.Context, namespace string) (bool, error) {
+func (kc *KubernetesClient) NamespaceExists(ctx context.Context, namespace string) (bool, error) {
 	namespaces, err := kc.Clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return false, err

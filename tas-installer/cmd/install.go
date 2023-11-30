@@ -10,6 +10,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	helmChartVersion string
+	helmValuesFile   string
+)
+
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Installs Trusted Artifact Signer",
@@ -52,7 +57,9 @@ func installTas() error {
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "rekor-system", "rekor-private-key", nil, getRekorSecrets())
 		},
-		func() error { return install.HandleHelmChartInstall(kc.ClusterCommonName) },
+		func() error {
+			return install.HandleHelmChartInstall(kc, helmValuesFile, helmChartVersion)
+		},
 	}
 	for _, step := range installSteps {
 		if err := step(); err != nil {
@@ -60,6 +67,11 @@ func installTas() error {
 		}
 	}
 	return nil
+}
+
+func init() {
+	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", "0.1.24", "Version of the Helm chart")
+	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "examples/values-sigstore-openshift.yaml", "Custom values file for chart configuration")
 }
 
 func getFulcioFileSecrets() map[string]string {

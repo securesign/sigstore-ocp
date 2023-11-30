@@ -40,21 +40,21 @@ func HandleKeycloakInstall(kc *kubernetes.KubernetesClient, operatorConfig, reso
 		return err
 	}
 	fmt.Println("Pod with prefix 'keycloak-postgresql' has reached a running state")
-
 	fmt.Println("Keycloak installed successfully")
 	return nil
 }
 
-func HandleHelmChartInstall(clusterCommonName string) error {
-	if err := helm.InstallTrustedArtifactSigner(clusterCommonName); err != nil {
+func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, helmValuesFile, helmChartVersion string) error {
+	fmt.Println("Installing helm chart")
+	if err := helm.InstallTrustedArtifactSigner(kc, helmValuesFile, helmChartVersion); err != nil {
 		return err
 	}
-	fmt.Println("Helm Chart Successfully installed ")
+	fmt.Println("Helm Chart Successfully installed")
 	return nil
 }
 
 func HandleNamespaceCreate(kc *kubernetes.KubernetesClient, namespace string) error {
-	if err := kc.CreateNamespaceIfExists(namespace); err != nil {
+	if err := kc.CreateNamespaceIfNotExists(namespace); err != nil {
 		if err == kubernetes.ErrNamespaceAlreadyExists {
 			fmt.Printf("namespace %s already exists skipping create", namespace)
 		}

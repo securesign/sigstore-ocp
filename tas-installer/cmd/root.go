@@ -23,7 +23,6 @@ var rootCmd = &cobra.Command{
 	For a successful installation, you must have provide the path to a kubeconfig file, or have 
 	one in $HOME/.kube/config. Additionally, the following CLI tools must all be in your $PATH environment.
 	
-	helm - used to install TAS helm charts
 	oc - used to install Keycloak
 	openssl - used to create the root certificates	`,
 
