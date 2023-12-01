@@ -128,6 +128,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/segment-backup-job"` |
 | configs.segment_backup_job.image.version |  | string | `"sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44"` |
 | configs.segment_backup_job.name |  | string | `"nightlyMetricsCollection"` |
+| configs.segment_backup_job.enabled |  | bool | `false` |
 | configs.segment_backup_job.namespace |  | string | `"sigstore-monitoring"` |
 | configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |

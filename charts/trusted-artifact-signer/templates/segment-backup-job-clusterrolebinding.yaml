@@ -1,4 +1,4 @@
-
+{{- if .Values.configs.segment_backup_job.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -11,3 +11,4 @@ subjects:
 - kind: ServiceAccount
   name: segment-backup-job
   namespace: {{ .Values.configs.segment_backup_job.namespace }}
+{{- end }}
