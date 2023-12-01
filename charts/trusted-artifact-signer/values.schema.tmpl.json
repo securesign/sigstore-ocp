@@ -27,6 +27,9 @@
                         "name": {
                             "type": "string"
                         },
+                        "enabled": {
+                            "type": "boolean"
+                        },
                         "namespace": {
                             "type" : "string"
                         },

@@ -11,4 +11,4 @@ subjects:
 - kind: ServiceAccount
   name: segment-backup-job
   namespace: {{ .Values.configs.segment_backup_job.namespace }}
-{{- end}}
+{{- end }}

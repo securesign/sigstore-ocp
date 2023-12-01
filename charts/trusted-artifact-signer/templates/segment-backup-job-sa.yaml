@@ -6,4 +6,4 @@ metadata:
   namespace: {{ .Values.configs.segment_backup_job.namespace }}
 secrets:
 - name: pull-secret
-{{- end}}
+{{- end }}

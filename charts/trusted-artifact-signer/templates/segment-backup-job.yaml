@@ -32,4 +32,4 @@ spec:
             capabilities:
               drop:
               - ALL
-{{- end}}
+{{- end }}
