@@ -22,7 +22,6 @@ spec:
             serviceAccountName: segment-backup-job
             containers:
               - name: {{ .Values.configs.segment_backup_job.name }}
-                # image: "{{ .Values.configs.segment_backup_job.image.registry }}/{{ .Values.configs.segment_backup_job.image.repository }}/{{ .Values.configs.segment_backup_job.image.version }}"
                 image: "{{ .Values.configs.segment_backup_job.image.registry }}/{{ .Values.configs.segment_backup_job.image.repository }}@{{ .Values.configs.segment_backup_job.image.version }}"
                 command: ["/bin/bash",  "/opt/app-root/src/script.sh"]
                 env:

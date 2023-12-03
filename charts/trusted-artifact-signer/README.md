@@ -92,7 +92,9 @@ Kubernetes: `>= 1.19.0-0`
 | configs.clientserver.name |  | string | `"tas-clients"` |
 | configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
 | configs.clientserver.namespace_create |  | bool | `true` |
-| configs.clientserver.route | Whether to create the OpenShift route resource | bool | `true` |
+| configs.clientserver.ingress.enabled | Whether to create the ingress resource | bool | `true` |
+| configs.clientserver.ingress.host | The value to publicly expose the service as. | string | `""` |
+| configs.clientserver.port |  | int | `8080` |
 | configs.cosign_deploy.enabled |  | bool | `false` |
 | configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"registry.redhat.io","repository":"rhtas-tech-preview/cosign-rhel9","version":"sha256:f4c2cec3fc1e24bbe094b511f6fe2fe3c6fa972da0edacaf6ac5672f06253a3e"}` |
 | configs.cosign_deploy.name | Name of deployment | string | `"cosign"` |
@@ -117,6 +119,16 @@ Kubernetes: `>= 1.19.0-0`
 | configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
 | configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
 | configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
+| configs.pull_secret.secret_create |  | bool | `true` |
+| configs.pull_secret.value | A TAS pull-secret, can be downloaded from https://console.redhat.com/application-services/trusted-content/application-services/trusted-content/artifact-signer. Helpful from the service side for when providing support to users. | object | `""` |
+| configs.pull_secret.namespace |  | string | `"sigstore-monitoring"` |
+| configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
+| configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
+| configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
+| configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/segment-backup-job"` |
+| configs.segment_backup_job.image.version |  | string | `"sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44"` |
+| configs.segment_backup_job.name |  | string | `"nightlyMetricsCollection"` |
+| configs.segment_backup_job.namespace |  | string | `"sigstore-monitoring"` |
 | configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |

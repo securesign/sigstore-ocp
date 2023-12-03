@@ -5,8 +5,24 @@
             "properties": {
                 "clientserver": {
                     "properties": {
+                        "port": {
+                            "type": "integer"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
                         "consoleDownload": {
                             "type": "boolean"
+                        },
+                        "ingress": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "host": {
+                                    "type": "string"
+                                }
+                            }
                         },
                         "image": {
                             "properties": {
@@ -32,9 +48,6 @@
                             "type": "string"
                         },
                         "namespace_create": {
-                            "type": "boolean"
-                        },
-                        "route": {
                             "type": "boolean"
                         }
                     },
@@ -167,6 +180,22 @@
                     },
                     "type": "object"
                 },
+                "pull_secret": {
+                    "properties": {
+                        "secret_create": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": ["object", "string"]
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "default_pull_secret_value": {
+                            "type": ["object", "string"]
+                        }
+                    }
+                },
                 "rekor": {
                     "properties": {
                         "clusterMonitoring": {
@@ -225,7 +254,7 @@
                     },
                     "type": "object"
                 },
-                "segment_backup_job": {
+                "segment_backup_job":{
                     "properties": {
                         "image": {
                             "properties": {

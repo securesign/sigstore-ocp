@@ -79,38 +79,7 @@ install_sso_keycloak
 
 common_name=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
 
-segment_backup_job=$(oc get job -n trusted-artifact-signer-monitoring --ignore-not-found=true | tail -n 1 | awk '{print $1}')
-if [[ -n $segment_backup_job ]]; then
-    oc delete job $segment_backup_job -n trusted-artifact-signer-monitoring
-fi
-
-oc new-project trusted-artifact-signer-monitoring > /dev/null 2>&1
-
-
-pull_secret_exists=$(oc get secret pull-secret -n trusted-artifact-signer-monitoring --ignore-not-found=true)
-if [[ -n $pull_secret_exists ]]; then
-    read -p "Secret \"pull-secret\" in namespace \"trusted-artifact-signer-monitoring\" already exists. Overwrite it (Y/N)?: " -n1 overwrite_pull_secret
-    echo ""
-    if [[ $overwrite_pull_secret == "Y" || $overwrite_pull_secret == 'y' ]]; then
-        read -p "Please enter the absolute path to the pull-secret.json file:
-" pull_secret_path
-        file_exists=$(ls $pull_secret_path 2>/dev/null)
-        if [[ -n $file_exists ]]; then
-            oc create secret generic pull-secret -n trusted-artifact-signer-monitoring --from-file=$pull_secret_path --dry-run=client -o yaml | oc replace -f -
-        else
-            echo "pull secret was not found based on the path provided: $pull_secret_path"
-            exit 0
-        fi
-    elif [[ $overwrite_pull_secret == "N" || $overwrite_pull_secret == 'n' ]]; then
-        echo "Skipping overwriting pull-secret..."
-    else 
-        echo "Bad input. Skipping this step, using existing pull-secret"
-    fi
-else
-    read -p "Please enter the absolute path to the pull-secret.json file:
-" pull_secret_path
-    oc create secret generic pull-secret -n trusted-artifact-signer-monitoring --from-file=$pull_secret_path
-fi
+default_pull_secret_value=$(oc get secret pull-secret -n openshift-config -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d)
 
 oc create ns fulcio-system
 oc create ns rekor-system
@@ -119,7 +88,8 @@ oc create ns rekor-system
 #helm repo add trusted-artifact-signer https://repo-securesign-helm.apps.open-svc-sts.k1wl.p1.openshiftapps.com/helm-charts
 #helm repo update
 #OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm install --debug trusted-artifact-signer trusted-artifact-signer/trusted-artifact-signer -n trusted-artifact-signer --create-namespace --values -
-OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n trusted-artifact-signer --create-namespace --values -
+DEFAULT_PULL_SECRET_VALUE=$default_pull_secret_value OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n trusted-artifact-signer --create-namespace --values -
+
 
 # Create the script to initialize the environment variables for the service endpoints
 generate_env_script

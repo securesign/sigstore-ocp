@@ -1,0 +1,27 @@
+{{- if .Values.configs.clientserver.ingress }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: {{ .Values.configs.clientserver.name }}
+  name: {{ .Values.configs.clientserver.name }}
+  namespace: {{ .Values.configs.clientserver.namespace }}
+  annotations:
+    route.openshift.io/termination: "edge"
+spec:
+  rules:
+  {{ if empty .Values.configs.clientserver.ingress.host }}
+  - host: {{ .Values.configs.clientserver.name }}-{{ .Values.global.appsSubdomain }}
+  {{ else }}
+  - host: {{ .Values.configs.clientserver.ingress.host }}
+  {{- end}}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.configs.clientserver.name }}
+            port: 
+              number: {{ .Values.configs.clientserver.port }}
+{{- end }}

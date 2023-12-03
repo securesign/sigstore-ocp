@@ -1,3 +1,4 @@
+{{- if .Values.configs.clientserver.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,13 +23,13 @@ spec:
       containers:
       - name: tas-clients
         image: "{{ template "image" .Values.configs.clientserver.image }}"
-        #image: quay.io/sallyom/tas-clients:httpd
         imagePullPolicy: IfNotPresent
         ports:
-          - containerPort: 8080
+          - containerPort: {{ .Values.configs.clientserver.port }}
             protocol: TCP
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL
+{{- end}}
