@@ -6,43 +6,11 @@ import (
 	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/pkg/certs"
 	"securesign/sigstore-ocp/tas-installer/pkg/helm"
-	"securesign/sigstore-ocp/tas-installer/pkg/keycloak"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
 	"securesign/sigstore-ocp/tas-installer/ui"
 	"time"
 )
-
-func HandleKeycloakInstall(kc *kubernetes.KubernetesClient, operatorConfig, resourceConfig string) error {
-	fmt.Println("Installing keycloak operator in namespace: 'keycloak-system'")
-
-	if err := keycloak.ApplyAndWaitForKeycloakResources(kc, operatorConfig, "keycloak-system", "rhsso-operator", func(err error) {
-		switch {
-		case err == kubernetes.ErrPodNotFound:
-			fmt.Println("No pods with the prefix 'rhsso-operator' found in namespace keycloak-system. Retrying in 10 seconds...")
-		case err == kubernetes.ErrPodNotRunning:
-			fmt.Println("Waiting for pod with prefix 'rhsso-operator' to reach a running state...")
-		}
-	}); err != nil {
-		return err
-	}
-	fmt.Println("Pod with prefix 'rhsso-operator' has reached a running state")
-
-	fmt.Println("Installing keycloak resources in namespace: 'keycloak-system'")
-	if err := keycloak.ApplyAndWaitForKeycloakResources(kc, resourceConfig, "keycloak-system", "keycloak-postgresql", func(err error) {
-		switch {
-		case err == kubernetes.ErrPodNotFound:
-			fmt.Println("No pods with the prefix 'keycloak-postgresql' found in namespace keycloak-system. Retrying in 10 seconds...")
-		case err == kubernetes.ErrPodNotRunning:
-			fmt.Println("Waiting for pod with prefix 'keycloak-postgresql' to reach a running state...")
-		}
-	}); err != nil {
-		return err
-	}
-	fmt.Println("Pod with prefix 'keycloak-postgresql' has reached a running state")
-	fmt.Println("Keycloak installed successfully")
-	return nil
-}
 
 func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, helmValuesFile, helmChartVersion string) error {
 	fmt.Println("Installing helm chart")
