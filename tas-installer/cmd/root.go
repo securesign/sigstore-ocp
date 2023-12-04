@@ -10,9 +10,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	fulcioNamespace      = "fulcio-system"
+	rekorNamespace       = "rekor-system"
+	monitoringNamespace  = "sigstore-monitoring"
+	tasNamespace         = "trusted-artifact-signer"
+	tasReleaseName       = "trusted-artifact-signer"
+	fulcioCertSecretName = "fulcio-secret-rh"
+	rekorPrivateKey      = "rekor-private-key"
+	pullSecret           = "pull-secret"
+	segmentBackupJob     = "segment-backup-job"
+)
+
 var (
 	kc             *kubernetes.KubernetesClient
 	kubeconfigPath string
+	// tasNamespacesAll are those not managed by Helm
+	tasNamespacesAll = []string{fulcioNamespace, rekorNamespace, monitoringNamespace, tasNamespace}
 )
 
 var rootCmd = &cobra.Command{
@@ -23,8 +37,7 @@ var rootCmd = &cobra.Command{
 	For a successful installation, you must have provide the path to a kubeconfig file, or have 
 	one in $HOME/.kube/config. Additionally, the following CLI tools must all be in your $PATH environment.
 	
-	oc - used to install Keycloak
-	openssl - used to create the root certificates	`,
+	oc - used to install Keycloak `,
 
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error

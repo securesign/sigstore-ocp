@@ -1,62 +1,114 @@
 package helm
 
 import (
-	"context"
+	"embed"
+	"io/ioutil"
 	"log"
 	"os"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
-	"strings"
-	"time"
+	"text/template"
 
 	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/cli"
 	"helm.sh/helm/v3/pkg/registry"
+	"helm.sh/helm/v3/pkg/release"
 )
+
+const templateValuesFile = "values-openshift.tmpl"
 
 var (
-	values = make(map[string]interface{})
+	//go:embed values-openshift.tmpl
+	templateFS embed.FS
+	values     = make(map[string]interface{})
 )
 
-func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, pathToValuesFile, chartVersion string) error {
+type templatedValues struct {
+	OpenShiftAppsSubdomain string
+}
+
+func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*release.UninstallReleaseResponse, error) {
+	actionConfig, _, err := actionConfig(tasNamespace)
+	if err != nil {
+		return nil, err
+	}
+	return action.NewUninstall(actionConfig).Run(tasReleaseName)
+}
+
+func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, pathToValuesFile, chartVersion string) error {
 	chartUrl := "oci://quay.io/redhat-user-workloads/arewm-tenant/sigstore-ocp/trusted-artifact-signer"
-	if pathToValuesFile != "" {
-		if err := parseValuesFile(pathToValuesFile, kc.ClusterCommonName); err != nil {
-			return err
-		}
+
+	tv := templatedValues{
+		OpenShiftAppsSubdomain: kc.ClusterCommonName,
 	}
 
-	settings := cli.New()
-	actionConfig := new(action.Configuration)
-	if err := actionConfig.Init(settings.RESTClientGetter(), "trusted-artifact-signer", os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
+	tmpl, err := template.ParseFS(templateFS, templateValuesFile)
+	if err != nil {
 		return err
+	}
+
+	if pathToValuesFile != "" {
+		if err := parseValuesFile(pathToValuesFile); err != nil {
+			return err
+		}
+	} else {
+		// if no values passed, use the default templated values
+		tmpFile, err := ioutil.TempFile("", "values-*.yaml")
+		if err != nil {
+			return err
+		}
+		defer tmpFile.Close()
+		err = tmpl.Execute(tmpFile, tv)
+		if err != nil {
+			return err
+		}
+		if err := parseValuesFile(tmpFile.Name()); err != nil {
+			return err
+		}
 	}
 
 	client, err := registry.NewClient()
 	if err != nil {
 		return err
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	exists, err := kc.NamespaceExists(ctx, "trusted-artifact-signer")
+	actionConfig, settings, err := actionConfig(tasNamespace)
 	if err != nil {
 		return err
 	}
 
-	if exists {
-		upgradeRelease(actionConfig, client, settings, chartUrl, chartVersion, values)
-	} else {
-		installNewRelease(actionConfig, client, settings, chartUrl, chartVersion, values)
+	lister := action.NewList(actionConfig)
+	lister.AllNamespaces = true
+	releases, err := lister.Run()
+	if err != nil {
+		return err
+	}
+	exists := false
+	for _, rel := range releases {
+		if rel.Name == tasReleaseName && rel.Namespace == tasNamespace {
+			exists = true
+			upgradeRelease(actionConfig, client, settings, tasNamespace, chartUrl, chartVersion, values)
+		}
+	}
+	if !exists {
+		installNewRelease(actionConfig, client, settings, tasNamespace, tasReleaseName, chartUrl, chartVersion, values)
 	}
 	return nil
 }
 
-func installNewRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, chartURL, chartVersion string, values map[string]interface{}) error {
+func actionConfig(tasNamespace string) (*action.Configuration, *cli.EnvSettings, error) {
+	settings := cli.New()
+	actionConfig := new(action.Configuration)
+	if err := actionConfig.Init(settings.RESTClientGetter(), tasNamespace, os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
+		return nil, nil, err
+	}
+	return actionConfig, settings, nil
+}
+
+func installNewRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, tasNamespace, tasReleaseName, chartURL, chartVersion string, values map[string]interface{}) error {
 	install := action.NewInstall(actionConfig)
-	install.ReleaseName = "trusted-artifact-signer"
-	install.Namespace = "trusted-artifact-signer"
+	install.ReleaseName = tasReleaseName
+	install.Namespace = tasNamespace
 	install.CreateNamespace = true
 	install.Version = chartVersion
 	install.SetRegistryClient(client)
@@ -79,9 +131,9 @@ func installNewRelease(actionConfig *action.Configuration, client *registry.Clie
 	return nil
 }
 
-func upgradeRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, chartURL, chartVersion string, values map[string]interface{}) error {
+func upgradeRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, tasNamespace, chartURL, chartVersion string, values map[string]interface{}) error {
 	upgrade := action.NewUpgrade(actionConfig)
-	upgrade.Namespace = "trusted-artifact-signer"
+	upgrade.Namespace = tasNamespace
 	upgrade.Version = chartVersion
 	upgrade.SetRegistryClient(client)
 
@@ -95,7 +147,7 @@ func upgradeRelease(actionConfig *action.Configuration, client *registry.Client,
 		return err
 	}
 
-	_, err = upgrade.Run("trusted-artifact-signer", chart, values)
+	_, err = upgrade.Run(tasNamespace, chart, values)
 	if err != nil {
 		return err
 	}
@@ -103,20 +155,15 @@ func upgradeRelease(actionConfig *action.Configuration, client *registry.Client,
 	return nil
 }
 
-func parseValuesFile(pathToValuesFile, commonName string) error {
+func parseValuesFile(pathToValuesFile string) error {
 	data, err := os.ReadFile(pathToValuesFile)
 	if err != nil {
 		return err
 	}
-	modifiedData := replaceOpenShiftAppsSubdomain(data, commonName)
 
-	if err = yaml.Unmarshal([]byte(modifiedData), &values); err != nil {
+	if err = yaml.Unmarshal([]byte(data), &values); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func replaceOpenShiftAppsSubdomain(data []byte, commonName string) string {
-	return strings.ReplaceAll(string(data), "$OPENSHIFT_APPS_SUBDOMAIN", commonName)
 }
