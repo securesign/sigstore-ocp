@@ -14,12 +14,9 @@ var envgenCmd = &cobra.Command{
 	Long: `Creates a shell script defining configuration environment variables for TAS command line binaries. This script can be used to configure "cosign" and other CLI binaries that communicate with the TAS infrastructure.
 	
 	Environment Variables:
-	1. KEYCLOAK_REALM=sigstore
-	2. FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
-	3. KEYCLOAK_URL=https://keycloak-keycloak-system.\$BASE_HOSTNAME
-	4. REKOR_URL=https://rekor.\$BASE_HOSTNAME
-	5. TUF_URL=https://tuf.\$BASE_HOSTNAME
-	6. OIDC_ISSUER_URL=\$KEYCLOAK_URL/auth/realms/\$KEYCLOAK_REALM`,
+	1. FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
+	2. REKOR_URL=https://rekor.\$BASE_HOSTNAME
+	3. TUF_URL=https://tuf.\$BASE_HOSTNAME`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := generateEnvVars(); err != nil {
@@ -38,12 +35,9 @@ func generateEnvVars() error {
 	scriptContent := `#!/bin/bash
 	export BASE_HOSTNAME=` + baseHostname + `
 	echo "Base hostname = $BASE_HOSTNAME"
-	export KEYCLOAK_REALM=sigstore
 	export FULCIO_URL=https://fulcio.` + baseHostname + `
-	export KEYCLOAK_URL=https://keycloak-keycloak-system.` + baseHostname + `
 	export REKOR_URL=https://rekor.` + baseHostname + `
-	export TUF_URL=https://tuf.` + baseHostname + `
-	export OIDC_ISSUER_URL=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/sigstore`
+	export TUF_URL=https://tuf.` + baseHostname
 
 	fileName := "tas-env-variables.sh"
 	file, err := os.Create(fileName)
