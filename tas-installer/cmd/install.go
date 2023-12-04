@@ -22,10 +22,9 @@ var installCmd = &cobra.Command{
 
 	This command performs a series of actions:
 	1. Initializes the Kubernetes client to interact with your cluster
-	2. Installs Keycloak for SSO
-	3. Sets up necessary certificates
-	4. Configures secrets
-	5. Deploys TAS to openshift`,
+	2. Sets up necessary certificates
+	3. Configures secrets
+	4. Deploys TAS to openshift`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := installTas(tasNamespace); err != nil {
@@ -40,9 +39,6 @@ func init() {
 
 func installTas(tasNamespace string) error {
 	installSteps := []func() error{
-		func() error {
-			return install.HandleKeycloakInstall(kc, "keycloak/operator/base", "keycloak/resources/base")
-		},
 		func() error { return install.HandleCertSetup(kc) },
 		func() error { return install.HandleNamespacesCreate(kc, tasNamespacesAll) },
 		func() error {
