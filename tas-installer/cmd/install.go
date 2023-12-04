@@ -67,7 +67,7 @@ func installTas() error {
 
 func init() {
 	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", "0.1.24", "Version of the Helm chart")
-	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "examples/values-sigstore-openshift.yaml", "Custom values file for chart configuration")
+	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "", "Custom values file for chart configuration")
 }
 
 func getFulcioFileSecrets() map[string]string {
