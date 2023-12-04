@@ -1,0 +1,39 @@
+---
+global:
+  appsSubdomain: {{ .OpenShiftAppsSubdomain }}
+configs:
+  cosign_deploy:
+    enabled: true
+  fulcio:
+    namespace_create: false
+  rekor:
+    namespace_create: false
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  fulcio:
+    server:
+      ingress:
+        http:
+          hosts:
+            - host: fulcio.{{ .OpenShiftAppsSubdomain }}
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          ? https://oauth2.sigstore.dev/auth
+          : IssuerURL: https://oauth2.sigstore.dev/auth
+            ClientID: sigstore
+            Type: email
+  rekor:
+    server:
+      ingress:
+        hosts:
+          - host: rekor.{{ .OpenShiftAppsSubdomain }}
+            path: /
+  tuf:
+    ingress:
+      http:
+        hosts:
+          - host: tuf.{{ .OpenShiftAppsSubdomain }}
+            path: /

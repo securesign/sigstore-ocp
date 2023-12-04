@@ -44,24 +44,27 @@ func HandleKeycloakInstall(kc *kubernetes.KubernetesClient, operatorConfig, reso
 	return nil
 }
 
-func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, helmValuesFile, helmChartVersion string) error {
+func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion string) error {
 	fmt.Println("Installing helm chart")
-	if err := helm.InstallTrustedArtifactSigner(kc, helmValuesFile, helmChartVersion); err != nil {
+	if err := helm.InstallTrustedArtifactSigner(kc, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
 		return err
 	}
 	fmt.Println("Helm Chart Successfully installed")
 	return nil
 }
 
-func HandleNamespaceCreate(kc *kubernetes.KubernetesClient, namespace string) error {
-	if err := kc.CreateNamespaceIfNotExists(namespace); err != nil {
-		if err == kubernetes.ErrNamespaceAlreadyExists {
-			fmt.Printf("namespace %s already exists skipping create", namespace)
+func HandleNamespacesCreate(kc *kubernetes.KubernetesClient, namespaces []string) error {
+	var err error
+	for _, ns := range namespaces {
+		if err = kc.CreateNamespaceIfNotExists(ns); err != nil {
+			if err == kubernetes.ErrNamespaceAlreadyExists {
+				fmt.Printf("namespace %s already exists skipping create", ns)
+			}
+			return err
 		}
-		return err
+		fmt.Printf("namespace: %s successfully created \n", ns)
 	}
-	fmt.Printf("namespace: %s successfully created \n", namespace)
-	return nil
+	return err
 }
 
 func HandlePullSecretSetup(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {
