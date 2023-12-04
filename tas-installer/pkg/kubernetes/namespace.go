@@ -4,13 +4,30 @@ import (
 	"context"
 	"time"
 
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
 	ErrNamespaceAlreadyExists error
 )
+
+func (kc *KubernetesClient) DeleteNamespaceIfExists(ns string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	exists, err := kc.NamespaceExists(ctx, ns)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		if err := kc.Clientset.CoreV1().Namespaces().Delete(ctx, ns, metav1.DeleteOptions{}); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func (kc *KubernetesClient) CreateNamespaceIfNotExists(ns string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -21,26 +38,17 @@ func (kc *KubernetesClient) CreateNamespaceIfNotExists(ns string) error {
 		return err
 	}
 
-	if !exists {
-		namespace := &v1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: ns,
-				Labels: map[string]string{
-					"app.kubernetes.io/managed-by": "Helm",
-				},
-				Annotations: map[string]string{
-					"meta.helm.sh/release-name":      "trusted-artifact-signer",
-					"meta.helm.sh/release-namespace": "trusted-artifact-signer",
-				},
-			},
-		}
-
-		_, err := kc.Clientset.CoreV1().Namespaces().Create(ctx, namespace, metav1.CreateOptions{})
-		if err != nil {
-			return err
-		}
-	} else {
+	if exists {
 		return ErrNamespaceAlreadyExists
+	}
+	namespace := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: ns,
+		},
+	}
+
+	if _, err := kc.Clientset.CoreV1().Namespaces().Create(ctx, namespace, metav1.CreateOptions{}); err != nil {
+		return err
 	}
 	return nil
 }
