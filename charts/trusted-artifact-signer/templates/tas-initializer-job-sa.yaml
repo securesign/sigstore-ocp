@@ -1,0 +1,9 @@
+{{ if .Values.configs.tas_initializer_job.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tas-initializer
+  namespace: {{ .Values.configs.tas_initializer_job.namespace }}
+secrets:
+- name: tas-initializer-input
+{{- end}}

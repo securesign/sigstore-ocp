@@ -7,6 +7,22 @@ global:
 configs:
   tas_monitoring:
     namespace: trusted-artifact-signer-monitoring
+  tas_initializer_job:
+    enabled: true
+    namespace: trusted-artifact-signer
+    secret:
+      organization_name: trusted-artifact-signer
+      email_address: trustedartifactsigner@redhat.com
+      password: super-secret-password
+    image:
+      registry: quay.io
+      repository: grpereir/tas-initializer-job
+      version: sha256:eb6bbf26d01f0dcdecf2e2e3d0ab0e452b9a10d94a41788b918e7e1d93c9df05
+      pullPolicy: IfNotPresent
+    rolebindings:
+      - tas-initializer-rekor
+      - tas-initializer-fulcio
+      - tas-initializer
   segment_backup_job:
     name: segment-backup-job
     namespace: trusted-artifact-signer-monitoring
