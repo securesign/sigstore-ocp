@@ -32,3 +32,24 @@ func PromptForOIDCInfo() (*OIDCConfig, error) {
 
 	return &OIDCConfig{IssuerURL: issuerURL, ClientID: clientID, Type: "email"}, nil
 }
+
+func PromptForDefaultOIDCOption() (bool, error) {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Printf("Would you like to configure trusted artifact signer with a custom OIDC provider (Y/N)?: ")
+		useCustomOIDC, err := reader.ReadString('\n')
+		if err != nil {
+			return false, err
+		}
+
+		useCustomOIDC = strings.TrimSpace(strings.ToLower(useCustomOIDC))
+
+		if useCustomOIDC == "y" {
+			return true, nil
+		} else if useCustomOIDC == "n" {
+			return false, nil
+		} else {
+			fmt.Println("Invalid input. Please enter 'Y' for Yes or 'N' for No.")
+		}
+	}
+}

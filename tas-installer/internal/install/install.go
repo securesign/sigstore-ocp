@@ -97,10 +97,22 @@ func DeleteSegmentBackupJobIfExists(kc *kubernetes.KubernetesClient, namespace, 
 }
 
 func HandleOIDCInfo() error {
-	config, err := ui.PromptForOIDCInfo()
+	useCustomOIDC, err := ui.PromptForDefaultOIDCOption()
 	if err != nil {
 		return err
 	}
-	OIDCConfig = *config
+
+	if useCustomOIDC {
+		config, err := ui.PromptForOIDCInfo()
+		if err != nil {
+			return err
+		}
+		OIDCConfig = *config
+	} else {
+		OIDCConfig.ClientID = "sigstore"
+		OIDCConfig.IssuerURL = "https://oauth2.sigstore.dev/auth"
+		OIDCConfig.Type = "email"
+		fmt.Println("Using default OIDC provider")
+	}
 	return nil
 }
