@@ -7,25 +7,25 @@ import (
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 )
 
-func HandleHelmChartUninstall(tasNamespace, tasReleaseName string) error {
-	fmt.Println("Uninstalling helm chart")
+func HandleHelmChartUninstall(tasNamespace, tasReleaseName string) (string, error) {
 	info, err := helm.UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName)
 	if err != nil {
-		return err
+		return "", err
 	}
-	fmt.Printf("Uninstalled helm release: %s namespace: %s %s\n", info.Release.Name, info.Release.Namespace, info.Info)
-	return nil
+	msg := fmt.Sprintf("Uninstalled helm release: %s namespace: %s %s\n", info.Release.Name, info.Release.Namespace, info.Info)
+	return msg, nil
 }
 
-func HandleNamespacesDelete(kc *kubernetes.KubernetesClient, namespaces []string) error {
+func HandleNamespacesDelete(kc *kubernetes.KubernetesClient, namespaces []string) ([]string, error) {
+	deletens := []string{}
 	for _, ns := range namespaces {
 		deleted, err := kc.DeleteNamespaceIfExists(ns)
 		if err != nil {
-			return err
+			return deletens, err
 		}
 		if deleted {
-			fmt.Printf("namespace: %s successfully deleted \n", ns)
+			deletens = append(deletens, ns)
 		}
 	}
-	return nil
+	return deletens, nil
 }

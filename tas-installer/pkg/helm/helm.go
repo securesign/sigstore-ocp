@@ -87,11 +87,15 @@ func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace,
 	for _, rel := range releases {
 		if rel.Name == tasReleaseName && rel.Namespace == tasNamespace {
 			exists = true
-			upgradeRelease(actionConfig, client, settings, tasNamespace, chartUrl, chartVersion, values)
+			if err := upgradeRelease(actionConfig, client, settings, tasNamespace, chartUrl, chartVersion, values); err != nil {
+				return err
+			}
 		}
 	}
 	if !exists {
-		installNewRelease(actionConfig, client, settings, tasNamespace, tasReleaseName, chartUrl, chartVersion, values)
+		if err := installNewRelease(actionConfig, client, settings, tasNamespace, tasReleaseName, chartUrl, chartVersion, values); err != nil {
+			return err
+		}
 	}
 	return nil
 }
