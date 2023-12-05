@@ -18,12 +18,14 @@ func HandleHelmChartUninstall(tasNamespace, tasReleaseName string) error {
 }
 
 func HandleNamespacesDelete(kc *kubernetes.KubernetesClient, namespaces []string) error {
-	var err error
 	for _, ns := range namespaces {
-		if err = kc.DeleteNamespaceIfExists(ns); err != nil {
+		deleted, err := kc.DeleteNamespaceIfExists(ns)
+		if err != nil {
 			return err
 		}
-		fmt.Printf("namespace: %s successfully deleted \n", ns)
+		if deleted {
+			fmt.Printf("namespace: %s successfully deleted \n", ns)
+		}
 	}
-	return err
+	return nil
 }
