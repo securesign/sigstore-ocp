@@ -12,21 +12,21 @@ var (
 	ErrNamespaceAlreadyExists error
 )
 
-func (kc *KubernetesClient) DeleteNamespaceIfExists(ns string) error {
+func (kc *KubernetesClient) DeleteNamespaceIfExists(ns string) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	exists, err := kc.NamespaceExists(ctx, ns)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if exists {
 		if err := kc.Clientset.CoreV1().Namespaces().Delete(ctx, ns, metav1.DeleteOptions{}); err != nil {
-			return err
+			return exists, err
 		}
 	}
-	return nil
+	return false, nil
 }
 
 func (kc *KubernetesClient) CreateNamespaceIfNotExists(ns string) error {
