@@ -13,26 +13,23 @@ import (
 )
 
 func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion string) error {
-	fmt.Println("Installing helm chart")
 	if err := helm.InstallTrustedArtifactSigner(kc, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
 		return err
 	}
-	fmt.Println("Helm Chart Successfully installed")
 	return nil
 }
 
-func HandleNamespacesCreate(kc *kubernetes.KubernetesClient, namespaces []string) error {
-	var err error
+func HandleNamespacesCreate(kc *kubernetes.KubernetesClient, namespaces []string) ([]string, error) {
+	createns := []string{}
 	for _, ns := range namespaces {
-		if err = kc.CreateNamespaceIfNotExists(ns); err != nil {
-			if err == kubernetes.ErrNamespaceAlreadyExists {
-				fmt.Printf("namespace %s already exists skipping create", ns)
+		if err := kc.CreateNamespaceIfNotExists(ns); err != nil {
+			if err != kubernetes.ErrNamespaceAlreadyExists {
+				return createns, err
 			}
-			return err
 		}
-		fmt.Printf("namespace: %s successfully created \n", ns)
+		createns = append(createns, ns)
 	}
-	return err
+	return createns, nil
 }
 
 func HandlePullSecretSetup(kc *kubernetes.KubernetesClient, pullSecretName, namespace string) error {

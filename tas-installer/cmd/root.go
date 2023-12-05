@@ -13,7 +13,7 @@ import (
 const (
 	fulcioNamespace      = "fulcio-system"
 	rekorNamespace       = "rekor-system"
-	monitoringNamespace  = "sigstore-monitoring"
+	monitoringNamespace  = "trusted-artifact-signer-monitoring"
 	tasNamespace         = "trusted-artifact-signer"
 	tasReleaseName       = "trusted-artifact-signer"
 	fulcioCertSecretName = "fulcio-secret-rh"
