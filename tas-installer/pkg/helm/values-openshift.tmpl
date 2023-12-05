@@ -2,6 +2,9 @@
 global:
   appsSubdomain: {{ .OpenShiftAppsSubdomain }}
 configs:
+  segment_backup_job:
+    enabled: false
+    namespace_create: false
   cosign_deploy:
     enabled: true
   fulcio:

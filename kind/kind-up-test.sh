@@ -53,5 +53,5 @@ do
 done
 
 # install charts
-helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n sigstore --create-namespace --values ./examples/values-kind-sigstore.yaml && \
-helm test trusted-artifact-signer -n sigstore
+helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n trusted-artifact-signer --create-namespace --values ./examples/values-kind-sigstore.yaml && \
+helm test trusted-artifact-signer -n trusted-artifact-signer

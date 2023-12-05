@@ -9,18 +9,26 @@ import (
 	"encoding/pem"
 	"math/big"
 	"os"
+	"path/filepath"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 	"securesign/sigstore-ocp/tas-installer/ui"
 	"time"
+)
+
+const (
+	FulcioPrivateKey = "file_ca_key.pem"
+	FulcioPublicKey  = "file_ca_pub.pem"
+	FulcioRootCert   = "fulcio-root.pem"
+	RekorSigningKey  = "rekor_key.pem"
 )
 
 var (
 	certPassword string
 )
 
-func SetupCerts(kc *kubernetes.KubernetesClient, certConfig *ui.CertConfig) error {
+func SetupCerts(kc *kubernetes.KubernetesClient, certConfig *ui.CertConfig, dir string) error {
 	certPassword = certConfig.CertPassword
-	err := os.MkdirAll("./keys-cert", 0755)
+	err := os.MkdirAll(dir, 0755)
 	if err != nil {
 		return err
 	}
@@ -29,16 +37,16 @@ func SetupCerts(kc *kubernetes.KubernetesClient, certConfig *ui.CertConfig) erro
 	if err != nil {
 		return err
 	}
-	if err = createCAKey(cakey, certConfig); err != nil {
+	if err = createCAKey(cakey, certConfig, dir); err != nil {
 		return err
 	}
-	if err = createCAPub(cakey, certConfig); err != nil {
+	if err = createCAPub(cakey, certConfig, dir); err != nil {
 		return err
 	}
-	if err = createFulcioCA(cakey, certConfig); err != nil {
+	if err = createFulcioCA(cakey, certConfig, dir); err != nil {
 		return err
 	}
-	if err = createRekorKey(certConfig); err != nil {
+	if err = createRekorKey(certConfig, dir); err != nil {
 		return err
 	}
 
@@ -49,7 +57,7 @@ func GetCertPassword() string {
 	return certPassword
 }
 
-func createCAKey(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
+func createCAKey(key *ecdsa.PrivateKey, certConfig *ui.CertConfig, dir string) error {
 	mKey, err := x509.MarshalECPrivateKey(key)
 	if err != nil {
 		return err
@@ -60,7 +68,7 @@ func createCAKey(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
 		return err
 	}
 
-	file, err := os.Create("./keys-cert/file_ca_key.pem")
+	file, err := os.Create(filepath.Join(dir, FulcioPrivateKey))
 	if err != nil {
 		return err
 	}
@@ -71,13 +79,13 @@ func createCAKey(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
 	return nil
 }
 
-func createCAPub(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
+func createCAPub(key *ecdsa.PrivateKey, certConfig *ui.CertConfig, dir string) error {
 	mPubKey, err := x509.MarshalPKIXPublicKey(key.Public())
 	if err != nil {
 		return err
 	}
 
-	publicF, err := os.Create("./keys-cert/file_ca_pub.pem")
+	publicF, err := os.Create(filepath.Join(dir, FulcioPublicKey))
 	if err != nil {
 		return err
 	}
@@ -94,7 +102,7 @@ func createCAPub(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
 	return nil
 }
 
-func createRekorKey(certConfig *ui.CertConfig) error {
+func createRekorKey(certConfig *ui.CertConfig, dir string) error {
 	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
 		return err
@@ -105,7 +113,7 @@ func createRekorKey(certConfig *ui.CertConfig) error {
 		return err
 	}
 
-	file, err := os.Create("./keys-cert/rekor_key.pem")
+	file, err := os.Create(filepath.Join(dir, RekorSigningKey))
 	if err != nil {
 		return err
 	}
@@ -122,7 +130,7 @@ func createRekorKey(certConfig *ui.CertConfig) error {
 	return nil
 }
 
-func createFulcioCA(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
+func createFulcioCA(key *ecdsa.PrivateKey, certConfig *ui.CertConfig, dir string) error {
 	notBefore := time.Now()
 	notAfter := notBefore.Add(365 * 24 * 10 * time.Hour)
 
@@ -149,7 +157,7 @@ func createFulcioCA(key *ecdsa.PrivateKey, certConfig *ui.CertConfig) error {
 		return err
 	}
 
-	f, err := os.Create("./keys-cert/fulcio-root.pem")
+	f, err := os.Create(filepath.Join(dir, FulcioRootCert))
 	if err != nil {
 		return err
 	}

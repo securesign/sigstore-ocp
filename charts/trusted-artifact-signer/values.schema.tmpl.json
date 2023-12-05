@@ -19,13 +19,6 @@
         "configs": {
             "type": "object",
             "properties": {
-                "tas_monitoring": {
-                    "properties": {
-                        "namespace": {
-                            "type": "string"
-                        }
-                    }
-                },
                 "segment_backup_job":{
                     "properties": {
                         "name": {
@@ -33,6 +26,9 @@
                         },
                         "namespace": {
                             "type" : "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
                         },
                         "image": {
                             "properties": {

@@ -227,6 +227,7 @@
                 },
                 "segment_backup_job": {
                     "properties": {
+                        "enabled": true,
                         "image": {
                             "properties": {
                                 "pullPolicy": {
@@ -249,18 +250,14 @@
                         "namespace": {
                             "type": "string"
                         },
+                        "namespace_create": {
+                            "type": "boolean"
+                        },
                         "rolebindings": {
                             "items": {
                                 "type": "string"
                             },
                             "type": "array"
-                        }
-                    }
-                },
-                "tas_monitoring": {
-                    "properties": {
-                        "namespace": {
-                            "type": "string"
                         }
                     }
                 },
