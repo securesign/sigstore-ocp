@@ -12,9 +12,11 @@ import (
 	"time"
 )
 
+var OIDCConfig ui.OIDCConfig
+
 func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, helmValuesFile, helmChartVersion string) error {
 	fmt.Println("Installing helm chart")
-	if err := helm.InstallTrustedArtifactSigner(kc, helmValuesFile, helmChartVersion); err != nil {
+	if err := helm.InstallTrustedArtifactSigner(kc, helmValuesFile, helmChartVersion, OIDCConfig); err != nil {
 		return err
 	}
 	fmt.Println("Helm Chart Successfully installed")
@@ -91,5 +93,14 @@ func DeleteSegmentBackupJobIfExists(kc *kubernetes.KubernetesClient, namespace, 
 	if err := kc.DeleteJobIfExists(namespace, jobName); err != nil {
 		return err
 	}
+	return nil
+}
+
+func HandleOIDCInfo() error {
+	config, err := ui.PromptForOIDCInfo()
+	if err != nil {
+		return err
+	}
+	OIDCConfig = *config
 	return nil
 }

@@ -2,9 +2,12 @@ package helm
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/ui"
+	"strings"
 	"time"
 
 	"helm.sh/helm/v3/pkg/action"
@@ -15,7 +18,7 @@ import (
 	"helm.sh/helm/v3/pkg/registry"
 )
 
-func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, pathToValuesFile, chartVersion string) error {
+func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, pathToValuesFile, chartVersion string, oidcConfig ui.OIDCConfig) error {
 	chartUrl := "oci://quay.io/redhat-user-workloads/arewm-tenant/sigstore-ocp/trusted-artifact-signer"
 
 	settings := cli.New()
@@ -36,18 +39,18 @@ func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, pathToValuesF
 	}
 
 	if exists {
-		if err := upgradeRelease(actionConfig, client, settings, kc.ClusterCommonName, chartUrl, chartVersion, pathToValuesFile); err != nil {
+		if err := upgradeRelease(actionConfig, client, settings, oidcConfig, kc.ClusterCommonName, chartUrl, chartVersion, pathToValuesFile); err != nil {
 			return err
 		}
 	} else {
-		if err := installNewRelease(actionConfig, client, settings, kc.ClusterCommonName, chartUrl, chartVersion, pathToValuesFile); err != nil {
+		if err := installNewRelease(actionConfig, client, settings, oidcConfig, kc.ClusterCommonName, chartUrl, chartVersion, pathToValuesFile); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func installNewRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, clusterCommonName, chartURL, chartVersion, pathToValuesFile string) error {
+func installNewRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, oidcConfig ui.OIDCConfig, clusterCommonName, chartURL, chartVersion, pathToValuesFile string) error {
 	install := action.NewInstall(actionConfig)
 	install.ReleaseName = "trusted-artifact-signer"
 	install.Namespace = "trusted-artifact-signer"
@@ -65,7 +68,17 @@ func installNewRelease(actionConfig *action.Configuration, client *registry.Clie
 		return err
 	}
 
-	values, err := parseValuesFile(settings, clusterCommonName, pathToValuesFile)
+	defaultValueOpts, err := parseValuesFile(clusterCommonName, pathToValuesFile)
+	if err != nil {
+		return err
+	}
+
+	oidcValueOpts, err := parseOIDCProvider(oidcConfig)
+	if err != nil {
+		return err
+	}
+
+	values, err := mergeValueOpts(settings, defaultValueOpts, oidcValueOpts)
 	if err != nil {
 		return err
 	}
@@ -78,7 +91,7 @@ func installNewRelease(actionConfig *action.Configuration, client *registry.Clie
 	return nil
 }
 
-func upgradeRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, clusterCommonName, chartURL, chartVersion, pathToValuesFile string) error {
+func upgradeRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, oidcConfig ui.OIDCConfig, clusterCommonName, chartURL, chartVersion, pathToValuesFile string) error {
 	upgrade := action.NewUpgrade(actionConfig)
 	upgrade.Namespace = "trusted-artifact-signer"
 	upgrade.Version = chartVersion
@@ -94,7 +107,17 @@ func upgradeRelease(actionConfig *action.Configuration, client *registry.Client,
 		return err
 	}
 
-	values, err := parseValuesFile(settings, clusterCommonName, pathToValuesFile)
+	defaultValueOpts, err := parseValuesFile(clusterCommonName, pathToValuesFile)
+	if err != nil {
+		return err
+	}
+
+	oidcValueOpts, err := parseOIDCProvider(oidcConfig)
+	if err != nil {
+		return err
+	}
+
+	values, err := mergeValueOpts(settings, defaultValueOpts, oidcValueOpts)
 	if err != nil {
 		return err
 	}
@@ -107,8 +130,8 @@ func upgradeRelease(actionConfig *action.Configuration, client *registry.Client,
 	return nil
 }
 
-func parseValuesFile(settings *cli.EnvSettings, clusterCommonName, pathToValuesFile string) (map[string]interface{}, error) {
-	var valueOpts values.Options
+func parseValuesFile(clusterCommonName, pathToValuesFile string) (values.Options, error) {
+	var defaultValueOpts values.Options
 
 	defaultValues := []string{
 		"global.appsSubdomain=" + clusterCommonName,
@@ -121,20 +144,50 @@ func parseValuesFile(settings *cli.EnvSettings, clusterCommonName, pathToValuesF
 	}
 
 	if pathToValuesFile != "" {
-		valueOpts = values.Options{
+		defaultValueOpts = values.Options{
 			ValueFiles: []string{pathToValuesFile},
 			Values:     defaultValues,
 		}
 	} else {
-		valueOpts = values.Options{
+		defaultValueOpts = values.Options{
 			Values: defaultValues,
 		}
 	}
 
-	mergedValues, err := valueOpts.MergeValues(getter.All(settings))
+	return defaultValueOpts, nil
+}
+
+func parseOIDCProvider(oidcConfig ui.OIDCConfig) (values.Options, error) {
+	if oidcConfig.IssuerURL == "" || oidcConfig.ClientID == "" {
+		return values.Options{}, fmt.Errorf("invalid OIDC configuration")
+	}
+
+	oidcConfig.IssuerURL = strings.ReplaceAll(oidcConfig.IssuerURL, ".", "\\.")
+
+	oidcValues := []string{
+		fmt.Sprintf("scaffold.fulcio.config.contents.OIDCIssuers.%s.IssuerURL=%s", oidcConfig.IssuerURL, oidcConfig.IssuerURL),
+		fmt.Sprintf("scaffold.fulcio.config.contents.OIDCIssuers.%s.ClientID=%s", oidcConfig.IssuerURL, oidcConfig.ClientID),
+		fmt.Sprintf("scaffold.fulcio.config.contents.OIDCIssuers.%s.Type=%s", oidcConfig.IssuerURL, oidcConfig.Type),
+	}
+
+	return values.Options{Values: oidcValues}, nil
+}
+
+func mergeValueOpts(settings *cli.EnvSettings, defaultValueOpts, oidcValueOpts values.Options) (map[string]interface{}, error) {
+	var combinedValueOpts values.Options
+
+	combinedValueOpts = values.Options{
+		ValueFiles:    append(defaultValueOpts.ValueFiles, oidcValueOpts.ValueFiles...),
+		StringValues:  append(defaultValueOpts.StringValues, oidcValueOpts.StringValues...),
+		Values:        append(defaultValueOpts.Values, oidcValueOpts.Values...),
+		FileValues:    append(defaultValueOpts.FileValues, oidcValueOpts.FileValues...),
+		JSONValues:    append(defaultValueOpts.JSONValues, oidcValueOpts.JSONValues...),
+		LiteralValues: append(defaultValueOpts.LiteralValues, oidcValueOpts.LiteralValues...),
+	}
+
+	mergedValues, err := combinedValueOpts.MergeValues(getter.All(settings))
 	if err != nil {
 		return nil, err
 	}
-
 	return mergedValues, nil
 }

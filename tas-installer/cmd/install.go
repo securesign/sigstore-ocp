@@ -39,6 +39,7 @@ func init() {
 
 func installTas() error {
 	installSteps := []func() error{
+		func() error { return install.HandleOIDCInfo() },
 		func() error { return install.HandleCertSetup(kc) },
 		func() error {
 			return install.DeleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job")
