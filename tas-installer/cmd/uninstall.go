@@ -24,11 +24,19 @@ func init() {
 }
 
 func uninstallTas() error {
-	if err := uninstall.HandleHelmChartUninstall(tasNamespace, tasReleaseName); err != nil {
+	log.Print("uninstalling helm chart")
+	msg, err := uninstall.HandleHelmChartUninstall(tasNamespace, tasReleaseName)
+	if err != nil {
 		log.Print(err.Error())
+	} else {
+		log.Print(msg)
 	}
-	if err := uninstall.HandleNamespacesDelete(kc, tasNamespacesAll); err != nil {
+	deletens, err := uninstall.HandleNamespacesDelete(kc, tasNamespacesAll)
+	if err != nil {
 		return err
+	}
+	for _, ns := range deletens {
+		log.Printf("namespace: %s successfully deleted", ns)
 	}
 	return nil
 }

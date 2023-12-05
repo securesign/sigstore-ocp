@@ -26,7 +26,7 @@ func (kc *KubernetesClient) DeleteNamespaceIfExists(ns string) (bool, error) {
 			return exists, err
 		}
 	}
-	return false, nil
+	return exists, nil
 }
 
 func (kc *KubernetesClient) CreateNamespaceIfNotExists(ns string) error {
