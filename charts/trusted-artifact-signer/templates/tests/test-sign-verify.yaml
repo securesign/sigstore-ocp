@@ -21,7 +21,7 @@ spec:
             runAsUser: 1000
     containers:
       - name: cosign
-        image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}:{{ .Values.configs.cosign_deploy.image.version }}"
+        image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}@{{ .Values.configs.cosign_deploy.image.version }}"
         env:
         - name: OIDC_AUTHENTICATION_REALM
           value: "sigstore"

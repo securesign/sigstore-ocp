@@ -32,7 +32,6 @@ scaffold:
     config:
       contents:
         OIDCIssuers:
-          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
           ? http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
           : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
             ClientID: sigstore
