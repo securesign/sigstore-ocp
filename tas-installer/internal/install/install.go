@@ -78,12 +78,12 @@ func HandlePullSecretSetup(kc *kubernetes.KubernetesClient, pullSecretName, name
 	return nil
 }
 
-func HandleCertSetup(kc *kubernetes.KubernetesClient) error {
+func HandleCertSetup(kc *kubernetes.KubernetesClient, dir string) error {
 	certConfig, err := ui.PromptForCertInfo(kc)
 	if err != nil {
 		return err
 	}
-	certs.SetupCerts(kc, certConfig)
+	certs.SetupCerts(kc, certConfig, dir)
 	return nil
 }
 

@@ -3,11 +3,17 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"path/filepath"
+
 	"securesign/sigstore-ocp/tas-installer/internal/install"
 	"securesign/sigstore-ocp/tas-installer/pkg/certs"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
 
 	"github.com/spf13/cobra"
+)
+
+const (
+	keysCertDir = "keys-cert"
 )
 
 var (
@@ -39,7 +45,7 @@ func init() {
 
 func installTas(tasNamespace string) error {
 	installSteps := []func() error{
-		func() error { return install.HandleCertSetup(kc) },
+		func() error { return install.HandleCertSetup(kc, keysCertDir) },
 		func() error {
 			createns, err := install.HandleNamespacesCreate(kc, tasNamespacesAll)
 			if err != nil {
@@ -65,7 +71,6 @@ func installTas(tasNamespace string) error {
 			if err := install.HandleHelmChartInstall(kc, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
 				return err
 			}
-			log.Print("helm chart successfully installed")
 			return nil
 		},
 	}
@@ -84,9 +89,9 @@ func init() {
 
 func getFulcioSecretFiles() map[string]string {
 	return map[string]string{
-		"private": "./keys-cert/file_ca_key.pem",
-		"public":  "./keys-cert/file_ca_pub.pem",
-		"cert":    "./keys-cert/fulcio-root.pem",
+		"private": filepath.Join(keysCertDir, certs.FulcioPrivateKey),
+		"public":  filepath.Join(keysCertDir, certs.FulcioPublicKey),
+		"cert":    filepath.Join(keysCertDir, certs.FulcioRootCert),
 	}
 }
 
@@ -98,6 +103,6 @@ func getFulcioLiteralSecrets() map[string]string {
 
 func getRekorSecretFiles() map[string]string {
 	return map[string]string{
-		"private": "./keys-cert/rekor_key.pem",
+		"private": filepath.Join(keysCertDir, certs.RekorSigningKey),
 	}
 }
