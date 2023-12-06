@@ -45,10 +45,10 @@ func installTas() error {
 		},
 		func() error { return install.HandleCertSetup(kc) },
 		func() error {
-			return install.DeleteSegmentBackupJobIfExists(kc, "sigstore-monitoring", "segment-backup-job")
+			return install.DeleteSegmentBackupJobIfExists(kc, "trusted-artifact-signer-monitoring", "segment-backup-job")
 		},
-		func() error { return install.HandleNamespaceCreate(kc, "sigstore-monitoring") },
-		func() error { return install.HandlePullSecretSetup(kc, "pull-secret", "sigstore-monitoring") },
+		func() error { return install.HandleNamespaceCreate(kc, "trusted-artifact-signer-monitoring") },
+		func() error { return install.HandlePullSecretSetup(kc, "pull-secret", "trusted-artifact-signer-monitoring") },
 		func() error { return install.HandleNamespaceCreate(kc, "fulcio-system") },
 		func() error {
 			return secrets.ConfigureSystemSecrets(kc, "fulcio-system", "fulcio-secret-rh", getFulcioLiteralSecrets(), getFulcioFileSecrets())

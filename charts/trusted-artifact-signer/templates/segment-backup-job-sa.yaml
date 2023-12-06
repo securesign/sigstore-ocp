@@ -3,6 +3,6 @@ kind: ServiceAccount
 metadata:
   name: segment-backup-job
   # namespace: {{ .Values.configs.segment_backup_job.namespace }}
-  namespace: sigstore-monitoring
+  namespace: trusted-artifact-signer-monitoring
 secrets:
 - name: pull-secret

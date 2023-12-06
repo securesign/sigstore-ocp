@@ -117,15 +117,15 @@ Kubernetes: `>= 1.19.0-0`
 | configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
 | configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
 | configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
-| configs.sigstore_monitoring.namespace |  | string | `"sigstore-monitoring"` |
-| configs.sigstore_monitoring.namespace_create |  | bool | `true` |
+| configs.tas_monitoring.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
+| configs.tas_monitoring.namespace_create |  | bool | `true` |
 | configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
 | configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
 | configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/segment-backup-job"` |
 | configs.segment_backup_job.image.version |  | string | `"sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44"` |
 | configs.segment_backup_job.name |  | string | `"nightlyMetricsCollection"` |
-| configs.segment_backup_job.namespace |  | string | `"sigstore-monitoring"` |
+| configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
 | configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
