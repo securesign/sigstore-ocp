@@ -79,9 +79,9 @@ install_sso_keycloak
 
 common_name=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
 
-segment_backup_job=$(oc get job -n sigstore-monitoring --ignore-not-found=true | tail -n 1 | awk '{print $1}')
+segment_backup_job=$(oc get job -n trusted-artifact-signer-monitoring --ignore-not-found=true | tail -n 1 | awk '{print $1}')
 if [[ -n $segment_backup_job ]]; then
-    oc delete job $segment_backup_job -n sigstore-monitoring
+    oc delete job $segment_backup_job -n trusted-artifact-signer-monitoring
 fi
 
 oc new-project trusted-artifact-signer-monitoring > /dev/null 2>&1
