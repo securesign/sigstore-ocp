@@ -36,8 +36,7 @@ func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*relea
 	return action.NewUninstall(actionConfig).Run(tasReleaseName)
 }
 
-func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, pathToValuesFile, chartVersion string) error {
-	chartUrl := "oci://quay.io/redhat-user-workloads/arewm-tenant/sigstore-ocp/trusted-artifact-signer"
+func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, pathToValuesFile, chartUrl, chartVersion string) error {
 
 	tv := templatedValues{
 		OpenShiftAppsSubdomain: kc.ClusterCommonName,
