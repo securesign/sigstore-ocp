@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.24](https://img.shields.io/badge/Version-0.1.24-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.25](https://img.shields.io/badge/Version-0.1.25-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -117,15 +117,6 @@ Kubernetes: `>= 1.19.0-0`
 | configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
 | configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
 | configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
-| configs.tas_monitoring.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
-| configs.tas_monitoring.namespace_create |  | bool | `true` |
-| configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
-| configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
-| configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
-| configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/segment-backup-job"` |
-| configs.segment_backup_job.image.version |  | string | `"sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44"` |
-| configs.segment_backup_job.name |  | string | `"nightlyMetricsCollection"` |
-| configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
 | configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
@@ -137,6 +128,14 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
+| configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
+| configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
+| configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/segment-backup-job"` |
+| configs.segment_backup_job.image.version |  | string | `"sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44"` |
+| configs.segment_backup_job.name |  | string | `"segment-backup-job"` |
+| configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
+| configs.segment_backup_job.rolebindings[0] |  | string | `"segment-backup-job"` |
+| configs.tas_monitoring.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
 | configs.trillian.namespace |  | string | `"trillian-system"` |
 | configs.trillian.namespace_create |  | bool | `true` |
 | configs.trillian.rolebindings | names for rolebindings to add clusterroles to trillian serviceaccounts. The names must match the serviceaccount names in the trillian namespace. | list | `["trillian-logserver","trillian-logsigner","trillian-mysql"]` |
