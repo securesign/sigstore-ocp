@@ -5,11 +5,11 @@ global:
   appsSubdomain: ""
 
 configs:
-  sigstore_monitoring:
-    namespace: sigstore-monitoring
+  tas_monitoring:
+    namespace: trusted-artifact-signer-monitoring
   segment_backup_job:
     name: segment-backup-job
-    namespace: sigstore-monitoring
+    namespace: trusted-artifact-signer-monitoring
     image:
       registry:  registry.redhat.io
       repository: rhtas-tech-preview/segment-backup-job-rhel9

@@ -19,7 +19,7 @@
         "configs": {
             "type": "object",
             "properties": {
-                "sigstore_monitoring": {
+                "tas_monitoring": {
                     "properties": {
                         "namespace": {
                             "type": "string"
