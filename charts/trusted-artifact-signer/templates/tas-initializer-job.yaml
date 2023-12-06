@@ -1,0 +1,39 @@
+{{ if .Values.configs.tas_initializer_job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tas-initializer
+  namespace: {{ .Values.configs.tas_initializer_job.namespace }}
+spec:  
+  parallelism: 1    
+  completions: 1
+  activeDeadlineSeconds: 200
+  backoffLimit: 5
+  template:
+    metadata:
+      name: {{ .Values.configs.tas_initializer_job.name }}
+      labels:               
+        parent: "tas-initializer"
+    spec:
+      restartPolicy: OnFailure 
+      serviceAccountName: tas-initializer
+      containers:
+        - name: tas-initializer
+          image: "{{ .Values.configs.tas_initializer_job.image.registry }}/{{ .Values.configs.tas_initializer_job.image.repository }}@{{ .Values.configs.tas_initializer_job.image.version }}"
+          env:
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+              - ALL
+          volumeMounts:
+          - name: tas-initializer-input
+            mountPath: "/tmp/tas-initializer-input"
+            readOnly: true
+      volumes:
+        - name: tas-initializer-input
+          secret:
+            secretName: tas-initializer-input
+{{- end }}
