@@ -136,6 +136,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.segment_backup_job.namespace |  | string | `"sigstore-monitoring"` |
 | configs.segment_backup_job.rolebindings[0] |  | string | `"segment-backup-job"` |
 | configs.sigstore_monitoring.namespace |  | string | `"sigstore-monitoring"` |
+| configs.sigstore_monitoring.namespace_create |  | bool | `true` |
 | configs.trillian.namespace |  | string | `"trillian-system"` |
 | configs.trillian.namespace_create |  | bool | `true` |
 | configs.trillian.rolebindings | names for rolebindings to add clusterroles to trillian serviceaccounts. The names must match the serviceaccount names in the trillian namespace. | list | `["trillian-logserver","trillian-logsigner","trillian-mysql"]` |
