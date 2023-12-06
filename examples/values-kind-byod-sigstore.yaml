@@ -1,0 +1,55 @@
+# With this example, you can see how to deploy Sigstore instance that is internal and can be use only within the cluster.
+# To sign your containers, you can use pre-deployed container in `cosign` namespace (see https://github.com/securesign/sigstore-ocp/blob/main/sign-verify.md#signing-a-container-using-the-cosign-pod).
+# It is expected that there is a secret with the fulcio root & signing keys
+# named 'fulcio-secret-rh' in namespace 'fulcio-system' and a secret 'rekor-private-key'
+# with rekor signing keys in the 'rekor-system' namespace.
+# secret names must match secret names in scaffold.tuf, that default to
+# 'fulcio-secret-rh' and 'rekor-private-key'
+# For root & key requirements, see ../requirements-keys-certs.md
+configs:
+  clientserver:
+    consoleDownload: false
+    route: false
+  cosign_deploy:
+    enabled: true
+  fulcio:
+    clusterMonitoring:
+      enabled: false
+    namespace_create: false
+  rekor:
+    clusterMonitoring:
+      enabled: false
+    namespace_create: false
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  trillian:
+    mysql:
+      enabled: false
+      port: 3306
+      hostname: trillian-mysql.mysql.svc.cluster.local
+      auth:
+        existingSecret: trillian-mysql
+  fulcio:
+    server:
+      ingress:
+        enabled: false
+        http:
+          enabled: false
+    config:
+      contents:
+        OIDCIssuers:
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
+          ? http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
+          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
+            ClientID: sigstore
+            Type: email
+  rekor:
+    server:
+      ingress:
+        enabled: false
+        http:
+          enabled: false
+  tuf:
+    ingress:
+      create: false
