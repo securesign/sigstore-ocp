@@ -31,27 +31,6 @@ oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=.
 
 oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
-#install OLM
-kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/crds.yaml
-# wait for a while to be sure CRDs are installed
-sleep 1
-kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/olm.yaml
-
-#install keycloak from Kind overlay
-kubectl create --kustomize keycloak/operator/overlay/kind
-until [ ! -z "$(kubectl get pod -l name=keycloak-operator -n keycloak-system 2>/dev/null)" ]
-do
-  echo "Waiting for keycloak operator. Pods in keycloak-system namespace:"
-  kubectl get pods -n keycloak-system
-  sleep 10
-done
-kubectl create --kustomize keycloak/resources/overlay/kind
-until [[ $( oc get keycloak keycloak -o jsonpath='{.status.ready}' -n keycloak-system 2>/dev/null) == "true" ]]
-do
-  printf "Waiting for keycloak deployment. \n Keycloak ready: %s \n" $(oc get keycloak keycloak -o jsonpath='{.status.ready}' -n keycloak-system)
-  sleep 10
-done
-
 # install charts
-helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n sigstore --create-namespace --values ./examples/values-kind-sigstore.yaml && \
-helm test trusted-artifact-signer -n sigstore
+helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n trusted-artifact-signer --create-namespace --values ./examples/values-kind-sigstore.yaml && \
+helm test trusted-artifact-signer -n trusted-artifact-signer
