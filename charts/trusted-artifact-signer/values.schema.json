@@ -249,18 +249,14 @@
                         "namespace": {
                             "type": "string"
                         },
+                        "namespace_create": {
+                            "type": "boolean"
+                        },
                         "rolebindings": {
                             "items": {
                                 "type": "string"
                             },
                             "type": "array"
-                        }
-                    }
-                },
-                "tas_monitoring": {
-                    "properties": {
-                        "namespace": {
-                            "type": "string"
                         }
                     }
                 },

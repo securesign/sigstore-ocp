@@ -7,6 +7,9 @@
 # Note: User must substitute for localhost below.
 ---
 configs:
+  segment_backup_job:
+    enabled: false
+    namespace_create: false
   clientserver:
     consoleDownload: false
     route: false
@@ -32,9 +35,8 @@ scaffold:
     config:
       contents:
         OIDCIssuers:
-          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
-          ? http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
-          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
+          ? https://oauth2.sigstore.dev/auth
+          : IssuerURL: https://oauth2.sigstore.dev/auth
             ClientID: sigstore
             Type: email
   rekor:

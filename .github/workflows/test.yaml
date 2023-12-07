@@ -2,11 +2,12 @@ name: Lint Charts
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main,release-1.0.gamma ]
   pull_request:
-    branches: [ main ]
+    branches: [ main,release-1.0.gamma ]
     paths:
       - "charts/**"
+      - "tas-installer/**"
       - ".github/**"
 
 jobs:
@@ -90,28 +91,6 @@ jobs:
           oc create ns rekor-system
           oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./kind/testing-only-cert-key/file_ca_key.pem --from-file=public=./kind/testing-only-cert-key/file_ca_pub.pem --from-file=cert=./kind/testing-only-cert-key/fulcio-root.pem  --from-literal=password=secure --dry-run=client -o yaml | oc apply -f-
           oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
-        shell: bash
-
-      - name: Install Keycloak
-        run: |
-          #install OLM
-          kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/crds.yaml
-          # wait for a while to be sure CRDs are installed
-          sleep 1
-          kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/olm.yaml
-          kubectl create --kustomize keycloak/operator/overlay/kind
-          until [ ! -z "$(kubectl get pod -l name=keycloak-operator -n keycloak-system 2>/dev/null)" ]
-          do
-            echo "Waiting for keycloak operator. Pods in keycloak-system namespace:"
-            kubectl get pods -n keycloak-system
-            sleep 10
-          done
-          kubectl create --kustomize keycloak/resources/overlay/kind
-          until [[ $( oc get keycloak keycloak -o jsonpath='{.status.ready}' -n keycloak-system 2>/dev/null) == "true" ]]
-          do
-            printf "Waiting for keycloak deployment. \n Keycloak ready: %s\n" $(oc get keycloak keycloak -o jsonpath='{.status.ready}' -n keycloak-system)
-            sleep 10
-          done
         shell: bash
 
       # tests are in charts/trusted-artifact-signer/templates/tests
