@@ -3,45 +3,6 @@
     "properties": {
         "configs": {
             "properties": {
-                "sigstore_monitoring": {
-                    "properties": {
-                        "namespace": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "segment_backup_job":{
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "namespace": {
-                            "type" : "string"
-                        },
-                        "image": {
-                            "properties": {
-                                "pullPolicy": {
-                                    "type": "string"
-                                },
-                                "registry": {
-                                    "type": "string"
-                                },
-                                "repository": {
-                                    "type": "string"
-                                },
-                                "version": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "rolebindings": {
-                            "items": {
-                                "type": "string"
-                            },
-                            "type": "array"
-                        }
-                    }
-                },
                 "clientserver": {
                     "properties": {
                         "consoleDownload": {
@@ -263,6 +224,84 @@
                         }
                     },
                     "type": "object"
+                },
+                "segment_backup_job": {
+                    "properties": {
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "rolebindings": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    }
+                },
+                "tas_initializer_job": {
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "values": {
+                            "properties": {
+                                "organization_name": {
+                                    "type": "string"
+                                },
+                                "email_address": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "image": {
+                            "properties": {
+                                "pullPolicy": {
+                                    "type": "string"
+                                },
+                                "registry": {
+                                    "type": "string"
+                                },
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tas_monitoring": {
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        }
+                    }
                 },
                 "trillian": {
                     "properties": {

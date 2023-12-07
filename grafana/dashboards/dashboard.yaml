@@ -1,8 +1,8 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: sigstore-monitoring-dashboard
-  namespace: sigstore-monitoring
+  name: trusted-artifact-signer-monitoring-dashboard
+  namespace: trusted-artifact-signer-monitoring
   labels:
     app: grafana
 spec:

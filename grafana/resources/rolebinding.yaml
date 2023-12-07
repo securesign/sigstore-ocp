@@ -9,4 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: grafana-serviceaccount
-  namespace: sigstore-monitoring
+  namespace: trusted-artifact-signer-monitoring
