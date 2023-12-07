@@ -19,10 +19,10 @@ configs:
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
+  # Trillian allows for the capabilities to bring your own database. This is
+  # useful for production deployments where you want to use a managed database
+  # service. 
   trillian:
-# Trillian allows for the capabilities to bring your own database. This is
-# useful for production deployments where you want to use a managed database
-# service. 
     mysql:
       enabled: true
       port: 3306
