@@ -7,22 +7,6 @@ global:
 configs:
   tas_monitoring:
     namespace: trusted-artifact-signer-monitoring
-  tas_initializer_job:
-    enabled: true
-    namespace: trusted-artifact-signer
-    secret:
-      organization_name: trusted-artifact-signer
-      email_address: trustedartifactsigner@redhat.com
-      password: super-secret-password
-    image:
-      registry: quay.io
-      repository: grpereir/tas-initializer-job
-      version: sha256:559d97861fb014bb753281fa00ebf739abadd269b1e9ec40e354fb6da22356f9
-      pullPolicy: IfNotPresent
-    rolebindings:
-      - tas-initializer-rekor
-      - tas-initializer-fulcio
-      - tas-initializer
   segment_backup_job:
     name: segment-backup-job
     namespace: trusted-artifact-signer-monitoring
@@ -56,6 +40,7 @@ configs:
       - ctlog
       - ctlog-createtree
       - trusted-artifact-signer-ctlog-createctconfig
+
   rekor:
     namespace_create: true
     namespace: rekor-system
@@ -84,6 +69,7 @@ configs:
         - interval: 30s
           port: 2112-tcp
           scheme: http
+
   fulcio:
     namespace_create: true
     namespace: fulcio-system
@@ -122,6 +108,7 @@ configs:
         - interval: 30s
           port: 2112-tcp
           scheme: http
+
   trillian:
     namespace_create: true
     namespace: trillian-system
@@ -131,6 +118,7 @@ configs:
       - trillian-logserver
       - trillian-logsigner
       - trillian-mysql
+
   tuf:
     namespace: tuf-system
     namespace_create: true
@@ -139,6 +127,7 @@ configs:
     rolebindings:
       - tuf
       - tuf-secret-copy-job
+
   cosign_deploy:
     enabled: false
     namespace: cosign
@@ -237,6 +226,7 @@ scaffold:
           hosts:
           - host: fulcio.appsSubdomain
             path: /
+
   rekor:
     enabled: true
     forceNamespace: rekor-system
