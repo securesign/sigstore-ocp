@@ -1,0 +1,65 @@
+---
+global:
+  appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
+configs:
+  cosign_deploy:
+    enabled: true
+  fulcio:
+    namespace_create: false
+  rekor:
+    namespace_create: false
+    # (OPTIONAL) when providing contents of secret with configs.rekor.server.signer
+    signer:
+      secret:
+        # must provide 1 of each, key_file path or key contents
+        # name must match rekor signer secretName in scaffold.rekor.server
+        name: ""
+        #private_key_file: "keys-cert/rekor_key.pem"
+        private_key: ""
+
+# github.com/sigstore/helm-charts/charts
+scaffold:
+  trillian:
+# Trillian allows for the capabilities to bring your own database. This is
+# useful for production deployments where you want to use a managed database
+# service. 
+    mysql:
+      enabled: true
+      port: 3306
+      # The hostname of the database server. This can be a hostname, IP, or Kubernetes service address.
+      hostname: ""
+      auth:
+        # Existing secret must contain the username, password, and root password. This is useful when using external secrets such as vault. 
+        # values in the secret must be mysql-password, mysql-root-password, and mysql-username. The expectation is that the database will be named trillian.
+        existingSecret: ""
+        # If you do not have an existing secret, you can use the following to create a new secret. Do not store these in public source control as someone will be able to access your database.
+        username: "mysql"
+        password: ""
+        rootPassword: ""
+  fulcio:
+    server:
+      ingress:
+        http:
+          hosts:
+            - host: fulcio.$OPENSHIFT_APPS_SUBDOMAIN
+              path: /
+    config:
+      contents:
+        OIDCIssuers:
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
+          ? https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
+          : IssuerURL: https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
+            ClientID: sigstore
+            Type: email
+  rekor:
+    server:
+      ingress:
+        hosts:
+          - host: rekor.$OPENSHIFT_APPS_SUBDOMAIN
+            path: /
+  tuf:
+    ingress:
+      http:
+        hosts:
+          - host: tuf.$OPENSHIFT_APPS_SUBDOMAIN
+            path: /
