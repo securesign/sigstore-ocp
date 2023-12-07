@@ -11,7 +11,7 @@ configs:
     namespace: trusted-artifact-signer-monitoring
     namespace_create: true
     image:
-      registry:  registry.redhat.io
+      registry: registry.redhat.io
       repository: rhtas-tech-preview/segment-backup-job-rhel9
       version: sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44
       pullPolicy: IfNotPresent

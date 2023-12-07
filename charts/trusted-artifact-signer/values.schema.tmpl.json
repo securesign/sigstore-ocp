@@ -21,6 +21,9 @@
             "properties": {
                 "segment_backup_job":{
                     "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
                         "name": {
                             "type": "string"
                         },

@@ -227,7 +227,9 @@
                 },
                 "segment_backup_job": {
                     "properties": {
-                        "enabled": true,
+                        "enabled": {
+                            "type": "boolean"
+                        },
                         "image": {
                             "properties": {
                                 "pullPolicy": {
