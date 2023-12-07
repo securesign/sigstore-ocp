@@ -77,7 +77,25 @@ EOL
 # Install Red Hat SSO Operator and setup Keycloak service
 install_sso_keycloak
 
+
+# Prompt for the organizationName
+read -p "Enter the organization name for the certificate: " organization_name
+# Prompt for the email address
+read -p "Enter the email address for the certificate: " email_address
+# Prompt for the Common Name (CN)
 common_name=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
+# Prompt for the password
+read -s -p "Enter the password for the private key: " password
+
+#
+mkdir -p keys-cert
+pushd keys-cert > /dev/null
+
+openssl ecparam -genkey -name prime256v1 -noout -out unenc.key
+openssl ec -in unenc.key -out file_ca_key.pem -des3 -passout pass:"$password"
+openssl ec -in file_ca_key.pem -passin pass:"$password" -pubout -out file_ca_pub.pem
+openssl req -new -x509 -days 365 -key file_ca_key.pem -passin pass:"$password"  -out fulcio-root.pem -passout pass:"$password" -subj "/CN=$common_name/emailAddress=$email_address/O=$organization_name"
+openssl ecparam -name prime256v1 -genkey -noout -out rekor_key.pem
 
 segment_backup_job=$(oc get job -n trusted-artifact-signer-monitoring --ignore-not-found=true | tail -n 1 | awk '{print $1}')
 if [[ -n $segment_backup_job ]]; then
@@ -85,7 +103,6 @@ if [[ -n $segment_backup_job ]]; then
 fi
 
 oc new-project trusted-artifact-signer-monitoring > /dev/null 2>&1
-
 
 pull_secret_exists=$(oc get secret pull-secret -n trusted-artifact-signer-monitoring --ignore-not-found=true)
 if [[ -n $pull_secret_exists ]]; then
@@ -112,8 +129,14 @@ else
     oc create secret generic pull-secret -n trusted-artifact-signer-monitoring --from-file=$pull_secret_path
 fi
 
+rm unenc.key
+popd > /dev/null
+
 oc create ns fulcio-system
+oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=./keys-cert/file_ca_key.pem --from-file=public=./keys-cert/file_ca_pub.pem --from-file=cert=./keys-cert/fulcio-root.pem --from-literal=password="$password" --dry-run=client -o yaml | oc apply -f-
+
 oc create ns rekor-system
+oc -n rekor-system create secret generic rekor-private-key --from-file=private=./keys-cert/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
 # TODO: uncomment to install from helm repository, install from the local repo checkout for now
 #helm repo add trusted-artifact-signer https://repo-securesign-helm.apps.open-svc-sts.k1wl.p1.openshiftapps.com/helm-charts
