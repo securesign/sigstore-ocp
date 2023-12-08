@@ -86,7 +86,7 @@ func installTas(tasNamespace string) error {
 func init() {
 	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", helmChartVersion, "Version of the Helm chart")
 	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "", "Custom values file for chart configuration")
-	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartUrl", helmChartUrl, "URL to Trusted Artifact Signer Helm chart")
+	installCmd.PersistentFlags().StringVar(&helmChartUrl, "chartUrl", helmChartUrl, "URL to Trusted Artifact Signer Helm chart")
 }
 
 func getFulcioSecretFiles() map[string]string {
