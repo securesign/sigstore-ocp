@@ -83,7 +83,7 @@ func installTas(tasNamespace string) error {
 }
 
 func init() {
-	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", "0.1.24", "Version of the Helm chart")
+	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", "0.1.26", "Version of the Helm chart")
 	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "", "Custom values file for chart configuration")
 }
 

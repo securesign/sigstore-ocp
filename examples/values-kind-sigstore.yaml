@@ -9,7 +9,10 @@
 configs:
   segment_backup_job:
     enabled: false
+    namespace: trusted-artifact-signer-monitoring
     namespace_create: false
+    clusterMonitoring:
+      enabled: false
   clientserver:
     consoleDownload: false
     route: false

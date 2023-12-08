@@ -128,14 +128,14 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
-| configs.segment_backup_job.enabled |  | bool | `true` |
+| configs.segment_backup_job.enabled |  | bool | `false` |
 | configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.segment_backup_job.image.registry |  | string | `"registry.redhat.io"` |
 | configs.segment_backup_job.image.repository |  | string | `"rhtas-tech-preview/segment-backup-job-rhel9"` |
 | configs.segment_backup_job.image.version |  | string | `"sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44"` |
 | configs.segment_backup_job.name |  | string | `"segment-backup-job"` |
 | configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
-| configs.segment_backup_job.namespace_create |  | bool | `true` |
+| configs.segment_backup_job.namespace_create |  | bool | `false` |
 | configs.segment_backup_job.rolebindings[0] |  | string | `"segment-backup-job"` |
 | configs.trillian.namespace |  | string | `"trillian-system"` |
 | configs.trillian.namespace_create |  | bool | `true` |

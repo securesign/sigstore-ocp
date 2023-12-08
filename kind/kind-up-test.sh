@@ -31,6 +31,8 @@ oc -n fulcio-system create secret generic fulcio-secret-rh --from-file=private=.
 
 oc -n rekor-system create secret generic rekor-private-key --from-file=private=./kind/testing-only-cert-key/rekor_key.pem --dry-run=client -o yaml | oc apply -f-
 
+# TODO: this should not be necessary
+oc create ns trusted-artifact-signer-monitoring
 # install charts
 helm upgrade -i trusted-artifact-signer --debug ./charts/trusted-artifact-signer --wait --wait-for-jobs --timeout 10m -n trusted-artifact-signer --create-namespace --values ./examples/values-kind-sigstore.yaml && \
 helm test trusted-artifact-signer -n trusted-artifact-signer

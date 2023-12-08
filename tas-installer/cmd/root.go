@@ -13,7 +13,7 @@ import (
 const (
 	fulcioNamespace      = "fulcio-system"
 	rekorNamespace       = "rekor-system"
-	monitoringNamespace  = "sigstore-monitoring"
+	monitoringNamespace  = "trusted-artifact-signer-monitoring"
 	tasNamespace         = "trusted-artifact-signer"
 	tasReleaseName       = "trusted-artifact-signer"
 	fulcioCertSecretName = "fulcio-secret-rh"
@@ -35,9 +35,7 @@ var rootCmd = &cobra.Command{
 	Long: `Installs Red Hat Trusted Artifact Signer (TAS) on Kubernetes
 	
 	For a successful installation, you must have provide the path to a kubeconfig file, or have 
-	one in $HOME/.kube/config. Additionally, the following CLI tools must all be in your $PATH environment.
-	
-	oc - used to install Keycloak `,
+	one in $HOME/.kube/config. Additionally, the following CLI tools must all be in your $PATH environment.`,
 
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error

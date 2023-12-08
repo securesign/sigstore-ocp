@@ -7,12 +7,12 @@
 # Note: User must substitute for localhost below.
 ---
 configs:
-  segment_backup_job:
-    enabled: false
-    namespace_create: false
   clientserver:
     consoleDownload: false
     route: false
+  segment_backup_job:
+    enabled: false
+    namespace_create: false
   cosign_deploy:
     enabled: true
   fulcio:
