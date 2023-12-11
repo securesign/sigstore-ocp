@@ -61,17 +61,17 @@ openssl ecparam -name prime256v1 -genkey -noout -out rekor_key.pem
 check_namespace_exists $fulcio_namespace
 fulcio_secret_exists=$(check_secret_exists $fulcio_namespace $fulcio_secret_name)
 if [[ "$fulcio_secret_exists" == "1" ]]; then
-    kubectl create secret generic $fulcio_secret_name -n $fulcio_namespace --from-file=/tmp/keys-cert/fulcio-root.pem
+    kubectl create secret generic $fulcio_secret_name -n $fulcio_namespace --from-file=private=/tmp/keys-cert/file_ca_key.pem --from-file=public=/tmp/keys-cert/file_ca_pub.pem --from-file=cert=/tmp/keys-cert/fulcio-root.pem --from-literal=password="$password"
 else 
     kubectl delete secret $fulcio_secret_name -n $fulcio_namespace
-    kubectl create secret generic $fulcio_secret_name -n $fulcio_namespace --from-file=/tmp/keys-cert/fulcio-root.pem
+    kubectl create secret generic $fulcio_secret_name -n $fulcio_namespace --from-file=private=/tmp/keys-cert/file_ca_key.pem --from-file=public=/tmp/keys-cert/file_ca_pub.pem --from-file=cert=/tmp/keys-cert/fulcio-root.pem --from-literal=password="$password"
 fi
 
 check_namespace_exists $rekor_namespace
 rekor_secret_exists=$(check_secret_exists $rekor_namespace $rekor_secret_name)
 if [[ "$rekor_secret_exists" == "1" ]]; then
-    kubectl create secret generic $rekor_secret_name -n $rekor_namespace --from-file=/tmp/keys-cert/rekor_key.pem
+    kubectl create secret generic $rekor_secret_name -n $rekor_namespace --from-file=private=/tmp/keys-cert/rekor_key.pem
 else 
     kubectl delete secret $rekor_secret_name -n $rekor_namespace
-    kubectl create secret generic $rekor_secret_name -n $rekor_namespace --from-file=/tmp/keys-cert/rekor_key.pem
+    kubectl create secret generic $rekor_secret_name -n $rekor_namespace --from-file=private=/tmp/keys-cert/rekor_key.pem
 fi
