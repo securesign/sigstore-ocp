@@ -2,10 +2,10 @@ package helm
 
 import (
 	"embed"
-	"io/ioutil"
 	"log"
 	"os"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/pkg/oidc"
 	"text/template"
 
 	"gopkg.in/yaml.v3"
@@ -26,6 +26,7 @@ var (
 
 type templatedValues struct {
 	OpenShiftAppsSubdomain string
+	OIDCconfig             oidc.OIDCConfig
 }
 
 func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*release.UninstallReleaseResponse, error) {
@@ -36,11 +37,12 @@ func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*relea
 	return action.NewUninstall(actionConfig).Run(tasReleaseName)
 }
 
-func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, pathToValuesFile, chartVersion string) error {
-	chartUrl := "oci://quay.io/redhat-user-workloads/arewm-tenant/sigstore-ocp/trusted-artifact-signer"
+func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, pathToValuesFile, chartVersion string) error {
+	chartUrl := "charts/trusted-artifact-signer"
 
 	tv := templatedValues{
 		OpenShiftAppsSubdomain: kc.ClusterCommonName,
+		OIDCconfig:             oidcConfig,
 	}
 
 	tmpl, err := template.ParseFS(templateFS, templateValuesFile)
@@ -54,7 +56,7 @@ func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace,
 		}
 	} else {
 		// if no values passed, use the default templated values
-		tmpFile, err := ioutil.TempFile("", "values-*.yaml")
+		tmpFile, err := os.CreateTemp("", "values-*.yaml")
 		if err != nil {
 			return err
 		}
