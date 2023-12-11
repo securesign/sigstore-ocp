@@ -55,7 +55,7 @@ The OIDC issuer environment variable must point to Google rather than Keycloak i
 ```
 export OIDC_ISSUER_URL=https://accounts.google.com
 ```
-This value overrides what is specified in the [sign-verify documentation](https://github.com/securesign/sigstore-ocp/blob/main/sign-verify.md). Be careful to avoid resetting `OIDC_ISSUER_URL` when using the `sign-verify` documentation steps or sourcing the `tas-env-variables.sh` script. You can check what the environment variable's value is by issuing
+This value overrides what is specified in the [sign-verify documentation](sign-verify.md). Be careful to avoid resetting `OIDC_ISSUER_URL` when using the `sign-verify` documentation steps or sourcing the `tas-env-variables.sh` script. You can check what the environment variable's value is by issuing
 
 ```
 $ echo $OIDC_ISSUER_URL

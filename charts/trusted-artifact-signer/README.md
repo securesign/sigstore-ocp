@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.26](https://img.shields.io/badge/Version-0.1.26-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.27](https://img.shields.io/badge/Version-0.1.27-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -11,7 +11,7 @@ This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/h
 chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
 
 If you have already read this document and want a quick no-fail path to installing a Sigstore stack with RH SSO,
-follow [quick start](../../quick-start-with-keycloak.md)
+follow [quick start](../../docs/quick-start-with-keycloak.md)
 
 The chart enhances the scaffold chart by taking care of the following:
 
@@ -40,9 +40,9 @@ scaffold:
 The following must be satisfied prior to deploying the sample implementation:
 
 * Fulcio root CA certificate and signing keys
-    * More information in [requirements-keys-certs.md](../../requirements-keys-certs.md)
+    * More information in [requirements-keys-certs.md](../../docs/requirements-keys-certs.md)
 * OpenID Token Issuer endpoint
-    * Keycloak/RHSSO requirements can be followed and deployed in OpenShift with [keycloak-example.md](../../keycloak-example.md)
+    * Keycloak/RHSSO requirements can be followed and deployed in OpenShift with [keycloak-example.md](../../docs/keycloak-example.md)
 
 #### Update the values file
 
@@ -66,11 +66,11 @@ OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDoma
 
 ### Monitor Sigstore Components with Grafana
 
-For real-time analytics through Grafana, refer to our [enable-grafana-monitoring.md](../../enable-grafana-monitoring.md) guide.
+For real-time analytics through Grafana, refer to our [enable-grafana-monitoring.md](../../docs/enable-grafana-monitoring.md) guide.
 
 ### Sign and/or verify artifacts!
 
-Follow [this](../../sign-verify.md) to sign and/or verify artifacts.
+Follow [this](../../docs/sign-verify.md) to sign and/or verify artifacts.
 
 ## Requirements
 
