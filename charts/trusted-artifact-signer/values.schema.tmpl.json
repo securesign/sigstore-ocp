@@ -24,17 +24,8 @@
                         "consoleDownload": {
                             "type": "boolean"
                         },
-                        "route": {
+                        "enabled": {
                             "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "namespace_create": {
-                            "type": "boolean"
-                        },
-                        "namespace": {
-                            "type": "string"
                         },
                         "image": {
                             "properties": {
@@ -52,6 +43,28 @@
                                 }
                             },
                             "type": "object"
+                        },
+                        "ingress": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "host": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace_create": {
+                            "type": "boolean"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": "integer"
                         }
                     },
                     "type": "object"
@@ -182,6 +195,22 @@
                         }
                     },
                     "type": "object"
+                },
+                "pull_secret": {
+                    "properties": {
+                        "secret_create": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": ["object", "string"]
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "default_pull_secret_value": {
+                            "type": ["object", "string"]
+                        }
+                    }
                 },
                 "rekor": {
                     "properties": {

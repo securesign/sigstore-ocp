@@ -5,40 +5,16 @@ global:
   appsSubdomain: ""
 
 configs:
-  tas_monitoring:
-    namespace: trusted-artifact-signer-monitoring
-  tas_initializer_job:
-    enabled: true
-    namespace: trusted-artifact-signer
-    secret:
-      organization_name: trusted-artifact-signer
-      email_address: trustedartifactsigner@redhat.com
-      password: super-secret-password
-    image:
-      registry: quay.io
-      repository: grpereir/tas-initializer-job
-      version: sha256:559d97861fb014bb753281fa00ebf739abadd269b1e9ec40e354fb6da22356f9
-      pullPolicy: IfNotPresent
-    rolebindings:
-      - tas-initializer-rekor
-      - tas-initializer-fulcio
-      - tas-initializer
-  segment_backup_job:
-    name: segment-backup-job
-    namespace: trusted-artifact-signer-monitoring
-    image:
-      registry:  registry.redhat.io
-      repository: rhtas-tech-preview/segment-backup-job-rhel9
-      version: sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44
-      pullPolicy: IfNotPresent
-    rolebindings:
-      - segment-backup-job
   clientserver:
+    enabled: true
     # -- Whether to create the OpenShift resource 'ConsoleCLIDownload' for each binary.
     # -- This can only be enabled if the OpenShift CRD is registered.
     consoleDownload: true
     # -- Whether to create the OpenShift route resource
-    route: true
+    ingress:
+      host: ""
+      enabled: true
+    port: 8080
     name: tas-clients
     namespace_create: true
     namespace: trusted-artifact-signer-clientserver
@@ -56,34 +32,6 @@ configs:
       - ctlog
       - ctlog-createtree
       - trusted-artifact-signer-ctlog-createctconfig
-  rekor:
-    namespace_create: true
-    namespace: rekor-system
-    # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
-    # The names must match the serviceaccount names in the rekor namespace.
-    rolebindings:
-      - rekor-redis
-      - rekor-server
-      - trusted-artifact-signer-rekor-createtree
-    # -- Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log
-    # When this section is left out, scaffold.rekor creates the secret and key.
-    signer:
-      secret:
-        # -- Name of the secret to create with the private key data. This name must match the value in
-        # scaffold.rekor.server.signer.signerFileSecretOptions.secretName.
-        name: ""
-        # -- Private encrypted signing key
-        private_key: ""
-        # -- File containing a private encrypted signing key
-        private_key_file: ""
-    #  -- With ClusterMonitoring enabled, a ServiceMonitor and RBAC is created. This adds a  metrics target from rekor-server
-    #  in the openshift-monitoring namespace scraped by prometheus along with other cluster-monitoring targets.
-    clusterMonitoring:
-      enabled: true
-      endpoints:
-        - interval: 30s
-          port: 2112-tcp
-          scheme: http
   fulcio:
     namespace_create: true
     namespace: fulcio-system
@@ -122,6 +70,68 @@ configs:
         - interval: 30s
           port: 2112-tcp
           scheme: http
+  pull_secret:
+    secret_create: true
+    value: ''
+    # -- this will be propgated by the installer OR you can download it from here: https://console.redhat.com/application-services/trusted-content/application-services/trusted-content/artifact-signer
+    namespace: sigstore-monitoring
+    default_pull_secret_value: ''
+  rekor:
+    namespace_create: true
+    namespace: rekor-system
+    # -- names for rolebindings to add clusterroles to rekor serviceaccounts.
+    # The names must match the serviceaccount names in the rekor namespace.
+    rolebindings:
+      - rekor-redis
+      - rekor-server
+      - trusted-artifact-signer-rekor-createtree
+    # -- Signer holds secret that contains the private key used to sign entries and the tree head of the transparency log
+    # When this section is left out, scaffold.rekor creates the secret and key.
+    signer:
+      secret:
+        # -- Name of the secret to create with the private key data. This name must match the value in
+        # scaffold.rekor.server.signer.signerFileSecretOptions.secretName.
+        name: ""
+        # -- Private encrypted signing key
+        private_key: ""
+        # -- File containing a private encrypted signing key
+        private_key_file: ""
+    #  -- With ClusterMonitoring enabled, a ServiceMonitor and RBAC is created. This adds a  metrics target from rekor-server
+    #  in the openshift-monitoring namespace scraped by prometheus along with other cluster-monitoring targets.
+    clusterMonitoring:
+      enabled: true
+      endpoints:
+        - interval: 30s
+          port: 2112-tcp
+          scheme: http
+  segment_backup_job:
+    name: segment-backup-job
+    namespace: trusted-artifact-signer-monitoring
+    image:
+      registry:  registry.redhat.io
+      repository: rhtas-tech-preview/segment-backup-job-rhel9
+      version: sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44
+      pullPolicy: IfNotPresent
+    rolebindings:
+      - segment-backup-job
+  tas_monitoring:
+    namespace: trusted-artifact-signer-monitoring
+  tas_initializer_job:
+    enabled: true
+    namespace: trusted-artifact-signer
+    secret:
+      organization_name: trusted-artifact-signer
+      email_address: trustedartifactsigner@redhat.com
+      password: super-secret-password
+    image:
+      registry: quay.io
+      repository: grpereir/tas-initializer-job
+      version: sha256:559d97861fb014bb753281fa00ebf739abadd269b1e9ec40e354fb6da22356f9
+      pullPolicy: IfNotPresent
+    rolebindings:
+      - tas-initializer-rekor
+      - tas-initializer-fulcio
+      - tas-initializer
   trillian:
     namespace_create: true
     namespace: trillian-system

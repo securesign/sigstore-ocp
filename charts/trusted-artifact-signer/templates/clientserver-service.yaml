@@ -1,3 +1,4 @@
+{{- if .Values.configs.clientserver.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,11 +8,11 @@ metadata:
   namespace: {{ .Values.configs.clientserver.namespace }}
 spec:
   ports:
-  - name: 8080-tcp
-    port: 8080
+  - name: {{ .Values.configs.clientserver.port }}-tcp
+    port: {{ .Values.configs.clientserver.port }}
     protocol: TCP
-    targetPort: 8080
+    targetPort: {{ .Values.configs.clientserver.port }}
   selector:
     app: {{ .Values.configs.clientserver.name }}
   type: ClusterIP
-
+{{- end }}

@@ -10,6 +10,11 @@
 global:
   appsSubdomain: $OPENSHIFT_APPS_SUBDOMAIN
 configs:
+  pull_secret:
+    secret_create: true
+    namespace: sigstore-monitoring
+    default_pull_secret_value: $DEFAULT_PULL_SECRET_VALUE
+    # default_pull_secret_value: {}
   cosign_deploy:
     enabled: true
   fulcio:
