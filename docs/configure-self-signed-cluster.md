@@ -31,4 +31,4 @@ fulcio to trust the ingress certificate for the keycloak OIDC endpoint.
 oc patch deployment/fulcio-server -n fulcio-system --patch-file /path/to/securesign/sigstore-ocp/hack/fulcio-patch-self-signed-oidc.yaml
 ```
 
-Now wait for all jobs to complete, then sign as usual. Refer to [the sign and verify doc](../sign-verify.md).
+Now wait for all jobs to complete, then sign as usual. Refer to [the sign and verify doc](sign-verify.md).
