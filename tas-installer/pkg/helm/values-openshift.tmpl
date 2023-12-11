@@ -24,10 +24,17 @@ scaffold:
     config:
       contents:
         OIDCIssuers:
-          ? https://oauth2.sigstore.dev/auth
-          : IssuerURL: https://oauth2.sigstore.dev/auth
-            ClientID: sigstore
-            Type: email
+          {{- if .OIDCconfig.IssuerURL }}
+          {{ .OIDCconfig.IssuerURL }}:
+            IssuerURL: "{{ .OIDCconfig.IssuerURL }}"
+            ClientID: "{{ if .OIDCconfig.ClientID }}{{ .OIDCconfig.ClientID }}{{ else }}sigstore{{ end }}"
+            Type: "{{ if .OIDCconfig.Type }}{{ .OIDCconfig.Type }}{{ else }}email{{ end }}"
+          {{- else }}
+          "https://oauth2.sigstore.dev/auth":
+            IssuerURL: "https://oauth2.sigstore.dev/auth"
+            ClientID: "sigstore"
+            Type: "email"
+          {{- end }}
   rekor:
     server:
       ingress:

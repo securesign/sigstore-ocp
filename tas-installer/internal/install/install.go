@@ -7,13 +7,14 @@ import (
 	"securesign/sigstore-ocp/tas-installer/pkg/certs"
 	"securesign/sigstore-ocp/tas-installer/pkg/helm"
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
+	"securesign/sigstore-ocp/tas-installer/pkg/oidc"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
 	"securesign/sigstore-ocp/tas-installer/ui"
 	"time"
 )
 
-func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion string) error {
-	if err := helm.InstallTrustedArtifactSigner(kc, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
+func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion string) error {
+	if err := helm.InstallTrustedArtifactSigner(kc, oidcConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
 		return err
 	}
 	return nil
