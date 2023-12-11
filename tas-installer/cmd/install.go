@@ -7,6 +7,7 @@ import (
 
 	"securesign/sigstore-ocp/tas-installer/internal/install"
 	"securesign/sigstore-ocp/tas-installer/pkg/certs"
+	"securesign/sigstore-ocp/tas-installer/pkg/oidc"
 	"securesign/sigstore-ocp/tas-installer/pkg/secrets"
 
 	"github.com/spf13/cobra"
@@ -19,6 +20,7 @@ const (
 var (
 	helmChartVersion string
 	helmValuesFile   string
+	oidcConfig       oidc.OIDCConfig
 )
 
 var installCmd = &cobra.Command{
@@ -68,7 +70,7 @@ func installTas(tasNamespace string) error {
 		},
 		func() error {
 			log.Print("installing helm chart")
-			if err := install.HandleHelmChartInstall(kc, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
+			if err := install.HandleHelmChartInstall(kc, oidcConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
 				return err
 			}
 			return nil
@@ -85,6 +87,9 @@ func installTas(tasNamespace string) error {
 func init() {
 	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", "0.1.26", "Version of the Helm chart")
 	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "", "Custom values file for chart configuration")
+	installCmd.PersistentFlags().StringVar(&oidcConfig.IssuerURL, "oidc-issuer-url", "", "Specify the OIDC issuer URL e.g for keycloak: https://[keycloak-domain]/auth/realms/[realm-name]")
+	installCmd.PersistentFlags().StringVar(&oidcConfig.ClientID, "oidc-client-id", "", "Specify the OIDC client ID")
+	installCmd.PersistentFlags().StringVar(&oidcConfig.Type, "oidc-type", "", "Specify the OIDC type")
 }
 
 func getFulcioSecretFiles() map[string]string {
