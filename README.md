@@ -9,7 +9,7 @@ This chart extends all the features in the upstream chart in addition to includi
 ### Installing from the Chart Repository
 
 For a quickstart on how to install Sigstore components on OpenShift refer to the
-[quickstart quide](./quick-start-with-keycloak.md)
+[quickstart quide](docs/quick-start-with-keycloak.md)
 
 ## Scaffolding Chart
 

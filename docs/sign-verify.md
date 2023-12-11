@@ -1,6 +1,6 @@
 ## Signing a Container From the Local System
 
-Utilize the following steps to sign a container that has been published to an OCI registry, with the cosign client running on your local system and the RHTAS stack running in an OpenShift cluster as documented [here](../quick-start-with-keycloak.md).
+Utilize the following steps to sign a container that has been published to an OCI registry, with the cosign client running on your local system and the RHTAS stack running in an OpenShift cluster as documented [here](quick-start-with-keycloak.md).
 
 1. Export the following environment variables substituting `base_hostname` with the value used as part of the provisioning
 

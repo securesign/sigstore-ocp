@@ -3,7 +3,7 @@
 Utilize the following commands and configurations to inject Fulcio root secret:
 
 First, generate a root key.
-Open [fulcio-create-CA script](./fulcio-create-root-ca-openssl.sh) to check out the commands before running it.
+Open [fulcio-create-CA script](../fulcio-create-root-ca-openssl.sh) to check out the commands before running it.
 The `openssl` commands are interactive.
 
 ```shell
@@ -36,7 +36,7 @@ configs:
 
 ## Rekor Signer Key
 
-Open [rekor create signer script](./rekor-create-signer-key.sh) to check out the commands before running it.
+Open [rekor create signer script](../rekor-create-signer-key.sh) to check out the commands before running it.
 Generate a signer key:
 
 ```shell
