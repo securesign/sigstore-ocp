@@ -8,7 +8,7 @@ spec:
     manage sigstore artifacts.
   displayName: cosign - Command Line Interface (CLI)
   links:
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/cosign.gz"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/cosign-amd64.gz"
     text: Download cosign for Linux x86_64
   - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/cosign-arm64.gz"
     text: Download cosign for Linux arm64
