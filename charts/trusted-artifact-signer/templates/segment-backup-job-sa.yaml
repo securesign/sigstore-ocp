@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: segment-backup-job
+  name: {{ .Values.configs.segment_backup_job.name }}
   namespace: {{ .Values.configs.segment_backup_job.namespace }}
 secrets:
-- name: pull-secret
+- name: {{ .Values.configs.pull_secret.name }}

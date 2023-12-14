@@ -74,7 +74,8 @@ configs:
     secret_create: true
     value: ''
     # -- this will be propgated by the installer OR you can download it from here: https://console.redhat.com/application-services/trusted-content/application-services/trusted-content/artifact-signer
-    namespace: sigstore-monitoring
+    namespace: trusted-artifact-signer-monitoring
+    name: pull-secret
     default_pull_secret_value: ''
   rekor:
     namespace_create: true
