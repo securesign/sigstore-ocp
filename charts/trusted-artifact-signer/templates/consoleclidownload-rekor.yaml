@@ -8,10 +8,18 @@ spec:
     interact with rekor server.
   displayName: rekor - Command Line Interface (CLI)
   links:
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/rekor-cli.gz"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/rekor-cli-amd64.gz"
     text: Download rekor-cli for Linux x86_64
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/rekor-cli.gz"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/rekor-cli-arm64.gz"
+    text: Download rekor-cli for Linux arm64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/rekor-cli-ppc64le.gz"
+    text: Download rekor-cli for Linux ppc64le
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/rekor-cli-s390x.gz"
+    text: Download rekor-cli for Linux s390x
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/rekor-cli-amd64.gz"
     text: Download rekor-cli for Mac x86_64
-  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/rekor-cli.gz"
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/rekor-cli-arm64.gz"
+    text: Download rekor-cli for Mac arm64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/rekor-cli-amd64.gz"
     text: Download rekor-cli for Windows x86_64
 {{- end }}
