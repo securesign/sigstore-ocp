@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.configs.clientserver.name }}
+  namespace: {{ .Values.configs.clientserver.namespace }}
+  labels:
+    app: {{ .Values.configs.clientserver.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.configs.clientserver.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.configs.clientserver.name }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: {{ .Values.configs.clientserver.name }}
+      containers:
+      - name: tas-clients
+        image: "{{ template "image" .Values.configs.clientserver.image }}"
+        #image: quay.io/sallyom/tas-clients:httpd
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
