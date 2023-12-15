@@ -7,6 +7,8 @@
 # 'fulcio-secret-rh' and 'rekor-private-key'
 # For root & key requirements, see ../requirements-keys-certs.md
 configs:
+  segment_backup_job:
+    enabled: false
   clientserver:
     consoleDownload: false
     route: false
