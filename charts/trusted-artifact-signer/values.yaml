@@ -27,9 +27,9 @@ configs:
     namespace_create: true
     namespace: trusted-artifact-signer-clientserver
     image:
-      registry: registry.redhat.io
-      repository: rhtas-tech-preview/client-server-rhel9
-      version: sha256:07b1c06290706873ee55e39bad5804ea1d7574b01909adf97d67495ad919f9a1
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
+      version: sha256:d8540b72f67c3947287d30913a9277770a43eb37eff2dd3efcb8e24759a106ac
       pullPolicy: IfNotPresent
   ctlog:
     namespace: ctlog-system
@@ -40,7 +40,6 @@ configs:
       - ctlog
       - ctlog-createtree
       - trusted-artifact-signer-ctlog-createctconfig
-
   rekor:
     namespace_create: true
     namespace: rekor-system
@@ -69,7 +68,6 @@ configs:
         - interval: 30s
           port: 2112-tcp
           scheme: http
-
   fulcio:
     namespace_create: true
     namespace: fulcio-system
@@ -108,7 +106,6 @@ configs:
         - interval: 30s
           port: 2112-tcp
           scheme: http
-
   trillian:
     namespace_create: true
     namespace: trillian-system
@@ -118,7 +115,6 @@ configs:
       - trillian-logserver
       - trillian-logsigner
       - trillian-mysql
-
   tuf:
     namespace: tuf-system
     namespace_create: true
@@ -127,7 +123,6 @@ configs:
     rolebindings:
       - tuf
       - tuf-secret-copy-job
-
   cosign_deploy:
     enabled: false
     namespace: cosign
@@ -144,6 +139,13 @@ configs:
       repository: rhtas-tech-preview/cosign-rhel9
       version: sha256:f4c2cec3fc1e24bbe094b511f6fe2fe3c6fa972da0edacaf6ac5672f06253a3e
       pullPolicy: IfNotPresent
+  # tsa:
+  #   namespace: tsa-system
+  #   namespace_create: true
+  #   # -- names for rolebindings to add clusterroles to tuf serviceaccounts.
+  #   # The names must match the serviceaccount names in the tuf namespace.
+  #   rolebindings:
+  #     - tsa-server
 
 rbac:
   # -- clusterrole to be added to sigstore component serviceaccounts.
@@ -223,10 +225,6 @@ scaffold:
           className: ""
           annotations:
             route.openshift.io/termination: "edge"
-          hosts:
-          - host: fulcio.appsSubdomain
-            path: /
-
   rekor:
     enabled: true
     forceNamespace: rekor-system
@@ -257,10 +255,6 @@ scaffold:
         className: ""
         annotations:
           route.openshift.io/termination: "edge"
-        hosts:
-          - host: rekor.appsSubdomain
-            path: /
-
     createtree:
       image:
         registry: registry.redhat.io
@@ -384,15 +378,10 @@ scaffold:
       className: ""
       annotations:
         route.openshift.io/termination: "edge"
-      http:
-        hosts:
-          - host: tuf.appsSubdomain
-            path: /
     deployment:
       registry: registry.redhat.io
       repository: rhtas-tech-preview/tuf-server-rhel9
       version: sha256:413e361de99f09e617084438b2fc3c9c477f4a8e2cd65bd5f48271e66d57a9d9
-
   copySecretJob:
     name: copy-secrets-job
     enabled: true
@@ -405,9 +394,36 @@ scaffold:
 
   tsa:
     enabled: false
+    # enabled: true
     forceNamespace: tsa-system
     namespace:
       create: false
       name: tsa-system
     server:
       fullnameOverride: tsa-server
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/tsa-1-0-gamma/timestamp-authority-1-0-gamma
+        version: sha256:4a142e1581801501705ab955109dc9a12bfd3e2232efa67b27b07bd7c290a40b
+        imagePullPolicy: IfNotPresent
+      ingress:
+        http:
+          enabled: true
+          className: ""
+          annotations:
+            route.openshift.io/termination: "edge"
+      serviceAccount:
+        create: true
+        name: "tsa-server"
+        mountToken: false
+      securityContext:
+        runAsUser: 1000620001
+        supplementalGroups: [1000620001]
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+      containerSecurityContext:
+        testing: "true"
+        
+        

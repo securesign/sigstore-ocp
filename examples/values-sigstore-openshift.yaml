@@ -46,3 +46,10 @@ scaffold:
         hosts:
           - host: tuf.$OPENSHIFT_APPS_SUBDOMAIN
             path: /
+  # tsa:
+  #   server:
+  #     ingress:
+  #       http:
+  #         hosts:
+  #           - host: tsa.$OPENSHIFT_APPS_SUBDOMAIN
+  #             path: /
