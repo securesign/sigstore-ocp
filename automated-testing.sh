@@ -11,7 +11,7 @@ https_curl_status=$(echo $?)
 if [[ $https_curl_status == "60" ]]; then
     echo "self-signed cert for cluster"
     if [[ $(uname) == "Darwin" ]]; then
-        ./configure-local-env.sh
+        ./scripts/configure-local-env.sh
         echo "certificate should be imported to OSX keychain, trying again"
         https_curl_response=$(curl -X GET https://$oc_console_route &> /dev/null)
         https_curl_status=$(echo $?)
@@ -56,7 +56,7 @@ cosign_download=$(curl -sL $cosign_download_link -o /tmp/cosign-$OS_FAMIL-$ARCH.
 not_found_html_string="<head>
 <title>404 Not Found</title>
 </head>"
-if [[ $(cat $cosign_download | grep )]]
+if [[ $(cat $cosign_download | grep "$not_found_html_string") ]]
 
 
 # 2 options for testing cosign, could test by downloading the binary from console-cli-downloads, or we could use the cosign pod with kubectl exec
