@@ -22,7 +22,6 @@ spec:
       containers:
       - name: tas-clients
         image: "{{ template "image" .Values.configs.clientserver.image }}"
-        #image: quay.io/sallyom/tas-clients:httpd
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080

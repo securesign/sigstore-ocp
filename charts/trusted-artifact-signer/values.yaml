@@ -27,9 +27,9 @@ configs:
     namespace_create: true
     namespace: trusted-artifact-signer-clientserver
     image:
-      registry: registry.redhat.io
-      repository: rhtas-tech-preview/client-server-rhel9
-      version: sha256:07b1c06290706873ee55e39bad5804ea1d7574b01909adf97d67495ad919f9a1
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
+      version: sha256:d8540b72f67c3947287d30913a9277770a43eb37eff2dd3efcb8e24759a106ac
       pullPolicy: IfNotPresent
   ctlog:
     namespace: ctlog-system
