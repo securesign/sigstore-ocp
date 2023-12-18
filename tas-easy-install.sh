@@ -144,6 +144,7 @@ oc -n rekor-system create secret generic rekor-private-key --from-file=private=.
 #OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm install --debug trusted-artifact-signer trusted-artifact-signer/trusted-artifact-signer -n trusted-artifact-signer --create-namespace --values -
 OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n trusted-artifact-signer --create-namespace --values -
 
+oc set env -n fulcio-system deployment/fulcio-server SSL_CERT_DIR=/var/run/fulcio
 # Create the script to initialize the environment variables for the service endpoints
 generate_env_script
 
