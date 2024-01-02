@@ -25,7 +25,7 @@ func init() {
 
 func uninstallTas() error {
 	log.Print("uninstalling helm chart")
-	msg, err := uninstall.HandleHelmChartUninstall(tasNamespace, tasReleaseName)
+	msg, err := uninstall.HandleHelmChartUninstall(kc, tasNamespace, tasReleaseName)
 	if err != nil {
 		log.Print(err.Error())
 	} else {

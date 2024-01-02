@@ -7,8 +7,8 @@ import (
 	"securesign/sigstore-ocp/tas-installer/pkg/kubernetes"
 )
 
-func HandleHelmChartUninstall(tasNamespace, tasReleaseName string) (string, error) {
-	info, err := helm.UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName)
+func HandleHelmChartUninstall(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName string) (string, error) {
+	info, err := helm.UninstallTrustedArtifactSigner(kc, tasNamespace, tasReleaseName)
 	if err != nil {
 		return "", err
 	}
