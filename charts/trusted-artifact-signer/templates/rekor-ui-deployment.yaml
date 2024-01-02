@@ -1,31 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.configs.clientserver.name }}
-  namespace: {{ .Values.configs.clientserver.namespace }}
+  name: {{ .Values.configs.rekorui.name }}
+  namespace: {{ .Values.configs.rekorui.namespace }}
   labels:
-    app: {{ .Values.configs.clientserver.name }}
+    app: {{ .Values.configs.rekorui.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.configs.clientserver.name }}
+      app: {{ .Values.configs.rekorui.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.configs.clientserver.name }}
+        app: {{ .Values.configs.rekorui.name }}
     spec:
       securityContext:
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
-      serviceAccountName: {{ .Values.configs.clientserver.name }}
+      serviceAccountName: {{ .Values.configs.rekorui.name }}
       containers:
-      - name: tas-clients
-        image: "{{ template "image" .Values.configs.clientserver.image }}"
-        #image: quay.io/sallyom/tas-clients:httpd
-        imagePullPolicy: IfNotPresent
+      - name: rekor-ui
+        image: "{{ template "image" .Values.configs.rekorui.image }}"
+        imagePullPolicy: Always
         ports:
-          - containerPort: 8080
+          - containerPort: 3000
             protocol: TCP
         securityContext:
           allowPrivilegeEscalation: false

@@ -1,20 +1,20 @@
-{{- if .Values.configs.clientserver.route }}
+{{- if .Values.configs.rekorui.route }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   labels:
-    app: {{ .Values.configs.clientserver.name }}
-  name: {{ .Values.configs.clientserver.name }}
-  namespace: {{ .Values.configs.clientserver.namespace }}
+    app: {{ .Values.configs.rekorui.name }}
+  name: {{ .Values.configs.rekorui.name }}
+  namespace: {{ .Values.configs.rekorui.namespace }}
 spec:
   port:
-    targetPort: 8080-tcp
+    targetPort: 3000-tcp
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
   to:
     kind: Service
-    name: {{ .Values.configs.clientserver.name }}
+    name: {{ .Values.configs.rekorui.name }}
     weight: 100
   wildcardPolicy: None
 {{- end }}
