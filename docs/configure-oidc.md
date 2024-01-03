@@ -53,12 +53,12 @@ You can check that the config updated properly with `oc describe cm fulcio-serve
 The OIDC issuer environment variable must point to Google rather than Keycloak in the terminal where signing and verification with RHTAS are being executed. The correct issuer for Google is https://accounts.google.com.
 
 ```
-export OIDC_ISSUER_URL=https://accounts.google.com
+export COSIGN_OIDC_ISSUER=https://accounts.google.com
 ```
-This value overrides what is specified in the [sign-verify documentation](sign-verify.md). Be careful to avoid resetting `OIDC_ISSUER_URL` when using the `sign-verify` documentation steps or sourcing the `tas-env-variables.sh` script. You can check what the environment variable's value is by issuing
+This value overrides what is specified in the [sign-verify documentation](sign-verify.md). Be careful to avoid resetting `COSIGN_OIDC_ISSUER` when using the `sign-verify` documentation steps or sourcing the `tas-env-variables.sh` script. You can check what the environment variable's value is by issuing
 
 ```
-$ echo $OIDC_ISSUER_URL
+$ echo $COSIGN_OIDC_ISSUER
 ```
 
 It should show `https://accounts.google.com`.
@@ -73,5 +73,5 @@ Create a client secret file that contains only the client secret:
 When issuing a `cosign sign` command, add the flags to pass in the client secret (as a file path) and the client ID (as a string):
 
 ```
-cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL $IMAGE --oidc-client-secret-file=<my secret filename> --oidc-client-id=<my client ID>
+cosign sign -y $IMAGE --oidc-client-secret-file=<my secret filename> --oidc-client-id=<my client ID>
 ```
