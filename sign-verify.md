@@ -14,10 +14,14 @@ The following assumes there exists a Keycloak `keycloak` in namespace `keycloak-
 
 ```shell
 export OIDC_AUTHENTICATION_REALM=sigstore
-export FULCIO_URL=https://fulcio.$OPENSHIFT_APPS_SUBDOMAIN
-export OIDC_ISSUER_URL=https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/$OIDC_AUTHENTICATION_REALM
-export REKOR_URL=https://rekor.$OPENSHIFT_APPS_SUBDOMAIN
+export COSIGN_FULCIO_URL=https://fulcio.$OPENSHIFT_APPS_SUBDOMAIN
+export COSIGN_OIDC_ISSUER=https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/$OIDC_AUTHENTICATION_REALM
+export COSIGN_CERTIFICATE_OIDC_ISSUER=$COSIGN_OIDC_ISSUER
+export COSIGN_REKOR_URL=https://rekor.$OPENSHIFT_APPS_SUBDOMAIN
 export TUF_URL=https://tuf.$OPENSHIFT_APPS_SUBDOMAIN
+export COSIGN_MIRROR=$TUF_URL
+export COSIGN_ROOT=$TUF_URL/root.json
+export COSIGN_YES="true"
 ```
 
 2. Initialize the TUF roots
@@ -37,13 +41,13 @@ Then you can initialize cosign, or start here if you are not using a cluster wit
 Note: If you have used `cosign` previously, you may need to first delete the `~/.sigstore` directory
 
 ```shell
-cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json
+cosign initialize
 ```
 
 3. Sign the desired container
 
 ```shell
-cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL  <image>
+cosign sign -y <image>
 ```
 
 Authenticate with the OIDC provider (Keycloak, here)  using the desired credentials.
@@ -54,9 +58,7 @@ This example that verifies an image signed with email identity `sigstore-user@em
 
 ```shell
 cosign verify \
---rekor-url=$REKOR_URL \
 --certificate-identity-regexp sigstore-user \
---certificate-oidc-issuer-regexp keycloak  \
 <image>
 ```
 
@@ -79,7 +81,7 @@ oc get pods -n cosign
 2. Initialize the TUF roots.
 
 ```shell
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json'
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign initialize'
 ```
 
 3. Login to the image repository of your choice using cosign.
@@ -95,18 +97,18 @@ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 -d "password=<password>" \
 -d "grant_type=password" \
 -d "scope=openid" \
-<oidc_issuer_url>/protocol/openid-connect/token
+\$COSIGN_OIDC_ISSUER/protocol/openid-connect/token
 ```
 
 5. Sign the container.
 ```
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL --identity-token=<id_token> <image>'
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign sign -y --identity-token=<id_token> <image>'
 ```
 
 6. Verify the signed image. Again, this example assumes `Keycloak` is the OIDC provider.
 
 ```shell
-oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --rekor-url=$REKOR_URL --certificate-identity-regexp sigstore-user --certificate-oidc-issuer-regexp keycloak <image>'
+oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --certificate-identity-regexp sigstore-user <image>'
 ```
 
 If the signature verification did not result in an error, the deployment of Sigstore was successful!

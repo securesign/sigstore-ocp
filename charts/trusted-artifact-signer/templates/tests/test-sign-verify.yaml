@@ -25,19 +25,25 @@ spec:
         env:
         - name: OIDC_AUTHENTICATION_REALM
           value: "sigstore"
-        - name: FULCIO_URL
+        - name: COSIGN_FULCIO_URL
           value: "http://fulcio-server.fulcio-system.svc"
-        - name: OIDC_ISSUER_URL
-          value: "http://keycloak-internal.keycloak-system.svc/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
-        - name: REKOR_URL
+        - name: COSIGN_REKOR_URL
           value: "http://rekor-server.rekor-system.svc"
-        - name: TUF_URL
+        - name: COSIGN_OIDC_ISSUER
+          value: "http://keycloak-internal.keycloak-system.svc/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
+        - name: COSIGN_CERTIFICATE_OIDC_ISSUER
+          value: "http://keycloak-internal.keycloak-system.svc/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
+        - name: COSIGN_MIRROR
           value: "http://tuf-server.tuf-system.svc"
+        - name: COSIGN_ROOT
+          value: "http://tuf-server.tuf-system.svc/root.json"
+        - name: COSIGN_YES
+          value: "true"
         command: ["/bin/sh", "-c"]
         args:
           - |
-            cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json
-            TOKEN=$(curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=jdoe" -d "password=secure" -d "grant_type=password" -d "scope=openid" -d "client_id=sigstore" $OIDC_ISSUER_URL/protocol/openid-connect/token |  sed -E 's/.*"access_token":"([^"]*).*/\1/')
-            cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL --identity-token=$TOKEN ttl.sh/sigstore-test:5m
-            cosign verify --rekor-url=$REKOR_URL --certificate-identity-regexp ".*@redhat" --certificate-oidc-issuer-regexp ".*keycloak.*" ttl.sh/sigstore-test:5m
+            cosign initialize
+            TOKEN=$(curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=jdoe" -d "password=secure" -d "grant_type=password" -d "scope=openid" -d "client_id=sigstore" $COSIGN_OIDC_ISSUER/protocol/openid-connect/token |  sed -E 's/.*"access_token":"([^"]*).*/\1/')
+            cosign sign -y --identity-token=$TOKEN ttl.sh/sigstore-test:5m
+            cosign verify --certificate-identity-regexp ".*@redhat" ttl.sh/sigstore-test:5m
     restartPolicy: Never
