@@ -110,3 +110,60 @@ oc exec -n cosign <pod_name> -- /bin/sh -c 'cosign verify --rekor-url=$REKOR_URL
 ```
 
 If the signature verification did not result in an error, the deployment of Sigstore was successful!
+
+## Signing an image on Windows using PowerShell
+
+Use the following steps to sign a container that has been published to an OCI registry, on Windows using `PowerShell`.
+
+1. Define the following environment variables
+```
+$OPENSHIFT_APPS_SUBDOMAIN = "apps." + $(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
+$OIDC_AUTHENTICATION_REALM = "sigstore"
+$FULCIO_URL = "https://fulcio." + $OPENSHIFT_APPS_SUBDOMAIN
+$OIDC_ISSUER_URL = "https://keycloak-keycloak-system." + $OPENSHIFT_APPS_SUBDOMAIN + "/auth/realms/" + $OIDC_AUTHENTICATION_REALM
+$REKOR_URL = "https://rekor." + $OPENSHIFT_APPS_SUBDOMAIN
+$TUF_URL = "https://tuf." + $OPENSHIFT_APPS_SUBDOMAIN
+```
+2. Initialize the TUF roots
+
+Note: If you have used `cosign` previously, you may need to first delete the `C:\Users\<user>\.sigstore` directory
+
+```
+cosign initialize --mirror=$TUF_URL --root=$TUF_URL/root.json
+```
+
+3. Sign the desired container
+
+    3.1. Signing with Upstream's Public goods instance
+
+    ```
+    cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL <image>
+    ```
+
+    3.2. Signing with keycloak
+
+    Retrieve the `id_token` from the keycloak instance
+
+    ```
+    $body = @{ 
+                client_id = "<client_id>" 
+                username  = "<username>"
+                password  = "<password>"
+                grant_type = "password" 
+                scope = "openid"
+            }
+
+    $id_token = (Invoke-WebRequest -Uri "$OIDC_ISSUER_URL/protocol/openid-connect/token" -Method Post -Body $body -ContentType "application/x-www-form-urlencoded" -UseBasicParsing).Content | ConvertFrom-Json | Select-Object -ExpandProperty id_token 
+    ```
+
+    Sign the container
+
+    ```
+    cosign sign -y --fulcio-url=$FULCIO_URL --rekor-url=$REKOR_URL --oidc-issuer=$OIDC_ISSUER_URL --identity-token=$id_token <image>
+    ```
+
+4. Verify the desired container
+
+```
+cosign verify --rekor-url=$REKOR_URL --certificate-identity-regexp <identity> --certificate-oidc-issuer-regexp <oidc-issuer> <image>
+```
