@@ -27,14 +27,20 @@ spec:
           value: {{ .Values.global.appsSubdomain }}
         - name: OIDC_AUTHENTICATION_REALM
           value: "sigstore"
-        - name: FULCIO_URL
+        - name: COSIGN_FULCIO_URL
           value: "https://fulcio.$(OPENSHIFT_APPS_SUBDOMAIN)"
-        - name: OIDC_ISSUER_URL
-          value: "https://oauth2.sigstore.dev/auth"
-        - name: REKOR_URL
+        - name: COSIGN_OIDC_ISSUER
+          value: "https://keycloak-keycloak-system.$(OPENSHIFT_APPS_SUBDOMAIN)/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
+        - name: COSIGN_CERTIFICATE_OIDC_ISSUER
+          value: "https://keycloak-keycloak-system.$(OPENSHIFT_APPS_SUBDOMAIN)/auth/realms/$(OIDC_AUTHENTICATION_REALM)"
+        - name: COSIGN_REKOR_URL
           value: "https://rekor.$(OPENSHIFT_APPS_SUBDOMAIN)"
-        - name: TUF_URL
+        - name: COSIGN_MIRROR
           value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: COSIGN_ROOT
+          value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)/root.json"
+        - name: COSIGN_YES
+          value: "true"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
