@@ -29,7 +29,7 @@ configs:
     image:
       registry: quay.io
       repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
-      version: 0c8c0403842deb9ac9cc97b72cd97e74871cd1337
+      version: 0c8c0403842deb9ac9cc97b72cd97e74871cd133
       pullPolicy: IfNotPresent
   ctlog:
     namespace: ctlog-system
