@@ -44,7 +44,7 @@ RUN   mv /var/www/html/clients/darwin/gitsign_cli_darwin_amd64.gz /var/www/html/
       mv /var/www/html/clients/linux/gitsign_cli_linux_s390x.gz /var/www/html/clients/linux/gitsign-s390x.gz && \
       mv /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows/gitsign-amd64.gz
 
-RUN mv /var/www/html/clients/darwin/rekor_cli_darwin_amd64.gz /var/www/html/clients/darwin/rekor-cli-am64.gz && \
+RUN mv /var/www/html/clients/darwin/rekor_cli_darwin_amd64.gz /var/www/html/clients/darwin/rekor-cli-amd64.gz && \
       mv /var/www/html/clients/darwin/rekor_cli_darwin_arm64.gz /var/www/html/clients/darwin/rekor-cli-arm64.gz && \
       mv /var/www/html/clients/linux/rekor_cli_linux_amd64.gz /var/www/html/clients/linux/rekor-cli-amd64.gz && \
       mv /var/www/html/clients/linux/rekor_cli_linux_arm64.gz /var/www/html/clients/linux/rekor-cli-arm64.gz && \
