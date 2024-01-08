@@ -9,9 +9,9 @@ configs:
     enabled: false
     namespace_create: false
     image:
-      registry: registry.redhat.io
-      repository: rhtas-tech-preview/segment-backup-job-rhel9
-      version: sha256:d5b5f7942e898a056d2268083e2d4a45f763bce5697c0e9788d5aa0ec382cc44
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/segment-backup-job-1-0-gamma
+      version: 09e235befcdcb6b7a415660c947714740b46c2a9
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job
