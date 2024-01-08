@@ -39,9 +39,9 @@ configs:
     namespace: rekor-ui
     image:
       registry: quay.io
-      repository: tdalton/rekorui
-      version: latest
-      pullPolicy: Always
+      repository: redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma
+      version: f5580de310006e589bbc5b610d3c6154fda62889
+      imagePullPolicy: Always
     ingress: true
     subdomain: rekorui.appsSubdomain
   ctlog:

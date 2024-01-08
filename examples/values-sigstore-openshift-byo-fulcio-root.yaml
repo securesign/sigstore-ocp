@@ -38,6 +38,8 @@ configs:
           -----BEGIN CERTIFICATE-----
           paste contents here
           -----END CERTIFICATE-----
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

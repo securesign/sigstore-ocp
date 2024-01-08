@@ -25,6 +25,8 @@ configs:
           -----BEGIN EC PRIVATE KEY-----
           paste contents here
           -----END EC PRIVATE KEY-----
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

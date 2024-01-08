@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.28](https://img.shields.io/badge/Version-0.1.28-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.29](https://img.shields.io/badge/Version-0.1.29-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -86,9 +86,9 @@ Kubernetes: `>= 1.19.0-0`
 |-----|-------------|------|---------|
 | configs.clientserver.consoleDownload | This can only be enabled if the OpenShift CRD is registered. | bool | `true` |
 | configs.clientserver.image.pullPolicy |  | string | `"IfNotPresent"` |
-| configs.clientserver.image.registry |  | string | `"registry.redhat.io"` |
-| configs.clientserver.image.repository |  | string | `"rhtas-tech-preview/client-server-rhel9"` |
-| configs.clientserver.image.version |  | string | `"sha256:07b1c06290706873ee55e39bad5804ea1d7574b01909adf97d67495ad919f9a1"` |
+| configs.clientserver.image.registry |  | string | `"quay.io"` |
+| configs.clientserver.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma"` |
+| configs.clientserver.image.version |  | string | `"0c8c0403842deb9ac9cc97b72cd97e74871cd133"` |
 | configs.clientserver.name |  | string | `"tas-clients"` |
 | configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
 | configs.clientserver.namespace_create |  | bool | `true` |
@@ -128,6 +128,16 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
+| configs.rekorui.image.imagePullPolicy |  | string | `"Always"` |
+| configs.rekorui.image.registry |  | string | `"quay.io"` |
+| configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |
+| configs.rekorui.image.version |  | string | `"on-pr-6b967e86b8564458650bc9c4f23260fa9874c776"` |
+| configs.rekorui.ingress |  | bool | `true` |
+| configs.rekorui.name |  | string | `"rekor-ui"` |
+| configs.rekorui.namespace |  | string | `"rekor-ui"` |
+| configs.rekorui.namespace_create |  | bool | `true` |
+| configs.rekorui.route |  | bool | `true` |
+| configs.rekorui.subdomain |  | string | `"rekorui.appsSubdomain"` |
 | configs.segment_backup_job.enabled |  | bool | `false` |
 | configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.segment_backup_job.image.registry |  | string | `"registry.redhat.io"` |
