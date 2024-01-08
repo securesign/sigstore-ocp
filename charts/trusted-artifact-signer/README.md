@@ -10,7 +10,10 @@ A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenS
 This wrapper chart builds on top of the [Scaffold](https://github.com/sigstore/helm-charts/tree/main/charts/scaffold)
 chart from the Sigstore project to both simplify and satisfy the requirements for deployment within an OpenShift
 
-If you have already read this document and want a quick no-fail path to installing a Sigstore stack with RH SSO,
+Refer to the quick-start to install Sigstore components on OpenShift with the upstream Sigstore OIDC Issuer URL,
+[quickstart quide](docs/quick-start-with-sigstore-issuer.md)
+
+For a quick no-fail path to installing a Sigstore stack with RH SSO,
 follow [quick start](../../docs/quick-start-with-keycloak.md)
 
 The chart enhances the scaffold chart by taking care of the following:
@@ -35,14 +38,47 @@ scaffold:
 
 ### Sample Implementation
 
-#### Prerequisites
-
-The following must be satisfied prior to deploying the sample implementation:
+The installer and the quick start with RedHat SSO script include the creation of the necessary secrets:
 
 * Fulcio root CA certificate and signing keys
     * More information in [requirements-keys-certs.md](../../docs/requirements-keys-certs.md)
 * OpenID Token Issuer endpoint
+    * The public Sigstore OIDC Issuer URL `https://oauth2.sigstore.dev/auth` is configured in the absence of any other OIDC provider.
     * Keycloak/RHSSO requirements can be followed and deployed in OpenShift with [keycloak-example.md](../../docs/keycloak-example.md)
+
+To add configuration options to the TAS installation, either provide a custom `values.yaml` or provide available flags to the `tas-install`
+command.
+
+#### Configure the install with the `tas-install` command flags.
+
+Here are the available options for use with `tas-install`. For any other customization, you may provide a `values.yaml` with necessary
+information.
+
+```
+ $ ./tas-install install -h
+Installs Trusted Artifact Signer (TAS) on a Kubernetes cluster.
+
+	This command performs a series of actions:
+	1. Initializes the Kubernetes client to interact with your cluster
+	2. Sets up necessary certificates
+	3. Configures secrets
+	4. Deploys TAS to openshift
+
+Usage:
+  tas-installer install [flags]
+
+Flags:
+      --chart-location string    /local/path/to/chart or oci://registry/repo location of Helm chart (default "./charts/trusted-artifact-signer")
+      --chart-version string     Version of the Helm chart (default "0.1.29")
+  -h, --help                     help for install
+      --oidc-client-id string    Specify the OIDC client ID
+      --oidc-issuer-url string   Specify the OIDC issuer URL e.g for keycloak: https://[keycloak-domain]/auth/realms/[realm-name]
+      --oidc-type string         Specify the OIDC type
+      --values string            path to custom values file for chart configuration
+
+Global Flags:
+      --kubeconfig string   Specify the kubeconfig path (default "/Users/somalley/.kube/config")
+```
 
 #### Update the values file
 
@@ -54,15 +90,6 @@ to curate the deployment of the chart:
 1. Modify the OIDC Issuer URL in the fulcio config section of the values file as necessary.
 
 2. Perform any additional customizations as desired
-
-### Installing the Chart
-
-When logged in as an elevated OpenShift user, execute the following to install the chart referencing the
-customized values file. The OPENSHIFT_APPS_SUBDOMAIN will be substituted in the values file with `envsubst` below:
-
-```shell
-OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }') envsubst <  examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer -n sigstore --create-namespace --values -
-```
 
 ### Monitor Sigstore Components with Grafana
 

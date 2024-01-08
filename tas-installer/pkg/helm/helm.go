@@ -37,8 +37,7 @@ func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*relea
 	return action.NewUninstall(actionConfig).Run(tasReleaseName)
 }
 
-func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, pathToValuesFile, chartVersion string) error {
-	chartUrl := "charts/trusted-artifact-signer"
+func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, pathToValuesFile, chartLocation, chartVersion string) error {
 
 	tv := templatedValues{
 		OpenShiftAppsSubdomain: kc.ClusterCommonName,
@@ -89,13 +88,13 @@ func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oi
 	for _, rel := range releases {
 		if rel.Name == tasReleaseName && rel.Namespace == tasNamespace {
 			exists = true
-			if err := upgradeRelease(actionConfig, client, settings, tasNamespace, chartUrl, chartVersion, values); err != nil {
+			if err := upgradeRelease(actionConfig, client, settings, tasNamespace, chartLocation, chartVersion, values); err != nil {
 				return err
 			}
 		}
 	}
 	if !exists {
-		if err := installNewRelease(actionConfig, client, settings, tasNamespace, tasReleaseName, chartUrl, chartVersion, values); err != nil {
+		if err := installNewRelease(actionConfig, client, settings, tasNamespace, tasReleaseName, chartLocation, chartVersion, values); err != nil {
 			return err
 		}
 	}
@@ -111,7 +110,7 @@ func actionConfig(tasNamespace string) (*action.Configuration, *cli.EnvSettings,
 	return actionConfig, settings, nil
 }
 
-func installNewRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, tasNamespace, tasReleaseName, chartURL, chartVersion string, values map[string]interface{}) error {
+func installNewRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, tasNamespace, tasReleaseName, chartLocation, chartVersion string, values map[string]interface{}) error {
 	install := action.NewInstall(actionConfig)
 	install.ReleaseName = tasReleaseName
 	install.Namespace = tasNamespace
@@ -119,7 +118,7 @@ func installNewRelease(actionConfig *action.Configuration, client *registry.Clie
 	install.Version = chartVersion
 	install.SetRegistryClient(client)
 
-	chartPath, err := install.LocateChart(chartURL, settings)
+	chartPath, err := install.LocateChart(chartLocation, settings)
 	if err != nil {
 		return err
 	}
@@ -137,13 +136,13 @@ func installNewRelease(actionConfig *action.Configuration, client *registry.Clie
 	return nil
 }
 
-func upgradeRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, tasNamespace, chartURL, chartVersion string, values map[string]interface{}) error {
+func upgradeRelease(actionConfig *action.Configuration, client *registry.Client, settings *cli.EnvSettings, tasNamespace, chartLocation, chartVersion string, values map[string]interface{}) error {
 	upgrade := action.NewUpgrade(actionConfig)
 	upgrade.Namespace = tasNamespace
 	upgrade.Version = chartVersion
 	upgrade.SetRegistryClient(client)
 
-	chartPath, err := upgrade.LocateChart(chartURL, settings)
+	chartPath, err := upgrade.LocateChart(chartLocation, settings)
 	if err != nil {
 		return err
 	}

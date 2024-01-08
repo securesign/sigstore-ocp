@@ -3,6 +3,8 @@ Chart.lock
 # Vim swap files
 *.swp
 
+*.tgz
+
 *tas-env-variables*
 keys-cert
 ./keys-cert/*.pem
