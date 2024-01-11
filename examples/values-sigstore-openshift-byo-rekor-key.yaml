@@ -12,6 +12,9 @@ configs:
     enabled: true
   fulcio:
     namespace_create: false
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
+
   rekor:
     # -- whether to create the 'rekor-system' namespace
     # When providing the rekor signer.secret, the ns already exists
