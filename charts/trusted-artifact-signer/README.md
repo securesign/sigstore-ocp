@@ -3,8 +3,12 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
+<<<<<<< HEAD
 
 ![Version: 0.1.30](https://img.shields.io/badge/Version-0.1.30-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+=======
+![Version: 0.1.31](https://img.shields.io/badge/Version-0.1.31-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+>>>>>>> 471ed55 (Chart Version Bump)
 
 ## Overview
 
@@ -132,7 +136,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekorui.image.imagePullPolicy |  | string | `"Always"` |
 | configs.rekorui.image.registry |  | string | `"quay.io"` |
 | configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |
-| configs.rekorui.image.version |  | string | `"on-pr-6b967e86b8564458650bc9c4f23260fa9874c776"` |
+| configs.rekorui.image.version |  | string | `"f5580de310006e589bbc5b610d3c6154fda62889"` |
 | configs.rekorui.ingress |  | bool | `true` |
 | configs.rekorui.name |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace |  | string | `"rekor-ui"` |
