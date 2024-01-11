@@ -20,7 +20,7 @@ configs:
     clusterMonitoring:
       enabled: false
     namespace_create: false
-  rekor-ui:
+  rekorui:
     route: false
 
 # github.com/sigstore/helm-charts/charts
