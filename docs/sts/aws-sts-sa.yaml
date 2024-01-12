@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cosign-sts
+  namespace: cosign
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::UPDATE_ME:role/UPDATE_ME"
+    # optional: Defaults to "sts.amazonaws.com" if not set
+    eks.amazonaws.com/audience: "sigstore"
+    # optional: When "true", adds AWS_STS_REGIONAL_ENDPOINTS env var to containers
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+    # optional: Defaults to 86400 for expirationSeconds if not set
+    eks.amazonaws.com/token-expiration: "86400"
