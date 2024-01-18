@@ -1,0 +1,41 @@
+apiVersion: v1
+entries:
+  trusted-artifact-signer:
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: support
+          url: https://github.com/securesign/sigstore-ocp/issues
+        - name: Chart Source
+          url: https://github.com/securesign/sigstore-ocp
+        - name: Default Image Source
+          url: ""
+      charts.openshift.io/name: TrustedArtifactSigner
+      charts.openshift.io/provider: TrustedArtifactSigner
+      charts.openshift.io/supportURL: https://github.com/securesign/sigstore-ocp/issues
+    apiVersion: v2
+    created: "2024-01-18T09:39:12.193894-08:00"
+    dependencies:
+    - alias: scaffold
+      name: scaffold
+      repository: https://sigstore.github.io/helm-charts
+      version: 0.6.32
+    description: A Helm chart for deploying Sigstore scaffold chart that is opinionated
+      for OpenShift
+    digest: 24a3c1bed2e6e4d1053358b1d49451fb4152288b2b8eaea3c66db99bc58614f8
+    keywords:
+    - sigstore
+    - sign
+    - cosign
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - name: TrustedArtifactSigner
+    name: trusted-artifact-signer
+    sources:
+    - https://github.com/securesign/sigstore-ocp
+    type: application
+    urls:
+    - https://securesign.github.io/sigstore-ocp/trusted-artifact-signer-0.1.31.tgz
+    version: 0.1.31
+generated: "2024-01-18T09:39:12.184566-08:00"
