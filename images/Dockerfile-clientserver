@@ -1,6 +1,6 @@
-FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:34f0101f63303496c0f9b9e656510ed512bf7c6bf327c1e137f9a591fd221b5a AS cosign-image
-FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/gitsign-cli-0-8@sha256:bd5a24c8ea3f0e1356ff36a93af775607b4d24446c85ef06d2d8c134f164d23b AS gitsign-image
-FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/rekor-cli-1-3@sha256:120c08af4c57f5f24ba87f500a523759cdf7693bdd8d9652ae1c385258e181dc AS rekor-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2 AS cosign-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2 AS gitsign-image
+FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2 AS rekor-image
 
 FROM registry.access.redhat.com/ubi9/httpd-24@sha256:9aa4397b4bb4ceea9daa6eb24fe124bec0451a029bd571c06575906a1451e432
 
