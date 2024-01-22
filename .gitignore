@@ -11,5 +11,5 @@ keys-cert
 
 .idea
 
-tas-install
-pull-secret.json
+*tas-install*
+*pull-secret.json*
