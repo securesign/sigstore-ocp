@@ -40,7 +40,7 @@ configs:
     image:
       registry: quay.io
       repository: redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma
-      version: f5580de310006e589bbc5b610d3c6154fda62889
+      version: "sha256:dfccdb7fefc305f5b825b02da37ccc1e660b80b9d88388803530c4cdad918dcf"
       imagePullPolicy: Always
     ingress: true
     subdomain: rekorui.appsSubdomain
