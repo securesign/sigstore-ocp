@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.configs.rekorui.name }}
+  namespace: {{ .Values.configs.rekorui.namespace }}
+  labels:
+    app: {{ .Values.configs.rekorui.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.configs.rekorui.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.configs.rekorui.name }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: {{ .Values.configs.rekorui.name }}
+      containers:
+      - name: rekor-ui
+        image: "{{ template "image" .Values.configs.rekorui.image }}"
+        imagePullPolicy: Always
+        env:
+        - name: REKORDOMAIN
+          value:  {{ .Values.configs.rekorui.rekordomain }}
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL

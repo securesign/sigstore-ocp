@@ -12,6 +12,8 @@ configs:
     enabled: true
   rekor:
     namespace_create: false
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
   fulcio:
     # -- whether to create the 'fulcio-system' namespace
     # When providing the fulcio server.secret, the ns already exists
@@ -38,6 +40,8 @@ configs:
           -----BEGIN CERTIFICATE-----
           paste contents here
           -----END CERTIFICATE-----
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

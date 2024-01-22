@@ -31,6 +31,19 @@ configs:
       repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
       version: "sha256:4058383a7f5c76f9a24da58eaa485d89e48f5472ea55eafcece37f08f61622a1"
       pullPolicy: IfNotPresent
+
+  rekorui:
+    route: true
+    name: rekor-ui
+    namespace_create: true
+    namespace: rekor-ui
+    image:
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma
+      version: "sha256:dfccdb7fefc305f5b825b02da37ccc1e660b80b9d88388803530c4cdad918dcf"
+      imagePullPolicy: Always
+    ingress: true
+    subdomain: rekorui.appsSubdomain
   ctlog:
     namespace: ctlog-system
     namespace_create: true

@@ -16,6 +16,8 @@ configs:
     namespace_create: false
   rekor:
     namespace_create: false
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

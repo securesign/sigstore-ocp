@@ -16,6 +16,8 @@ configs:
         name: ""
         #private_key_file: "keys-cert/rekor_key.pem"
         private_key: ""
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
