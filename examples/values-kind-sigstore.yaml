@@ -20,6 +20,9 @@ configs:
     clusterMonitoring:
       enabled: false
     namespace_create: false
+  rekorui:
+    route: false
+    ingress: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:

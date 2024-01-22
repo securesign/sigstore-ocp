@@ -12,6 +12,9 @@ configs:
     enabled: true
   fulcio:
     namespace_create: false
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
+
   rekor:
     # -- whether to create the 'rekor-system' namespace
     # When providing the rekor signer.secret, the ns already exists
@@ -25,6 +28,8 @@ configs:
           -----BEGIN EC PRIVATE KEY-----
           paste contents here
           -----END EC PRIVATE KEY-----
+  rekorui:
+    subdomain: rekorui.$OPENSHIFT_APPS_SUBDOMAIN
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
