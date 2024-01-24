@@ -1,4 +1,5 @@
 {{- if .Values.configs.rekorui.enabled }}
+{{- if .Values.configs.rekorui.route }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -17,4 +18,5 @@ spec:
     name: {{ .Values.configs.rekorui.name }}
     weight: 100
   wildcardPolicy: None
+{{- end }}
 {{- end }}
