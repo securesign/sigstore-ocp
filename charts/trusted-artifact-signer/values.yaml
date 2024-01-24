@@ -33,10 +33,10 @@ configs:
       pullPolicy: IfNotPresent
 
   rekorui:
-    enabled: false
+    enabled: true
     route: true
     name: rekor-ui
-    namespace_create: false
+    namespace_create: true
     namespace: rekor-ui
     image:
       registry: quay.io
