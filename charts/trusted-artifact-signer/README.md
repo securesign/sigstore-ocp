@@ -128,7 +128,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
-| configs.rekorui.enabled |  | bool | `true` |
+| configs.rekorui.enabled |  | bool | `false` |
 | configs.rekorui.image.imagePullPolicy |  | string | `"Always"` |
 | configs.rekorui.image.registry |  | string | `"quay.io"` |
 | configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |

@@ -33,7 +33,7 @@ configs:
       pullPolicy: IfNotPresent
 
   rekorui:
-    enabled: true
+    enabled: false
     route: true
     name: rekor-ui
     namespace_create: false

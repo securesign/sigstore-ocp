@@ -1,5 +1,4 @@
 {{- if .Values.configs.rekorui.enabled }}
-{{- if .Values.configs.rekorui.ingress }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -20,5 +19,4 @@ spec:
             name: {{ .Values.configs.rekorui.name }}
             port:
               number: 3000
-  wildcardPolicy: None
 {{- end }}
