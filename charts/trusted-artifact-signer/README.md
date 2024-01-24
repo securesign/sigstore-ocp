@@ -133,7 +133,6 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekorui.image.registry |  | string | `"quay.io"` |
 | configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |
 | configs.rekorui.image.version |  | string | `"sha256:dfccdb7fefc305f5b825b02da37ccc1e660b80b9d88388803530c4cdad918dcf"` |
-| configs.rekorui.ingress |  | bool | `true` |
 | configs.rekorui.name |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace_create |  | bool | `false` |
