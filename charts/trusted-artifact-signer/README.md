@@ -128,6 +128,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
+| configs.rekorui.enabled |  | bool | `true` |
 | configs.rekorui.image.imagePullPolicy |  | string | `"Always"` |
 | configs.rekorui.image.registry |  | string | `"quay.io"` |
 | configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |
@@ -135,7 +136,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekorui.ingress |  | bool | `true` |
 | configs.rekorui.name |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace |  | string | `"rekor-ui"` |
-| configs.rekorui.namespace_create |  | bool | `true` |
+| configs.rekorui.namespace_create |  | bool | `false` |
 | configs.rekorui.route |  | bool | `true` |
 | configs.rekorui.subdomain |  | string | `"rekorui.appsSubdomain"` |
 | configs.segment_backup_job.enabled |  | bool | `false` |

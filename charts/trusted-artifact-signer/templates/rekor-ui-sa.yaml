@@ -1,6 +1,7 @@
+{{- if .Values.configs.rekorui.enabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ .Values.configs.rekorui.name }}
   namespace: {{ .Values.configs.rekorui.namespace }}
-
+{{- end }}
