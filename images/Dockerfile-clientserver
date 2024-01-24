@@ -16,6 +16,7 @@ COPY --from=cosign-image /usr/local/bin/cosign-darwin-arm64.gz /var/www/html/cli
 COPY --from=cosign-image /usr/local/bin/cosign-linux-arm64.gz /var/www/html/clients/linux
 COPY --from=cosign-image /usr/local/bin/cosign-linux-ppc64le.gz /var/www/html/clients/linux
 COPY --from=cosign-image /usr/local/bin/cosign-linux-s390x.gz /var/www/html/clients/linux
+COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/linux
 COPY --from=cosign-image /usr/local/bin/cosign-windows-amd64.gz /var/www/html/clients/windows
 
 RUN gzip /var/www/html/clients/linux/cosign
@@ -56,6 +57,7 @@ RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64.gz /var/www/html/clients
       mv /var/www/html/clients/windows/cosign-windows-amd64.gz /var/www/html/clients/windows/cosign-amd64.gz && \
       mv /var/www/html/clients/darwin/cosign-darwin-arm64.gz /var/www/html/clients/darwin/cosign-arm64.gz && \
       mv /var/www/html/clients/linux/cosign-linux-ppc64le.gz /var/www/html/clients/linux/cosign-ppc64le.gz && \
+      mv /var/www/html/clients/linux/cosign.gz /var/www/html/clients/linux/cosign-amd64.gz && \
       mv /var/www/html/clients/linux/cosign-linux-s390x.gz /var/www/html/clients/linux/cosign-s390x.gz && \
       mv /var/www/html/clients/linux/cosign-linux-arm64.gz /var/www/html/clients/linux/cosign-arm64.gz
 
