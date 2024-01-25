@@ -115,7 +115,8 @@ RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64.gz /var/www/html/clients
       mv /var/www/html/clients/linux/cosign-linux-ppc64le.gz /var/www/html/clients/linux/cosign-ppc64le.gz && \
       mv /var/www/html/clients/linux/cosign-linux-amd64.gz /var/www/html/clients/linux/cosign-amd64.gz && \
       mv /var/www/html/clients/linux/cosign-linux-s390x.gz /var/www/html/clients/linux/cosign-s390x.gz && \
-      mv /var/www/html/clients/linux/cosign-linux-arm64.gz /var/www/html/clients/linux/cosign-arm64.gz
+      mv /var/www/html/clients/linux/cosign-linux-arm64.gz /var/www/html/clients/linux/cosign-arm64.gz && \
+      mv /var/www/html/clients/linux/cosign.gz /var/www/html/clients/linux/cosign-amd64.gz
 
 CMD run-httpd
 
