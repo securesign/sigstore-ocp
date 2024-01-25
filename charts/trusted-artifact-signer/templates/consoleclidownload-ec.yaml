@@ -2,7 +2,7 @@
 apiVersion: console.openshift.io/v1
 kind: ConsoleCLIDownload
 metadata:
-  name: EnterpriseContract
+  name: enterprisecontract
 spec:
   description: A copy of EnterpriseContract
   displayName: EnterpriseContract - Command Line Interface (CLI)
