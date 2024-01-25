@@ -1,0 +1,24 @@
+{{- if .Values.configs.clientserver.consoleDownload }}
+apiVersion: console.openshift.io/v1
+kind: ConsoleCLIDownload
+metadata:
+  name: EnterpriseContract
+spec:
+  description: A copy of EnterpriseContract
+  displayName: EnterpriseContract - Command Line Interface (CLI)
+  links:
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec_linux_amd64.gz"
+    text: Download EnterpriseContract for Linux x86_64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec_linux_arm64.gz"
+    text: Download EnterpriseContract for Linux arm64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec_linux_ppc64le.gz"
+    text: Download EnterpriseContract for Linux ppc64le
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec_linux_s390x.gz"
+    text: Download EnterpriseContract for Linux s390x
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/ec_darwin_amd64.gz"
+    text: Download EnterpriseContract for Mac x86_64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/ec_darwin_arm64.gz"
+    text: Download EnterpriseContract for Mac arm64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/ec_windows_amd64.gz"
+    text: Download EnterpriseContract for Windows x86_64
+{{- end }}
