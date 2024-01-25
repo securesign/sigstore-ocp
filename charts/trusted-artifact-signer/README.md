@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.34](https://img.shields.io/badge/Version-0.1.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.35](https://img.shields.io/badge/Version-0.1.35-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -88,7 +88,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.clientserver.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.clientserver.image.registry |  | string | `"quay.io"` |
 | configs.clientserver.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma"` |
-| configs.clientserver.image.version |  | string | `"sha256:4058383a7f5c76f9a24da58eaa485d89e48f5472ea55eafcece37f08f61622a1"` |
+| configs.clientserver.image.version |  | string | `"sha256:60cdd00990d5372889a33cb93258b8dc026a9aa27c6f757bce25a500414d03b6"` |
 | configs.clientserver.name |  | string | `"tas-clients"` |
 | configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
 | configs.clientserver.namespace_create |  | bool | `true` |
