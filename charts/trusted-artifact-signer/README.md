@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.33](https://img.shields.io/badge/Version-0.1.33-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.34](https://img.shields.io/badge/Version-0.1.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -128,11 +128,11 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.name | Name of the secret to create with the private key data. This name must match the value in scaffold.rekor.server.signer.signerFileSecretOptions.secretName. | string | `""` |
 | configs.rekor.signer.secret.private_key | Private encrypted signing key | string | `""` |
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
+| configs.rekorui.enabled |  | bool | `true` |
 | configs.rekorui.image.imagePullPolicy |  | string | `"Always"` |
 | configs.rekorui.image.registry |  | string | `"quay.io"` |
 | configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |
 | configs.rekorui.image.version |  | string | `"sha256:dfccdb7fefc305f5b825b02da37ccc1e660b80b9d88388803530c4cdad918dcf"` |
-| configs.rekorui.ingress |  | bool | `true` |
 | configs.rekorui.name |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace_create |  | bool | `true` |
@@ -194,7 +194,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.createcerts.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.fulcio.createcerts.image.registry |  | string | `"quay.io"` |
 | scaffold.fulcio.createcerts.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/fulcio-1-0-gamma/createcerts-1-0-gamma"` |
-| scaffold.fulcio.createcerts.image.version |  | string | `"sha256:2b30084c5d30aa08c60641efca7b8ab0d964669a43b3d8e89b6ceb94ddbdca2c"` |
+| scaffold.fulcio.createcerts.image.version |  | string | `"sha256:4b5516f5059737fc16f3c1dded4ed2f999f896a12735cbd9c4f71d081635cbee"` |
 | scaffold.fulcio.ctlog.createctconfig.logPrefix |  | string | `"sigstorescaffolding"` |
 | scaffold.fulcio.ctlog.enabled |  | bool | `false` |
 | scaffold.fulcio.enabled |  | bool | `true` |

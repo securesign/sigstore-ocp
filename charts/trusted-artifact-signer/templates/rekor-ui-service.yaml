@@ -1,3 +1,4 @@
+{{- if .Values.configs.rekorui.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,4 +15,4 @@ spec:
   selector:
     app: {{ .Values.configs.rekorui.name }}
   type: ClusterIP
-
+{{- end }}
