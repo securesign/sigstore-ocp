@@ -29,7 +29,7 @@ configs:
     image:
       registry: quay.io
       repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
-      version: "sha256:4058383a7f5c76f9a24da58eaa485d89e48f5472ea55eafcece37f08f61622a1"
+      version: "sha256:60cdd00990d5372889a33cb93258b8dc026a9aa27c6f757bce25a500414d03b6"
       pullPolicy: IfNotPresent
 
   rekorui:

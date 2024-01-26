@@ -1,0 +1,24 @@
+{{- if .Values.configs.clientserver.consoleDownload }}
+apiVersion: console.openshift.io/v1
+kind: ConsoleCLIDownload
+metadata:
+  name: enterprisecontract
+spec:
+  description: Enterprise Contract is a tool for verifying signatures and performing policy checks on container images
+  displayName: Enterprise Contract - Command Line Interface (CLI)
+  links:
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec-amd64.gz"
+    text: Download EnterpriseContract for Linux x86_64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec-arm64.gz"
+    text: Download EnterpriseContract for Linux arm64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec-ppc64le.gz"
+    text: Download EnterpriseContract for Linux ppc64le
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec-s390x.gz"
+    text: Download EnterpriseContract for Linux s390x
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/ec-amd64.gz"
+    text: Download EnterpriseContract for Mac x86_64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/darwin/ec-arm64.gz"
+    text: Download EnterpriseContract for Mac arm64
+  - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/windows/ec-amd64.gz"
+    text: Download EnterpriseContract for Windows x86_64
+{{- end }}
