@@ -4,8 +4,8 @@ kind: ConsoleCLIDownload
 metadata:
   name: enterprisecontract
 spec:
-  description: A copy of EnterpriseContract
-  displayName: EnterpriseContract - Command Line Interface (CLI)
+  description: Enterprise Contract is a tool for verifying signatures and performing policy checks on container images
+  displayName: Enterprise Contract - Command Line Interface (CLI)
   links:
   - href: "https://{{ $.Values.configs.clientserver.name }}-{{ $.Values.configs.clientserver.namespace }}.{{ $.Values.global.appsSubdomain }}/clients/linux/ec-amd64.gz"
     text: Download EnterpriseContract for Linux x86_64
