@@ -1,3 +1,29 @@
+#
+# Note about source containers:
+# Due to the way this image is built, the source container for the image itself
+# does not include the full set of sources for the cli tool binaries included in
+# the image. The complete sources for each cli tool are available in the source
+# containers for the images that the binaries are extracted from.
+#
+# You can find the source containers for each of the cli tools in the following
+# locations:
+#
+# Cosign
+#   https://catalog.redhat.com/software/containers/detail/652971cd584d77e9d922883b
+#   docker://registry.redhat.io/rhtas-tech-preview/cosign-rhel9
+#
+# Gitsign
+#   https://catalog.redhat.com/software/containers/detail/652974c4f28b8157c60653c9
+#   docker://registry.redhat.io/rhtas-tech-preview/gitsign-rhel9
+#
+# Rekor CLI
+#   https://catalog.redhat.com/software/containers/detail/652976ecee3ec526235c8a56
+#   docker://registry.redhat.io/rhtas-tech-preview/rekor-cli-rhel9
+#
+# Enterprise Contract
+#  https://catalog.redhat.com/software/containers/detail/65a0454ad3407c4a7825b10c
+#  docker://registry.redhat.io/rhtas-tech-preview/ec-rhel9
+#
 
 # An image with oc so we can run `oc image extract` to download the binaries
 FROM registry.redhat.io/openshift4/ose-tools-rhel8:v4.11.0-202401122348.p0.gbf40a6c.assembly.stream AS downloads
