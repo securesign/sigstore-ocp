@@ -86,15 +86,15 @@ Kubernetes: `>= 1.19.0-0`
 |-----|-------------|------|---------|
 | configs.clientserver.consoleDownload | This can only be enabled if the OpenShift CRD is registered. | bool | `true` |
 | configs.clientserver.image.pullPolicy |  | string | `"IfNotPresent"` |
-| configs.clientserver.image.registry |  | string | `"quay.io"` |
-| configs.clientserver.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma"` |
+| configs.clientserver.image.registry |  | string | `"registry.redhat.io"` |
+| configs.clientserver.image.repository |  | string | `"rhtas-tech-preview/client-server-rhel9"` |
 | configs.clientserver.image.version |  | string | `"sha256:60cdd00990d5372889a33cb93258b8dc026a9aa27c6f757bce25a500414d03b6"` |
 | configs.clientserver.name |  | string | `"tas-clients"` |
 | configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
 | configs.clientserver.namespace_create |  | bool | `true` |
 | configs.clientserver.route | Whether to create the OpenShift route resource | bool | `true` |
 | configs.cosign_deploy.enabled |  | bool | `false` |
-| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2","version":"sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2"}` |
+| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"registry.redhat.io","repository":"rhtas-tech-preview/cosign-rhel9","version":"sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2"}` |
 | configs.cosign_deploy.name | Name of deployment | string | `"cosign"` |
 | configs.cosign_deploy.namespace |  | string | `"cosign"` |
 | configs.cosign_deploy.namespace_create |  | bool | `true` |
@@ -130,8 +130,8 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekor.signer.secret.private_key_file | File containing a private encrypted signing key | string | `""` |
 | configs.rekorui.enabled |  | bool | `true` |
 | configs.rekorui.image.imagePullPolicy |  | string | `"Always"` |
-| configs.rekorui.image.registry |  | string | `"quay.io"` |
-| configs.rekorui.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-search-ui-1-0-gamma"` |
+| configs.rekorui.image.registry |  | string | `"registry.redhat.io"` |
+| configs.rekorui.image.repository |  | string | `"rhtas-tech-preview/rekor-search-ui-rhel9"` |
 | configs.rekorui.image.version |  | string | `"sha256:ea4344bc762809ca46ea0708de378d8592b97194a9c1e08eb9396294276818bf"` |
 | configs.rekorui.name |  | string | `"rekor-ui"` |
 | configs.rekorui.namespace |  | string | `"rekor-ui"` |
@@ -140,8 +140,8 @@ Kubernetes: `>= 1.19.0-0`
 | configs.rekorui.subdomain |  | string | `"rekorui.appsSubdomain"` |
 | configs.segment_backup_job.enabled |  | bool | `false` |
 | configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
-| configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
-| configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/access-1-0-gamma/segment-backup-job-1-0-gamma"` |
+| configs.segment_backup_job.image.registry |  | string | `"registry.redhat.io"` |
+| configs.segment_backup_job.image.repository |  | string | `"rhtas-tech-preview/segment-backup-job-rhel9"` |
 | configs.segment_backup_job.image.version |  | string | `"sha256:24019bfe598d79774135398e8b186e56969e7f6e3dfdeb4a965ca40bd21cb6fb"` |
 | configs.segment_backup_job.name |  | string | `"segment-backup-job"` |
 | configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
@@ -167,8 +167,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.createctconfig.backoffLimit |  | int | `30` |
 | scaffold.ctlog.createctconfig.enabled |  | bool | `true` |
 | scaffold.ctlog.createctconfig.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.ctlog.createctconfig.image.registry |  | string | `"quay.io"` |
-| scaffold.ctlog.createctconfig.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/scaffold-1-0-gamma/createctconfig-0-6"` |
+| scaffold.ctlog.createctconfig.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.ctlog.createctconfig.image.repository |  | string | `"rhtas-tech-preview/createctconfig-rhel9"` |
 | scaffold.ctlog.createctconfig.image.version |  | string | `"sha256:2c96132697025f91dfdfd6b4d2376b9d6fb3231192647e9abcbf8239e8121c0d"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.imagePullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.ctlog.createctconfig.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
@@ -177,8 +177,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.createtree.displayName |  | string | `"ctlog-tree"` |
 | scaffold.ctlog.createtree.fullnameOverride |  | string | `"ctlog-createtree"` |
 | scaffold.ctlog.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.ctlog.createtree.image.registry |  | string | `"quay.io"` |
-| scaffold.ctlog.createtree.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/createtree-0-6"` |
+| scaffold.ctlog.createtree.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.ctlog.createtree.image.repository |  | string | `"rhtas-tech-preview/createtree-rhel9"` |
 | scaffold.ctlog.createtree.image.version |  | string | `"sha256:95d1fdd16443ce06cf1f50fec952063fc57637a6ec4076a80184fb1555fa7bfc"` |
 | scaffold.ctlog.enabled |  | bool | `true` |
 | scaffold.ctlog.forceNamespace |  | string | `"ctlog-system"` |
@@ -186,14 +186,14 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.namespace.create |  | bool | `false` |
 | scaffold.ctlog.namespace.name |  | string | `"ctlog-system"` |
 | scaffold.ctlog.server.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.ctlog.server.image.registry |  | string | `"quay.io"` |
-| scaffold.ctlog.server.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/scaffold-1-0-gamma/ct-server-0-6"` |
+| scaffold.ctlog.server.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.ctlog.server.image.repository |  | string | `"rhtas-tech-preview/ct-server-rhel9"` |
 | scaffold.ctlog.server.image.version |  | string | `"sha256:17eafff9bc34610d0295654df5adcf6e090bca6581cfc0eb0bb4896405953ac2"` |
 | scaffold.fulcio.createcerts.enabled |  | bool | `true` |
 | scaffold.fulcio.createcerts.fullnameOverride |  | string | `"fulcio-createcerts"` |
 | scaffold.fulcio.createcerts.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.fulcio.createcerts.image.registry |  | string | `"quay.io"` |
-| scaffold.fulcio.createcerts.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/fulcio-1-0-gamma/createcerts-1-0-gamma"` |
+| scaffold.fulcio.createcerts.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.fulcio.createcerts.image.repository |  | string | `"rhtas-tech-preview/createcerts-rhel9"` |
 | scaffold.fulcio.createcerts.image.version |  | string | `"sha256:424bb53e999f96fae237c22a3d863b11deec5481fd404b15c4f806c495de256b"` |
 | scaffold.fulcio.ctlog.createctconfig.logPrefix |  | string | `"sigstorescaffolding"` |
 | scaffold.fulcio.ctlog.enabled |  | bool | `false` |
@@ -203,8 +203,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.namespace.name |  | string | `"fulcio-system"` |
 | scaffold.fulcio.server.fullnameOverride |  | string | `"fulcio-server"` |
 | scaffold.fulcio.server.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.fulcio.server.image.registry |  | string | `"quay.io"` |
-| scaffold.fulcio.server.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/fulcio-1-0-gamma/fulcio-1-0-gamma"` |
+| scaffold.fulcio.server.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.fulcio.server.image.repository |  | string | `"rhtas-tech-preview/fulcio-rhel9"` |
 | scaffold.fulcio.server.image.version |  | string | `"sha256:12fac8e6d83056a7e5108cf92d6c622ef800ea0f2361e5b5d428a9a94811dd10"` |
 | scaffold.fulcio.server.ingress.http.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.fulcio.server.ingress.http.className |  | string | `""` |
@@ -213,12 +213,12 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.server.ingress.http.hosts[0].path |  | string | `"/"` |
 | scaffold.fulcio.server.secret |  | string | `"fulcio-secret-rh"` |
 | scaffold.rekor.backfillredis.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.rekor.backfillredis.image.registry |  | string | `"quay.io"` |
-| scaffold.rekor.backfillredis.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/backfill-redis-1-0-gamma"` |
+| scaffold.rekor.backfillredis.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.rekor.backfillredis.image.repository |  | string | `"rhtas-tech-preview/backfill-redis-rhel9"` |
 | scaffold.rekor.backfillredis.image.version |  | string | `"sha256:9a8ab70162a2aac1e8335fc1d82c84cd177a95c4ab820fa00dc915c07a25eb76"` |
 | scaffold.rekor.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.rekor.createtree.image.registry |  | string | `"quay.io"` |
-| scaffold.rekor.createtree.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/createtree-0-6"` |
+| scaffold.rekor.createtree.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.rekor.createtree.image.repository |  | string | `"rhtas-tech-preview/createtree-rhel9"` |
 | scaffold.rekor.createtree.image.version |  | string | `"sha256:95d1fdd16443ce06cf1f50fec952063fc57637a6ec4076a80184fb1555fa7bfc"` |
 | scaffold.rekor.enabled |  | bool | `true` |
 | scaffold.rekor.forceNamespace |  | string | `"rekor-system"` |
@@ -228,8 +228,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.redis.fullnameOverride |  | string | `"rekor-redis"` |
 | scaffold.rekor.server.fullnameOverride |  | string | `"rekor-server"` |
 | scaffold.rekor.server.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.rekor.server.image.registry |  | string | `"quay.io"` |
-| scaffold.rekor.server.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-server-1-0-gamma"` |
+| scaffold.rekor.server.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.rekor.server.image.repository |  | string | `"rhtas-tech-preview/rekor-server-rhl9"` |
 | scaffold.rekor.server.image.version |  | string | `"sha256:53b650ad487dce78025d1dbddc5f25116c132f4e78b7d6f8c1dd0638574f6db3"` |
 | scaffold.rekor.server.ingress.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.rekor.server.ingress.className |  | string | `""` |
@@ -242,8 +242,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.server.signerFileSecretOptions.secretName |  | string | `"rekor-private-key"` |
 | scaffold.rekor.trillian.enabled |  | bool | `false` |
 | scaffold.trillian.createdb.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.trillian.createdb.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.createdb.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/createdb-0-6"` |
+| scaffold.trillian.createdb.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.trillian.createdb.image.repository |  | string | `"rhtas-tech-preview/createdb-rhel9"` |
 | scaffold.trillian.createdb.image.version |  | string | `"sha256:cb9f0c8c9459c591eb1aa3192acaa75ccb7264db1e8306b9f4562025e2a04e87"` |
 | scaffold.trillian.enabled |  | bool | `true` |
 | scaffold.trillian.forceNamespace |  | string | `"trillian-system"` |
@@ -252,21 +252,21 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
 | scaffold.trillian.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
 | scaffold.trillian.initContainerImage.curl.version |  | string | `"latest"` |
-| scaffold.trillian.initContainerImage.netcat.registry |  | string | `"quay.io"` |
-| scaffold.trillian.initContainerImage.netcat.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-netcat-1-5"` |
+| scaffold.trillian.initContainerImage.netcat.registry |  | string | `"registry.redhat.io"` |
+| scaffold.trillian.initContainerImage.netcat.repository |  | string | `"rhtas-tech-preview/trillian-netcat-rhel9"` |
 | scaffold.trillian.initContainerImage.netcat.version |  | string | `"sha256:a43e9a384050d398a73e90d51c9c0f9f1af426117fa9bf6725674de7a95f0873"` |
 | scaffold.trillian.logServer.fullnameOverride |  | string | `"trillian-logserver"` |
 | scaffold.trillian.logServer.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.trillian.logServer.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.logServer.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-logserver-1-5"` |
+| scaffold.trillian.logServer.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.trillian.logServer.image.repository |  | string | `"rhtas-tech-preview/trillian-logserver-rhel9"` |
 | scaffold.trillian.logServer.image.version |  | string | `"sha256:5f9fcca2db9dbcbed0862d7a7e13cf355a3299624f0967836ea512c5b769ebb4"` |
 | scaffold.trillian.logServer.name |  | string | `"trillian-logserver"` |
 | scaffold.trillian.logServer.portHTTP |  | int | `8090` |
 | scaffold.trillian.logServer.portRPC |  | int | `8091` |
 | scaffold.trillian.logSigner.fullnameOverride |  | string | `"trillian-logsigner"` |
 | scaffold.trillian.logSigner.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.trillian.logSigner.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.logSigner.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-logsigner-1-5"` |
+| scaffold.trillian.logSigner.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.trillian.logSigner.image.repository |  | string | `"rhtas-tech-preview/trillian-logsigner-rhel9"` |
 | scaffold.trillian.logSigner.image.version |  | string | `"sha256:3c60ec029bc6742d9e1a62f057b2c7da928d0b13c50985495a4670c5538310d3"` |
 | scaffold.trillian.logSigner.name |  | string | `"trillian-logsigner"` |
 | scaffold.trillian.mysql.args |  | list | `[]` |
@@ -275,8 +275,8 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.mysql.gcp.scaffoldSQLProxy.repository |  | string | `"rhtas-tech-preview/cloudsqlproxy-rhel9"` |
 | scaffold.trillian.mysql.gcp.scaffoldSQLProxy.version |  | string | `"sha256:f6879364d41b2adbe339c6de1dae5d17be575ea274786895448ee4277831cb7f"` |
 | scaffold.trillian.mysql.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.trillian.mysql.image.registry |  | string | `"quay.io"` |
-| scaffold.trillian.mysql.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-database-1-5"` |
+| scaffold.trillian.mysql.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.trillian.mysql.image.repository |  | string | `"rhtas-tech-preview/trillian-database-rhel9"` |
 | scaffold.trillian.mysql.image.version |  | string | `"sha256:508ff03f1ba8bd337ef5986535841cdbecd946be482c58ba91f6fdb51c2e5f9e"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[0] |  | string | `"mysqladmin"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[1] |  | string | `"ping"` |
@@ -302,15 +302,15 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.redis.args[4] |  | string | `"yes"` |
 | scaffold.trillian.redis.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.redis.image.registry |  | string | `"registry.redhat.io"` |
-| scaffold.trillian.redis.image.repository |  | string | `"rhel9/redis-6"` |
+| scaffold.trillian.redis.image.repository |  | string | `"rhtas-tech-preview/redis-trillian-rhel9"` |
 | scaffold.trillian.redis.image.version |  | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |
 | scaffold.tsa.enabled |  | bool | `false` |
 | scaffold.tsa.forceNamespace |  | string | `"tsa-system"` |
 | scaffold.tsa.namespace.create |  | bool | `false` |
 | scaffold.tsa.namespace.name |  | string | `"tsa-system"` |
 | scaffold.tsa.server.fullnameOverride |  | string | `"tsa-server"` |
-| scaffold.tuf.deployment.registry |  | string | `"quay.io"` |
-| scaffold.tuf.deployment.repository |  | string | `"redhat-user-workloads/rhtas-tenant/scaffold-1-0-gamma/tuf-server-0-6"` |
+| scaffold.tuf.deployment.registry |  | string | `"registry.redhat.io"` |
+| scaffold.tuf.deployment.repository |  | string | `"rhtas-tech-preview/tuf-server-rhel9"` |
 | scaffold.tuf.deployment.version |  | string | `"sha256:e61ca335380ccb857cc66ecbb922ac741247956b62abba795fc29da648b91e26"` |
 | scaffold.tuf.enabled |  | bool | `true` |
 | scaffold.tuf.forceNamespace |  | string | `"tuf-system"` |
