@@ -1,83 +1,89 @@
-FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2 AS cosign-image
-FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/gitsign-cli-0-8@sha256:b8fae228a3e6dd53bfae8f23d44c8e08b4997a62f429f416401657fd54024d83 AS gitsign-image
-FROM quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/rekor-cli-1-3@sha256:b94954f6f82d9e5743c368a974a9d96c640e1ca7ba985fd3a86df5a989b8dd12 AS rekor-image
+#
+# Note about source containers:
+# Due to the way this image is built, the source container for the image itself
+# does not include the full set of sources for the cli tool binaries included in
+# the image. The complete sources for each cli tool are available in the source
+# containers for the images that the binaries are extracted from.
+#
+# You can find the source containers for each of the cli tools in the following
+# locations:
+#
+# Cosign
+#   https://catalog.redhat.com/software/containers/detail/652971cd584d77e9d922883b
+#   docker://registry.redhat.io/rhtas-tech-preview/cosign-rhel9
+#
+# Gitsign
+#   https://catalog.redhat.com/software/containers/detail/652974c4f28b8157c60653c9
+#   docker://registry.redhat.io/rhtas-tech-preview/gitsign-rhel9
+#
+# Rekor CLI
+#   https://catalog.redhat.com/software/containers/detail/652976ecee3ec526235c8a56
+#   docker://registry.redhat.io/rhtas-tech-preview/rekor-cli-rhel9
+#
+# Enterprise Contract
+#  https://catalog.redhat.com/software/containers/detail/65a0454ad3407c4a7825b10c
+#  docker://registry.redhat.io/rhtas-tech-preview/ec-rhel9
+#
 
-FROM registry.redhat.io/rhtas-tech-preview/ec-rhel9:1.0.alpha-1705963542@sha256:6aca9b2e9fde177d1398820b4b0609865dc2b0573c2d9e6d475e515a6a123f1c AS ec-image
+# An image with oc so we can run `oc image extract` to download the binaries
+FROM registry.redhat.io/openshift4/ose-tools-rhel8:v4.11.0-202401122348.p0.gbf40a6c.assembly.stream AS downloads
+
+ARG COSIGN_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:151f4a1e721b644bafe47bf5bfb8844ff27b95ca098cc37f3f6cbedcda79a897
+ARG GITSIGN_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/gitsign-cli-0-8@sha256:2df68b52aeb1568108c72ecc86fc371e47c0067d8f0085310910bbaef0336405
+ARG REKOR_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/rekor-cli-1-3@sha256:42eb37b10de9a9940bb135f2a94a90bca8d72fdeb5b1fd9c754961dc6d99350c
+ARG EC_IMAGE=quay.io/redhat-user-workloads/rhtap-contract-tenant/ec-v01-alpha/cli-v01-alpha@sha256:6aca9b2e9fde177d1398820b4b0609865dc2b0573c2d9e6d475e515a6a123f1c
+
+RUN mkdir -p /downloads/cosign && \
+    mkdir -p /downloads/gitsign && \
+    mkdir -p /downloads/rekor && \
+    mkdir -p /downloads/ec
+
+RUN oc image extract ${COSIGN_IMAGE}  --path /usr/local/bin/cosign*:/downloads/cosign && \
+    oc image extract ${GITSIGN_IMAGE} --path /usr/local/bin/gitsign_cli_*:/downloads/gitsign && \
+    oc image extract ${REKOR_IMAGE}   --path /usr/local/bin/rekor_cli_*:/downloads/rekor && \
+    oc image extract ${EC_IMAGE}      --path /usr/local/bin/ec_*:/downloads/ec
+
+# So we have a consistently named and gzipped file
+RUN gzip /downloads/cosign/cosign && \
+    mv /downloads/cosign/cosign.gz /downloads/cosign/cosign-linux-amd64.gz
 
 FROM registry.access.redhat.com/ubi9/httpd-24@sha256:965f7b03ae8f45228bad765ce47bc8956711e854213df0e4cee8623d51317b0a
 
-RUN mkdir -p /var/www/html/clients
-RUN mkdir -p /var/www/html/clients/darwin
-RUN mkdir -p /var/www/html/clients/linux
-RUN mkdir -p /var/www/html/clients/windows
+RUN mkdir -p /var/www/html/clients/darwin && \
+    mkdir -p /var/www/html/clients/linux && \
+    mkdir -p /var/www/html/clients/windows
 
+COPY --from=downloads /downloads/cosign/cosign-darwin-amd64.gz  /var/www/html/clients/darwin/cosign-amd64.gz
+COPY --from=downloads /downloads/cosign/cosign-darwin-arm64.gz  /var/www/html/clients/darwin/cosign-arm64.gz
+COPY --from=downloads /downloads/cosign/cosign-linux-amd64.gz   /var/www/html/clients/linux/cosign-amd64.gz
+COPY --from=downloads /downloads/cosign/cosign-linux-arm64.gz   /var/www/html/clients/linux/cosign-arm64.gz
+COPY --from=downloads /downloads/cosign/cosign-linux-ppc64le.gz /var/www/html/clients/linux/cosign-ppc64le.gz
+COPY --from=downloads /downloads/cosign/cosign-linux-s390x.gz   /var/www/html/clients/linux/cosign-s390x.gz
+COPY --from=downloads /downloads/cosign/cosign-windows-amd64.gz /var/www/html/clients/windows/cosign-amd64.gz
 
-COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/linux
-COPY --from=cosign-image /usr/local/bin/cosign-darwin-amd64.gz /var/www/html/clients/darwin
-COPY --from=cosign-image /usr/local/bin/cosign-darwin-arm64.gz /var/www/html/clients/darwin
-COPY --from=cosign-image /usr/local/bin/cosign-linux-arm64.gz /var/www/html/clients/linux
-COPY --from=cosign-image /usr/local/bin/cosign-linux-ppc64le.gz /var/www/html/clients/linux
-COPY --from=cosign-image /usr/local/bin/cosign-linux-s390x.gz /var/www/html/clients/linux
-COPY --from=cosign-image /usr/local/bin/cosign /var/www/html/clients/linux
-COPY --from=cosign-image /usr/local/bin/cosign-windows-amd64.gz /var/www/html/clients/windows
+COPY --from=downloads /downloads/gitsign/gitsign_cli_darwin_amd64.gz      /var/www/html/clients/darwin/gitsign-amd64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_darwin_arm64.gz      /var/www/html/clients/darwin/gitsign-arm64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_amd64.gz       /var/www/html/clients/linux/gitsign-amd64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_arm64.gz       /var/www/html/clients/linux/gitsign-arm64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_ppc64le.gz     /var/www/html/clients/linux/gitsign-ppc64le.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_s390x.gz       /var/www/html/clients/linux/gitsign-s390x.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows/gitsign-amd64.gz
 
-RUN gzip /var/www/html/clients/linux/cosign
+COPY --from=downloads /downloads/rekor/rekor_cli_darwin_amd64.gz      /var/www/html/clients/darwin/rekor-cli-amd64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_darwin_arm64.gz      /var/www/html/clients/darwin/rekor-cli-arm64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_linux_amd64.gz       /var/www/html/clients/linux/rekor-cli-amd64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_linux_arm64.gz       /var/www/html/clients/linux/rekor-cli-arm64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_linux_ppc64le.gz     /var/www/html/clients/linux/rekor-cli-ppc64le.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_linux_s390x.gz       /var/www/html/clients/linux/rekor-cli-s390x.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows/rekor-cli-amd64.gz
 
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_darwin_amd64.gz /var/www/html/clients/darwin
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_darwin_arm64.gz /var/www/html/clients/darwin
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_linux_amd64.gz /var/www/html/clients/linux
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_linux_arm64.gz /var/www/html/clients/linux
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_linux_ppc64le.gz /var/www/html/clients/linux
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_linux_s390x.gz /var/www/html/clients/linux
-COPY --from=gitsign-image /usr/local/bin/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows
-
-COPY --from=rekor-image /usr/local/bin/rekor_cli_darwin_amd64.gz /var/www/html/clients/darwin
-COPY --from=rekor-image /usr/local/bin/rekor_cli_darwin_arm64.gz /var/www/html/clients/darwin
-COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_amd64.gz /var/www/html/clients/linux
-COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_arm64.gz /var/www/html/clients/linux
-COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_ppc64le.gz /var/www/html/clients/linux
-COPY --from=rekor-image /usr/local/bin/rekor_cli_linux_s390x.gz /var/www/html/clients/linux
-COPY --from=rekor-image /usr/local/bin/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows
-
-COPY --from=ec-image /usr/local/bin/ec_darwin_amd64.gz /var/www/html/clients/darwin
-COPY --from=ec-image /usr/local/bin/ec_darwin_arm64.gz /var/www/html/clients/darwin
-COPY --from=ec-image /usr/local/bin/ec_linux_amd64.gz /var/www/html/clients/linux
-COPY --from=ec-image /usr/local/bin/ec_linux_arm64.gz /var/www/html/clients/linux
-COPY --from=ec-image /usr/local/bin/ec_linux_ppc64le.gz /var/www/html/clients/linux
-COPY --from=ec-image /usr/local/bin/ec_linux_s390x.gz /var/www/html/clients/linux
-COPY --from=ec-image /usr/local/bin/ec_windows_amd64.exe.gz /var/www/html/clients/windows
-
-RUN   mv /var/www/html/clients/darwin/gitsign_cli_darwin_amd64.gz /var/www/html/clients/darwin/gitsign-amd64.gz && \
-      mv /var/www/html/clients/darwin/gitsign_cli_darwin_arm64.gz /var/www/html/clients/darwin/gitsign-arm64.gz && \
-      mv /var/www/html/clients/linux/gitsign_cli_linux_amd64.gz /var/www/html/clients/linux/gitsign-amd64.gz && \
-      mv /var/www/html/clients/linux/gitsign_cli_linux_arm64.gz /var/www/html/clients/linux/gitsign-arm64.gz && \
-      mv /var/www/html/clients/linux/gitsign_cli_linux_ppc64le.gz /var/www/html/clients/linux/gitsign-ppc64le.gz && \
-      mv /var/www/html/clients/linux/gitsign_cli_linux_s390x.gz /var/www/html/clients/linux/gitsign-s390x.gz && \
-      mv /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows/gitsign-amd64.gz
-
-RUN mv /var/www/html/clients/darwin/rekor_cli_darwin_amd64.gz /var/www/html/clients/darwin/rekor-cli-amd64.gz && \
-      mv /var/www/html/clients/darwin/rekor_cli_darwin_arm64.gz /var/www/html/clients/darwin/rekor-cli-arm64.gz && \
-      mv /var/www/html/clients/linux/rekor_cli_linux_amd64.gz /var/www/html/clients/linux/rekor-cli-amd64.gz && \
-      mv /var/www/html/clients/linux/rekor_cli_linux_arm64.gz /var/www/html/clients/linux/rekor-cli-arm64.gz && \
-      mv /var/www/html/clients/linux/rekor_cli_linux_ppc64le.gz /var/www/html/clients/linux/rekor-cli-ppc64le.gz && \
-      mv /var/www/html/clients/linux/rekor_cli_linux_s390x.gz /var/www/html/clients/linux/rekor-cli-s390x.gz && \
-      mv /var/www/html/clients/windows/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows/rekor-cli-amd64.gz
-
-RUN mv /var/www/html/clients/darwin/ec_darwin_amd64.gz /var/www/html/clients/darwin/ec-amd64.gz && \
-      mv /var/www/html/clients/darwin/ec_darwin_arm64.gz /var/www/html/clients/darwin/ec-arm64.gz && \
-      mv /var/www/html/clients/linux/ec_linux_amd64.gz /var/www/html/clients/linux/ec-amd64.gz && \
-      mv /var/www/html/clients/linux/ec_linux_arm64.gz /var/www/html/clients/linux/ec-arm64.gz && \
-      mv /var/www/html/clients/linux/ec_linux_ppc64le.gz /var/www/html/clients/linux/ec-ppc64le.gz && \
-      mv /var/www/html/clients/linux/ec_linux_s390x.gz /var/www/html/clients/linux/ec-s390x.gz && \
-      mv /var/www/html/clients/windows/ec_windows_amd64.exe.gz /var/www/html/clients/windows/ec-amd64.gz
-
-RUN mv /var/www/html/clients/darwin/cosign-darwin-amd64.gz /var/www/html/clients/darwin/cosign-amd64.gz && \
-      mv /var/www/html/clients/windows/cosign-windows-amd64.gz /var/www/html/clients/windows/cosign-amd64.gz && \
-      mv /var/www/html/clients/darwin/cosign-darwin-arm64.gz /var/www/html/clients/darwin/cosign-arm64.gz && \
-      mv /var/www/html/clients/linux/cosign-linux-ppc64le.gz /var/www/html/clients/linux/cosign-ppc64le.gz && \
-      mv /var/www/html/clients/linux/cosign.gz /var/www/html/clients/linux/cosign-amd64.gz && \
-      mv /var/www/html/clients/linux/cosign-linux-s390x.gz /var/www/html/clients/linux/cosign-s390x.gz && \
-      mv /var/www/html/clients/linux/cosign-linux-arm64.gz /var/www/html/clients/linux/cosign-arm64.gz
+COPY --from=downloads /downloads/ec/ec_darwin_amd64.gz      /var/www/html/clients/darwin/ec-amd64.gz
+COPY --from=downloads /downloads/ec/ec_darwin_arm64.gz      /var/www/html/clients/darwin/ec-arm64.gz
+COPY --from=downloads /downloads/ec/ec_linux_amd64.gz       /var/www/html/clients/linux/ec-amd64.gz
+COPY --from=downloads /downloads/ec/ec_linux_arm64.gz       /var/www/html/clients/linux/ec-arm64.gz
+COPY --from=downloads /downloads/ec/ec_linux_ppc64le.gz     /var/www/html/clients/linux/ec-ppc64le.gz
+COPY --from=downloads /downloads/ec/ec_linux_s390x.gz       /var/www/html/clients/linux/ec-s390x.gz
+COPY --from=downloads /downloads/ec/ec_windows_amd64.exe.gz /var/www/html/clients/windows/ec-amd64.gz
 
 CMD run-httpd
 
