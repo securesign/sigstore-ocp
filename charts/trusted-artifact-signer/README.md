@@ -229,7 +229,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.server.fullnameOverride |  | string | `"rekor-server"` |
 | scaffold.rekor.server.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.rekor.server.image.registry |  | string | `"registry.redhat.io"` |
-| scaffold.rekor.server.image.repository |  | string | `"rhtas-tech-preview/rekor-server-rhl9"` |
+| scaffold.rekor.server.image.repository |  | string | `"rhtas-tech-preview/rekor-server-rhel9"` |
 | scaffold.rekor.server.image.version |  | string | `"sha256:53b650ad487dce78025d1dbddc5f25116c132f4e78b7d6f8c1dd0638574f6db3"` |
 | scaffold.rekor.server.ingress.annotations."route.openshift.io/termination" |  | string | `"edge"` |
 | scaffold.rekor.server.ingress.className |  | string | `""` |
