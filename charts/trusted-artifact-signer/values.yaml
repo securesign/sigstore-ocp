@@ -255,7 +255,7 @@ scaffold:
       fullnameOverride: rekor-server
       image:
         registry: registry.redhat.io
-        repository: rhtas-tech-preview/rekor-server-rhl9
+        repository: rhtas-tech-preview/rekor-server-rhel9
         version: "sha256:53b650ad487dce78025d1dbddc5f25116c132f4e78b7d6f8c1dd0638574f6db3"
         pullPolicy: IfNotPresent
       # when providing contents of secret with configs.rekor.signer
