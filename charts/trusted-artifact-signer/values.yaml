@@ -11,7 +11,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas-tech-preview/segment-backup-job-rhel9
-      version: "sha256:24019bfe598d79774135398e8b186e56969e7f6e3dfdeb4a965ca40bd21cb6fb"
+      version: "sha256:73f12e684395048bb1cd7f3f0ae4fdf97703e0012257e57152b4f7f8426644f5"
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job
@@ -29,7 +29,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas-tech-preview/client-server-rhel9
-      version: "sha256:60cdd00990d5372889a33cb93258b8dc026a9aa27c6f757bce25a500414d03b6"
+      version: "sha256:91caede7f666f380bd3e437444386a3818d89d50f28bb468c79294450c6bca9e"
       pullPolicy: IfNotPresent
 
   rekorui:
@@ -155,7 +155,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas-tech-preview/cosign-rhel9
-      version: sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2
+      version: sha256:151f4a1e721b644bafe47bf5bfb8844ff27b95ca098cc37f3f6cbedcda79a897
       pullPolicy: IfNotPresent
 
 rbac:
@@ -212,7 +212,7 @@ scaffold:
       name: fulcio-system
       create: false
     createcerts:
-      enabled: true
+      enabled: false
       fullnameOverride: fulcio-createcerts
       image:
         registry: registry.redhat.io
@@ -319,7 +319,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas-tech-preview/redis-trillian-rhel9
-        version: sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94
+        version: sha256:acf920baf6ee1715c0c9d7ddf69867d331c589d3afa680048c508943078d9585
         pullPolicy: IfNotPresent
 
     logSigner:

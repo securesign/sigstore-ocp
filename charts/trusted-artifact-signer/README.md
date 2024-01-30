@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.35](https://img.shields.io/badge/Version-0.1.35-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.36](https://img.shields.io/badge/Version-0.1.36-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -88,13 +88,13 @@ Kubernetes: `>= 1.19.0-0`
 | configs.clientserver.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.clientserver.image.registry |  | string | `"registry.redhat.io"` |
 | configs.clientserver.image.repository |  | string | `"rhtas-tech-preview/client-server-rhel9"` |
-| configs.clientserver.image.version |  | string | `"sha256:60cdd00990d5372889a33cb93258b8dc026a9aa27c6f757bce25a500414d03b6"` |
+| configs.clientserver.image.version |  | string | `"sha256:91caede7f666f380bd3e437444386a3818d89d50f28bb468c79294450c6bca9e"` |
 | configs.clientserver.name |  | string | `"tas-clients"` |
 | configs.clientserver.namespace |  | string | `"trusted-artifact-signer-clientserver"` |
 | configs.clientserver.namespace_create |  | bool | `true` |
 | configs.clientserver.route | Whether to create the OpenShift route resource | bool | `true` |
 | configs.cosign_deploy.enabled |  | bool | `false` |
-| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"registry.redhat.io","repository":"rhtas-tech-preview/cosign-rhel9","version":"sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2"}` |
+| configs.cosign_deploy.image | Image containing the cosign binary as well as environment variables with the base domain injected. | object | `{"pullPolicy":"IfNotPresent","registry":"registry.redhat.io","repository":"rhtas-tech-preview/cosign-rhel9","version":"sha256:151f4a1e721b644bafe47bf5bfb8844ff27b95ca098cc37f3f6cbedcda79a897"}` |
 | configs.cosign_deploy.name | Name of deployment | string | `"cosign"` |
 | configs.cosign_deploy.namespace |  | string | `"cosign"` |
 | configs.cosign_deploy.namespace_create |  | bool | `true` |
@@ -142,7 +142,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.segment_backup_job.image.registry |  | string | `"registry.redhat.io"` |
 | configs.segment_backup_job.image.repository |  | string | `"rhtas-tech-preview/segment-backup-job-rhel9"` |
-| configs.segment_backup_job.image.version |  | string | `"sha256:24019bfe598d79774135398e8b186e56969e7f6e3dfdeb4a965ca40bd21cb6fb"` |
+| configs.segment_backup_job.image.version |  | string | `"sha256:73f12e684395048bb1cd7f3f0ae4fdf97703e0012257e57152b4f7f8426644f5"` |
 | configs.segment_backup_job.name |  | string | `"segment-backup-job"` |
 | configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
 | configs.segment_backup_job.namespace_create |  | bool | `false` |
@@ -189,7 +189,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.ctlog.server.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.ctlog.server.image.repository |  | string | `"rhtas-tech-preview/ct-server-rhel9"` |
 | scaffold.ctlog.server.image.version |  | string | `"sha256:17eafff9bc34610d0295654df5adcf6e090bca6581cfc0eb0bb4896405953ac2"` |
-| scaffold.fulcio.createcerts.enabled |  | bool | `true` |
+| scaffold.fulcio.createcerts.enabled |  | bool | `false` |
 | scaffold.fulcio.createcerts.fullnameOverride |  | string | `"fulcio-createcerts"` |
 | scaffold.fulcio.createcerts.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.fulcio.createcerts.image.registry |  | string | `"registry.redhat.io"` |
@@ -303,7 +303,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.redis.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.redis.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.trillian.redis.image.repository |  | string | `"rhtas-tech-preview/redis-trillian-rhel9"` |
-| scaffold.trillian.redis.image.version |  | string | `"sha256:031a5a63611e1e6a9fec47492a32347417263b79ad3b63bcee72fc7d02d64c94"` |
+| scaffold.trillian.redis.image.version |  | string | `"sha256:acf920baf6ee1715c0c9d7ddf69867d331c589d3afa680048c508943078d9585"` |
 | scaffold.tsa.enabled |  | bool | `false` |
 | scaffold.tsa.forceNamespace |  | string | `"tsa-system"` |
 | scaffold.tsa.namespace.create |  | bool | `false` |
