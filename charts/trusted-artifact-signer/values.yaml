@@ -212,12 +212,12 @@ scaffold:
       name: fulcio-system
       create: false
     createcerts:
-      enabled: true
+      enabled: false
       fullnameOverride: fulcio-createcerts
       image:
         registry: quay.io
         repository: redhat-user-workloads/rhtas-tenant/fulcio-1-0-gamma/createcerts-1-0-gamma
-        version: "sha256:4b5516f5059737fc16f3c1dded4ed2f999f896a12735cbd9c4f71d081635cbee"
+        version: "sha256:424bb53e999f96fae237c22a3d863b11deec5481fd404b15c4f806c495de256b"
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: fulcio-server
