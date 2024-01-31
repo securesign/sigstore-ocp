@@ -241,6 +241,12 @@ scaffold:
             path: /
 
   rekor:
+    initContainerImage:
+      curl:
+        registry: registry.access.redhat.com
+        repository: ubi9/ubi-minimal
+        version: sha256:06d06f15f7b641a78f2512c8817cbecaa1bf549488e273f5ac27ff1654ed33f0
+        imagePullPolicy: IfNotPresent
     enabled: true
     forceNamespace: rekor-system
     fullnameOverride: rekor
