@@ -259,7 +259,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.logServer.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.logServer.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.trillian.logServer.image.repository |  | string | `"rhtas-tech-preview/trillian-logserver-rhel9"` |
-| scaffold.trillian.logServer.image.version |  | string | `"sha256:5f9fcca2db9dbcbed0862d7a7e13cf355a3299624f0967836ea512c5b769ebb4"` |
+| scaffold.trillian.logServer.image.version |  | string | `"sha256:0c175c41e093412450e80ba5e7be0ed47a85f166ee80003e74cbcb602ae190d1"` |
 | scaffold.trillian.logServer.name |  | string | `"trillian-logserver"` |
 | scaffold.trillian.logServer.portHTTP |  | int | `8090` |
 | scaffold.trillian.logServer.portRPC |  | int | `8091` |
@@ -267,7 +267,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.logSigner.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.logSigner.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.trillian.logSigner.image.repository |  | string | `"rhtas-tech-preview/trillian-logsigner-rhel9"` |
-| scaffold.trillian.logSigner.image.version |  | string | `"sha256:3c60ec029bc6742d9e1a62f057b2c7da928d0b13c50985495a4670c5538310d3"` |
+| scaffold.trillian.logSigner.image.version |  | string | `"sha256:0fa31246a6a1953043ce92d1b69a02096d6a9362851fe3ca603f19d8f60c34c5"` |
 | scaffold.trillian.logSigner.name |  | string | `"trillian-logsigner"` |
 | scaffold.trillian.mysql.args |  | list | `[]` |
 | scaffold.trillian.mysql.fullnameOverride |  | string | `"trillian-mysql"` |
@@ -277,7 +277,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.mysql.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.mysql.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.trillian.mysql.image.repository |  | string | `"rhtas-tech-preview/trillian-database-rhel9"` |
-| scaffold.trillian.mysql.image.version |  | string | `"sha256:508ff03f1ba8bd337ef5986535841cdbecd946be482c58ba91f6fdb51c2e5f9e"` |
+| scaffold.trillian.mysql.image.version |  | string | `"sha256:e8e038bf1ca79f44a12b63b460f60148c9a230c2e551d13783626f03ce2573a1"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[0] |  | string | `"mysqladmin"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[1] |  | string | `"ping"` |
 | scaffold.trillian.mysql.livenessProbe.exec.command[2] |  | string | `"-h"` |
