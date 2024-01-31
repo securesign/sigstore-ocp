@@ -390,10 +390,10 @@ scaffold:
     secrets:
       fulcio:
         name: fulcio-secret-rh
-        path: fulcio-cert
+        path: fulcio_v1.crt.pem
       rekor:
         name: rekor-public-key
-        path: rekor-pubkey
+        path: rekor.pub
       ctlog:
         name: ctlog-public-key
         path: ctfe.pub
