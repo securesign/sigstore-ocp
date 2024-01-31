@@ -251,6 +251,17 @@ scaffold:
       enabled: false
     redis:
       fullnameOverride: rekor-redis
+      args:
+        - /usr/bin/run-redis
+        - --bind
+        - 0.0.0.0
+        - --appendonly
+        - "yes"
+      image:
+        registry: registry.redhat.io
+        repository: rhtas-tech-preview/redis-trillian-rhel9
+        version: sha256:acf920baf6ee1715c0c9d7ddf69867d331c589d3afa680048c508943078d9585
+        pullPolicy: IfNotPresent
     server:
       fullnameOverride: rekor-server
       image:
@@ -310,17 +321,12 @@ scaffold:
         version: latest
         imagePullPolicy: IfNotPresent
     redis:
-      args:
-        - /usr/bin/run-redis
-        - --bind
-        - 0.0.0.0
-        - --appendonly
-        - "yes"
       image:
         registry: registry.redhat.io
         repository: rhtas-tech-preview/redis-trillian-rhel9
         version: sha256:acf920baf6ee1715c0c9d7ddf69867d331c589d3afa680048c508943078d9585
         pullPolicy: IfNotPresent
+      args: []
 
     logSigner:
       name: trillian-logsigner
