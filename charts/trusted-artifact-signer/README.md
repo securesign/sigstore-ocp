@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.38](https://img.shields.io/badge/Version-0.1.38-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.40](https://img.shields.io/badge/Version-0.1.40-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -78,7 +78,7 @@ Kubernetes: `>= 1.19.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.32 |
+| https://sigstore.github.io/helm-charts | scaffold(scaffold) | 0.6.41 |
 
 ## Values
 
@@ -223,9 +223,22 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.rekor.enabled |  | bool | `true` |
 | scaffold.rekor.forceNamespace |  | string | `"rekor-system"` |
 | scaffold.rekor.fullnameOverride |  | string | `"rekor"` |
+| scaffold.rekor.initContainerImage.curl.imagePullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.rekor.initContainerImage.curl.registry |  | string | `"registry.access.redhat.com"` |
+| scaffold.rekor.initContainerImage.curl.repository |  | string | `"ubi9/ubi-minimal"` |
+| scaffold.rekor.initContainerImage.curl.version |  | string | `"sha256:06d06f15f7b641a78f2512c8817cbecaa1bf549488e273f5ac27ff1654ed33f0"` |
 | scaffold.rekor.namespace.create |  | bool | `false` |
 | scaffold.rekor.namespace.name |  | string | `"rekor-system"` |
+| scaffold.rekor.redis.args[0] |  | string | `"/usr/bin/run-redis"` |
+| scaffold.rekor.redis.args[1] |  | string | `"--bind"` |
+| scaffold.rekor.redis.args[2] |  | string | `"0.0.0.0"` |
+| scaffold.rekor.redis.args[3] |  | string | `"--appendonly"` |
+| scaffold.rekor.redis.args[4] |  | string | `"yes"` |
 | scaffold.rekor.redis.fullnameOverride |  | string | `"rekor-redis"` |
+| scaffold.rekor.redis.image.pullPolicy |  | string | `"IfNotPresent"` |
+| scaffold.rekor.redis.image.registry |  | string | `"registry.redhat.io"` |
+| scaffold.rekor.redis.image.repository |  | string | `"rhtas-tech-preview/redis-trillian-rhel9"` |
+| scaffold.rekor.redis.image.version |  | string | `"sha256:acf920baf6ee1715c0c9d7ddf69867d331c589d3afa680048c508943078d9585"` |
 | scaffold.rekor.server.fullnameOverride |  | string | `"rekor-server"` |
 | scaffold.rekor.server.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.rekor.server.image.registry |  | string | `"registry.redhat.io"` |
@@ -295,11 +308,7 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.trillian.mysql.securityContext.fsGroup |  | int | `0` |
 | scaffold.trillian.namespace.create |  | bool | `false` |
 | scaffold.trillian.namespace.name |  | string | `"trillian-system"` |
-| scaffold.trillian.redis.args[0] |  | string | `"/usr/bin/run-redis"` |
-| scaffold.trillian.redis.args[1] |  | string | `"--bind"` |
-| scaffold.trillian.redis.args[2] |  | string | `"0.0.0.0"` |
-| scaffold.trillian.redis.args[3] |  | string | `"--appendonly"` |
-| scaffold.trillian.redis.args[4] |  | string | `"yes"` |
+| scaffold.trillian.redis.args |  | list | `[]` |
 | scaffold.trillian.redis.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.trillian.redis.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.trillian.redis.image.repository |  | string | `"rhtas-tech-preview/redis-trillian-rhel9"` |
