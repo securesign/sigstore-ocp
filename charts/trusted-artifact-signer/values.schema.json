@@ -1345,15 +1345,15 @@
                             "secrets": {
                                 "ctlog": {
                                     "name": "ctlog-public-key",
-                                    "path": "ctlog-pubkey"
+                                    "path": "ctfe.pub"
                                 },
                                 "fulcio": {
                                     "name": "fulcio-server-secret",
-                                    "path": "fulcio-cert"
+                                    "path": "fulcio_v1.crt.pem"
                                 },
                                 "rekor": {
                                     "name": "rekor-public-key",
-                                    "path": "rekor-pubkey"
+                                    "path": "rekor.pub"
                                 }
                             }
                         }
