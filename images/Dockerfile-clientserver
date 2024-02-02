@@ -29,8 +29,8 @@
 FROM registry.redhat.io/openshift4/ose-tools-rhel8:v4.11.0-202401122348.p0.gbf40a6c.assembly.stream AS downloads
 
 ARG COSIGN_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2@sha256:151f4a1e721b644bafe47bf5bfb8844ff27b95ca098cc37f3f6cbedcda79a897
-ARG GITSIGN_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/gitsign-cli-0-8@sha256:2df68b52aeb1568108c72ecc86fc371e47c0067d8f0085310910bbaef0336405
-ARG REKOR_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/rekor-cli-1-3@sha256:42eb37b10de9a9940bb135f2a94a90bca8d72fdeb5b1fd9c754961dc6d99350c
+ARG GITSIGN_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/gitsign-cli-0-8@sha256:da8157ebe2fe3f9e05f18328b4808351708f4aa184f6ed985ef08ed449fc9596
+ARG REKOR_IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/rekor-cli-1-3@sha256:8b36bf6d50c38460672d28e7552f4a7bf948453b6902f31892a003802f540aee
 ARG EC_IMAGE=quay.io/redhat-user-workloads/rhtap-contract-tenant/ec-v01-alpha/cli-v01-alpha@sha256:6aca9b2e9fde177d1398820b4b0609865dc2b0573c2d9e6d475e515a6a123f1c
 
 RUN mkdir -p /downloads/cosign && \
