@@ -1,0 +1,10 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ReleasePlan
+metadata:
+  labels:
+    release.appstudio.openshift.io/auto-release: 'false'
+  name: rhtas-access-1-0-gamma-registry-redhat-io
+  namespace: rhtas-tenant 
+spec:
+  application: access-1-0-gamma 
+  target: rhtap-releng-tenant
