@@ -350,7 +350,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas-tech-preview/trillian-logserver-rhel9
-        version: "sha256:d6bebd674b5d66bb742bf96dbbea761e2fa73a9fabd9be8a48cefbfc906e990c""
+        version: "sha256:d6bebd674b5d66bb742bf96dbbea761e2fa73a9fabd9be8a48cefbfc906e990c"
         pullPolicy: IfNotPresent
     mysql:
       fullnameOverride: trillian-mysql
