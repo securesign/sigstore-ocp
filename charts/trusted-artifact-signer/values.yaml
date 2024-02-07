@@ -9,9 +9,9 @@ configs:
     enabled: false
     namespace_create: false
     image:
-      registry: registry.redhat.io
-      repository: rhtas-tech-preview/segment-backup-job-rhel9
-      version: "sha256:73f12e684395048bb1cd7f3f0ae4fdf97703e0012257e57152b4f7f8426644f5"
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/segment-backup-job-1-0-gamma
+      version: "sha256:24019bfe598d79774135398e8b186e56969e7f6e3dfdeb4a965ca40bd21cb6fb"
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job
@@ -153,9 +153,9 @@ configs:
     name: cosign
     # -- Image containing the cosign binary as well as environment variables with the base domain injected.
     image:
-      registry: registry.redhat.io
-      repository: rhtas-tech-preview/cosign-rhel9
-      version: sha256:151f4a1e721b644bafe47bf5bfb8844ff27b95ca098cc37f3f6cbedcda79a897
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2
+      version: sha256:83e03294d6dfe8443762a735b2abb1171043cbfb93694a459e4432e520acf9a2
       pullPolicy: IfNotPresent
 
 rbac:
@@ -241,6 +241,12 @@ scaffold:
             path: /
 
   rekor:
+    initContainerImage:
+      curl:
+        registry: registry.access.redhat.com
+        repository: ubi9/ubi-minimal
+        version: sha256:06d06f15f7b641a78f2512c8817cbecaa1bf549488e273f5ac27ff1654ed33f0
+        imagePullPolicy: IfNotPresent
     enabled: true
     forceNamespace: rekor-system
     fullnameOverride: rekor
@@ -251,6 +257,17 @@ scaffold:
       enabled: false
     redis:
       fullnameOverride: rekor-redis
+      args:
+        - /usr/bin/run-redis
+        - --bind
+        - 0.0.0.0
+        - --appendonly
+        - "yes"
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/redis-0-6
+        version: sha256:acf920baf6ee1715c0c9d7ddf69867d331c589d3afa680048c508943078d9585
+        pullPolicy: IfNotPresent
     server:
       fullnameOverride: rekor-server
       image:
@@ -310,17 +327,12 @@ scaffold:
         version: latest
         imagePullPolicy: IfNotPresent
     redis:
-      args:
-        - /usr/bin/run-redis
-        - --bind
-        - 0.0.0.0
-        - --appendonly
-        - "yes"
       image:
         registry: registry.redhat.io
         repository: rhtas-tech-preview/redis-trillian-rhel9
         version: sha256:914089e0e8407420ce07f44dad49da75d34c88eac6314ea8d6e45ff0745e4b42
         pullPolicy: IfNotPresent
+      args: []
 
     logSigner:
       name: trillian-logsigner
@@ -338,7 +350,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas-tech-preview/trillian-logserver-rhel9
-        version: "sha256:3e7210bd4943c266eabaee33a50d86241c66ed69463f208bcc0b0b7373c22af0"
+        version: "sha256:d6bebd674b5d66bb742bf96dbbea761e2fa73a9fabd9be8a48cefbfc906e990c""
         pullPolicy: IfNotPresent
     mysql:
       fullnameOverride: trillian-mysql
@@ -384,10 +396,10 @@ scaffold:
     secrets:
       fulcio:
         name: fulcio-secret-rh
-        path: fulcio-cert
+        path: fulcio_v1.crt.pem
       rekor:
         name: rekor-public-key
-        path: rekor-pubkey
+        path: rekor.pub
       ctlog:
         name: ctlog-public-key
         path: ctfe.pub
@@ -405,6 +417,7 @@ scaffold:
       registry: registry.redhat.io
       repository: rhtas-tech-preview/tuf-server-rhel9
       version: "sha256:0702c1d59306e743a8fcf01785c25c5d5edb64199c8e626b4438ffb08b88a5e5"
+
 
   copySecretJob:
     name: copy-secrets-job
