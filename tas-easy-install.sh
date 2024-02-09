@@ -51,41 +51,6 @@ install_sso_keycloak() {
     fi
 }
 
-# Generate the script to initialize the environment variables for the service endpoints
-generate_env_script() {
-    # Write the script to a file
-cat <<EOL > tas-env-variables.sh
-#!/bin/bash
-
-export BASE_HOSTNAME=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
-echo "base hostname = \$BASE_HOSTNAME"
-
-export KEYCLOAK_REALM=sigstore
-export KEYCLOAK_URL=https://keycloak-keycloak-system.\$BASE_HOSTNAME
-export TUF_URL=https://tuf.\$BASE_HOSTNAME
-export COSIGN_FULCIO_URL=https://fulcio.\$BASE_HOSTNAME
-export COSIGN_REKOR_URL=https://rekor.\$BASE_HOSTNAME
-export COSIGN_MIRROR=\$TUF_URL
-export COSIGN_ROOT=\$TUF_URL/root.json
-export COSIGN_OIDC_ISSUER=\$KEYCLOAK_URL/auth/realms/\$KEYCLOAK_REALM
-export COSIGN_CERTIFICATE_OIDC_ISSUER=\$COSIGN_OIDC_ISSUER
-export COSIGN_YES="true"
-
-# Gitsign/Sigstore Variables
-export SIGSTORE_FULCIO_URL=\$COSIGN_FULCIO_URL
-export SIGSTORE_OIDC_ISSUER=\$COSIGN_OIDC_ISSUER
-export SIGSTORE_REKOR_URL=\$COSIGN_REKOR_URL
-
-# Rekor CLI Variables
-export REKOR_REKOR_SERVER=\$COSIGN_REKOR_URL
-EOL
-
-    # Make the generated script executable
-    chmod +x tas-env-variables.sh
-    echo "A script 'tas-env-variables.sh' to set a local signing environment has been created in the current directory."
-    echo "To initialize the environment variables, run 'source ./tas-env-variables.sh' from the terminal."
-}
-
 # Install Red Hat SSO Operator and setup Keycloak service
 install_sso_keycloak
 
@@ -169,5 +134,4 @@ else
     OPENSHIFT_APPS_SUBDOMAIN=$common_name envsubst < examples/values-sigstore-openshift.yaml | helm upgrade -i trusted-artifact-signer --debug charts/trusted-artifact-signer  -n trusted-artifact-signer --create-namespace --values - --set scaffold.fulcio.createcerts.enabled=true  
 fi
 
-# Create the script to initialize the environment variables for the service endpoints
-generate_env_script
+echo "\nTo initialize the environment variables, run 'source ./tas-env-variables.sh' from the terminal."
