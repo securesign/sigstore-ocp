@@ -3,6 +3,11 @@ apiVersion: console.openshift.io/v1
 kind: ConsoleCLIDownload
 metadata:
   name: enterprisecontract
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+  annotations:
+    meta.helm.sh/release-name: "trusted-artifact-signer"
+    meta.helm.sh/release-namespace: "trusted-artifact-signer"
 spec:
   description: Enterprise Contract is a tool for verifying signatures and performing policy checks on container images
   displayName: Enterprise Contract - Command Line Interface (CLI)

@@ -82,6 +82,15 @@ configs:
         - interval: 30s
           port: 2112-tcp
           scheme: http
+    backfillRedis:
+      enabled: true
+      schedule: "0 0 * * *"
+      image:
+        registry: registry.redhat.io
+        repository: rhtas-tech-preview/backfill-redis-rhel9
+        version: "sha256:028b3090bd0677351cc40de4a49246a5cdd57bdd2ad1668e4d7df0a7c01f20c7"
+        pullPolicy: IfNotPresent
+
 
   fulcio:
     namespace_create: true
@@ -296,12 +305,6 @@ scaffold:
         registry: registry.redhat.io
         repository: rhtas-tech-preview/createtree-rhel9
         version: "sha256:ec13e102555022c210361da239ec3cfe2e0d7b7fc3fea51d40e75fcbc9658a42"
-        pullPolicy: IfNotPresent
-    backfillredis:
-      image:
-        registry: registry.redhat.io
-        repository: rhtas-tech-preview/backfill-redis-rhel9
-        version: "sha256:028b3090bd0677351cc40de4a49246a5cdd57bdd2ad1668e4d7df0a7c01f20c7"
         pullPolicy: IfNotPresent
   trillian:
     enabled: true
