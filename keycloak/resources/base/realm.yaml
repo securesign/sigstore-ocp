@@ -3,14 +3,14 @@ kind: KeycloakRealm
 metadata:
   labels:
     app: sso
-  name: sigstore
+  name: trusted-artifact-signer
 spec:
   instanceSelector:
     matchLabels:
       app: sso
   realm:
-    displayName: Sigstore
+    displayName: Red-Hat-Trusted-Artifact-Signer
     enabled: true
-    id: sigstore
-    realm: sigstore
+    id: trusted-artifact-signer
+    realm: trusted-artifact-signer
     sslRequired: none

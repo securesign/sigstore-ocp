@@ -6,5 +6,5 @@ namespace: keycloak-system
 resources:
 - keycloak.yaml
 - realm.yaml
-- sigstore-client.yaml
+- tas-client.yaml
 - user.yaml
