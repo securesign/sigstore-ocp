@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This assumes you are currently running from the context of the namespace where your securesign is created
+# Run `oc project <securesign namespace>` to ensure you are working within the correct context
+
 export TUF_URL=$(oc get tuf -o jsonpath='{.items[0].status.url}')
 export OIDC_ISSUER_URL=https://$(oc get route keycloak -n keycloak-system | tail -n 1 | awk '{print $2}')/auth/realms/trusted-artifact-signer
 export COSIGN_FULCIO_URL=$(oc get fulcio -o jsonpath='{.items[0].status.url}')
@@ -7,6 +10,7 @@ export COSIGN_REKOR_URL=$(oc get rekor -o jsonpath='{.items[0].status.url}')
 export COSIGN_MIRROR=$TUF_URL
 export COSIGN_ROOT=$TUF_URL/root.json
 export COSIGN_OIDC_ISSUER=$OIDC_ISSUER_URL
+export COSIGN_OIDC_CLIENT_ID=trusted-artifact-signer
 export COSIGN_CERTIFICATE_OIDC_ISSUER=$OIDC_ISSUER_URL
 export COSIGN_YES="true"
 export SIGSTORE_FULCIO_URL=$COSIGN_FULCIO_URL
