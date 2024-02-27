@@ -1,0 +1,27 @@
+{{- if .Values.configs.rekor.backfillRedis.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backfill-redis
+  namespace: {{ .Values.configs.rekor.namespace }}
+spec:
+  schedule: {{ .Values.configs.rekor.backfillRedis.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backfill-redis
+            image: "{{ template "image" .Values.configs.rekor.backfillRedis.image }}"
+            command: ["/bin/sh", "-c"]
+            args:
+            - >
+              endIndex=$(curl -sS http://rekor-server/api/v1/log | sed -E 's/.*"treeSize":([0-9]+).*/\1/'); 
+              endIndex=$((endIndex-1)); 
+              if [ $endIndex -lt 0 ]; then 
+                echo "info: no rekor entries found"; 
+                exit 0; 
+              fi; 
+              backfill-redis --hostname=rekor-redis --port=6379 --rekor-address=http://rekor-server --start=0 --end=$endIndex
+          restartPolicy: OnFailure
+{{- end }}
