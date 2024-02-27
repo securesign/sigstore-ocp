@@ -18,7 +18,7 @@ spec:
             buildah push ttl.sh/sigstore-test:5m
         securityContext:
             privileged: true
-            runAsUser: 1000
+            runAsUser: 0
     containers:
       - name: cosign
         image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}@{{ .Values.configs.cosign_deploy.image.version }}"
