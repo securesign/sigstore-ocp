@@ -2,9 +2,9 @@ name: Lint Charts
 
 on:
   push:
-    branches: [ main,main ]
+    branches: [ main ]
   pull_request:
-    branches: [ main,main ]
+    branches: [ main ]
     paths:
       - "charts/**"
       - "tas-installer/**"
