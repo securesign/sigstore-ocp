@@ -45,7 +45,7 @@ spec:
         args:
           - |
             cosign initialize
-            TOKEN=$(curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=jdoe" -d "password=secure" -d "grant_type=password" -d "scope=openid" -d "client_id=sigstore" $COSIGN_OIDC_ISSUER/protocol/openid-connect/token |  sed -E 's/.*"access_token":"([^"]*).*/\1/')
+            TOKEN=$(curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=jdoe" -d "password=secure" -d "grant_type=password" -d "scope=openid" -d "client_id=trusted-artifact-signer" $COSIGN_OIDC_ISSUER/protocol/openid-connect/token |  sed -E 's/.*"access_token":"([^"]*).*/\1/')
             cosign sign -y --identity-token=$TOKEN ttl.sh/sigstore-test:5m
             cosign verify --certificate-identity-regexp ".*@redhat" ttl.sh/sigstore-test:5m
     restartPolicy: Never

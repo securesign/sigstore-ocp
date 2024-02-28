@@ -35,9 +35,9 @@ scaffold:
     config:
       contents:
         OIDCIssuers:
-          ? http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
-          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/sigstore
-            ClientID: sigstore
+          ? http://keycloak-internal.keycloak-system.svc/auth/realms/trusted-artifact-signer
+          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/trusted-artifact-signer
+            ClientID: trusted-artifact-signer
             Type: email
   rekor:
     server:
