@@ -37,8 +37,7 @@ func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*relea
 	return action.NewUninstall(actionConfig).Run(tasReleaseName)
 }
 
-func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, pathToValuesFile, chartVersion string) error {
-	chartUrl := "charts/trusted-artifact-signer"
+func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, pathToValuesFile, chartUrl, chartVersion string) error {
 
 	tv := templatedValues{
 		OpenShiftAppsSubdomain: kc.ClusterCommonName,

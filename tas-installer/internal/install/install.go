@@ -13,8 +13,8 @@ import (
 	"time"
 )
 
-func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion string) error {
-	if err := helm.InstallTrustedArtifactSigner(kc, oidcConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
+func HandleHelmChartInstall(kc *kubernetes.KubernetesClient, oidcConfig oidc.OIDCConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartUrl, helmChartVersion string) error {
+	if err := helm.InstallTrustedArtifactSigner(kc, oidcConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartUrl, helmChartVersion); err != nil {
 		return err
 	}
 	return nil
