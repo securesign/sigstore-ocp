@@ -39,20 +39,21 @@ func generateEnvVars() error {
 		export BASE_HOSTNAME=` + baseHostname + `
 		echo "Base hostname = $BASE_HOSTNAME"
 		
-		export KEYCLOAK_REALM=sigstore
+		export KEYCLOAK_REALM=trusted-artifact-signer
 		export KEYCLOAK_URL=https://keycloak-keycloak-system.` + baseHostname + `
 		export TUF_URL=https://tuf.` + baseHostname + `
 		export COSIGN_FULCIO_URL=https://fulcio.` + baseHostname + `
 		export COSIGN_REKOR_URL=https://rekor.` + baseHostname + `
 		export COSIGN_MIRROR=https://tuf.` + baseHostname + `
 		export COSIGN_ROOT=https://tuf.` + baseHostname + `/root.json
-		export COSIGN_OIDC_ISSUER=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/sigstore
-		export COSIGN_CERTIFICATE_OIDC_ISSUER=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/sigstore
+		export COSIGN_OIDC_ISSUER=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/trusted-artifact-signer
+		export COSIGN_CERTIFICATE_OIDC_ISSUER=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/trusted-artifact-signer
+		export COSIGN_OIDC_CLIENT_ID="trusted-artifact-signer"
 		export COSIGN_YES="true"
 
 		# Gitsign/Sigstore Variables
 		export SIGSTORE_FULCIO_URL=https://fulcio.` + baseHostname + `
-		export SIGSTORE_OIDC_ISSUER=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/sigstore
+		export SIGSTORE_OIDC_ISSUER=https://keycloak-keycloak-system.` + baseHostname + `/auth/realms/trusted-artifact-signer
 		export SIGSTORE_REKOR_URL=https://rekor.` + baseHostname + `
 
 		# Rekor CLI Variables
