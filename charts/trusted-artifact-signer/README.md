@@ -3,7 +3,7 @@
 
 A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
 
-![Version: 0.1.41](https://img.shields.io/badge/Version-0.1.41-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.44](https://img.shields.io/badge/Version-0.1.44-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Overview
 
@@ -117,6 +117,12 @@ Kubernetes: `>= 1.19.0-0`
 | configs.fulcio.server.secret.public_key_file | file containing signer public key | string | `""` |
 | configs.fulcio.server.secret.root_cert | fulcio root certificate authority (CA) | string | `""` |
 | configs.fulcio.server.secret.root_cert_file | file containing fulcio root certificate authority (CA) | string | `""` |
+| configs.rekor.backfillRedis.enabled |  | bool | `true` |
+| configs.rekor.backfillRedis.image.pullPolicy |  | string | `"IfNotPresent"` |
+| configs.rekor.backfillRedis.image.registry |  | string | `"registry.redhat.io"` |
+| configs.rekor.backfillRedis.image.repository |  | string | `"rhtas-tech-preview/backfill-redis-rhel9"` |
+| configs.rekor.backfillRedis.image.version |  | string | `"sha256:028b3090bd0677351cc40de4a49246a5cdd57bdd2ad1668e4d7df0a7c01f20c7"` |
+| configs.rekor.backfillRedis.schedule |  | string | `"0 0 * * *"` |
 | configs.rekor.clusterMonitoring.enabled |  | bool | `true` |
 | configs.rekor.clusterMonitoring.endpoints[0].interval |  | string | `"30s"` |
 | configs.rekor.clusterMonitoring.endpoints[0].port |  | string | `"2112-tcp"` |
@@ -212,10 +218,6 @@ Kubernetes: `>= 1.19.0-0`
 | scaffold.fulcio.server.ingress.http.hosts[0].host |  | string | `"fulcio.appsSubdomain"` |
 | scaffold.fulcio.server.ingress.http.hosts[0].path |  | string | `"/"` |
 | scaffold.fulcio.server.secret |  | string | `"fulcio-secret-rh"` |
-| scaffold.rekor.backfillredis.image.pullPolicy |  | string | `"IfNotPresent"` |
-| scaffold.rekor.backfillredis.image.registry |  | string | `"registry.redhat.io"` |
-| scaffold.rekor.backfillredis.image.repository |  | string | `"rhtas-tech-preview/backfill-redis-rhel9"` |
-| scaffold.rekor.backfillredis.image.version |  | string | `"sha256:028b3090bd0677351cc40de4a49246a5cdd57bdd2ad1668e4d7df0a7c01f20c7"` |
 | scaffold.rekor.createtree.image.pullPolicy |  | string | `"IfNotPresent"` |
 | scaffold.rekor.createtree.image.registry |  | string | `"registry.redhat.io"` |
 | scaffold.rekor.createtree.image.repository |  | string | `"rhtas-tech-preview/createtree-rhel9"` |

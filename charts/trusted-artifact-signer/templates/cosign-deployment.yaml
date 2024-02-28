@@ -26,7 +26,9 @@ spec:
         - name: OPENSHIFT_APPS_SUBDOMAIN
           value: {{ .Values.global.appsSubdomain }}
         - name: OIDC_AUTHENTICATION_REALM
-          value: "sigstore"
+          value: "trusted-artifact-signer"
+        - name: COSIGN_OIDC_CLIENT_ID
+          value: "trusted-artifact-signer"
         - name: COSIGN_FULCIO_URL
           value: "https://fulcio.$(OPENSHIFT_APPS_SUBDOMAIN)"
         - name: COSIGN_OIDC_ISSUER

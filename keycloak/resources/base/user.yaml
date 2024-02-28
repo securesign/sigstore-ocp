@@ -19,21 +19,3 @@ spec:
     firstName: Jane
     lastName: Doe
     username: jdoe
----
-apiVersion: keycloak.org/v1alpha1
-kind: KeycloakUser
-metadata:
-  labels:
-    app: sso
-  name: somalley
-spec:
-  realmSelector:
-    matchLabels:
-      app: sso
-  user:
-    email: somalley@redhat.com
-    enabled: true
-    emailVerified: true
-    firstName: Sally
-    lastName: OMalley
-    username: somalley

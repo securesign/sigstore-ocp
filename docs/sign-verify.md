@@ -13,7 +13,8 @@ OPENSHIFT_APPS_SUBDOMAIN=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDoma
 The following assumes there exists a Keycloak `keycloak` in namespace `keycloak-system`
 
 ```shell
-export OIDC_AUTHENTICATION_REALM=sigstore
+export OIDC_AUTHENTICATION_REALM=trusted-artifact-signer
+export COSIGN_OIDC_CLIENT_ID=trusted-artifact-signer
 export COSIGN_FULCIO_URL=https://fulcio.$OPENSHIFT_APPS_SUBDOMAIN
 export COSIGN_OIDC_ISSUER=https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/$OIDC_AUTHENTICATION_REALM
 export COSIGN_CERTIFICATE_OIDC_ISSUER=$COSIGN_OIDC_ISSUER
@@ -54,7 +55,7 @@ Authenticate with the OIDC provider (Keycloak, here)  using the desired credenti
 
 4. Verify the signed image
 
-This example that verifies an image signed with email identity `sigstore-user@email.com` and issuer `https://keycloak-keycloak.apps.com/auth/realms/sigstore`.
+This example that verifies an image signed with email identity `sigstore-user@email.com` and issuer `https://keycloak-keycloak.apps.com/auth/realms/trusted-artifact-signer`.
 
 ```shell
 cosign verify \
@@ -120,7 +121,8 @@ Use the following steps to sign a container that has been published to an OCI re
 1. Define the following environment variables
 ```
 $OPENSHIFT_APPS_SUBDOMAIN = "apps." + $(oc get dns cluster -o jsonpath='{.spec.baseDomain}')
-$OIDC_AUTHENTICATION_REALM = "sigstore"
+$OIDC_AUTHENTICATION_REALM = "trusted-artifact-signer"
+$COSIGN_OIDC_CLIENT_ID = "trusted-artifact-signer"
 $FULCIO_URL = "https://fulcio." + $OPENSHIFT_APPS_SUBDOMAIN
 $OIDC_ISSUER_URL = "https://keycloak-keycloak-system." + $OPENSHIFT_APPS_SUBDOMAIN + "/auth/realms/" + $OIDC_AUTHENTICATION_REALM
 $REKOR_URL = "https://rekor." + $OPENSHIFT_APPS_SUBDOMAIN

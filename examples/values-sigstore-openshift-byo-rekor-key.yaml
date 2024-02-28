@@ -43,10 +43,10 @@ scaffold:
     config:
       contents:
         OIDCIssuers:
-          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/sigstore
-          ? https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
-          : IssuerURL: https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/sigstore
-            ClientID: sigstore
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/trusted-artifact-signer
+          ? https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/trusted-artifact-signer
+          : IssuerURL: https://keycloak-keycloak-system.$OPENSHIFT_APPS_SUBDOMAIN/auth/realms/trusted-artifact-signer
+            ClientID: trusted-artifact-signer
             Type: email
   rekor:
     server:

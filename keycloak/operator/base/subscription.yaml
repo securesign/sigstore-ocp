@@ -13,7 +13,7 @@ spec:
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: keycloak-system-sigstore
+  name: keycloak-system-trusted-artifact-signer
 spec:
   targetNamespaces:
   - keycloak-system
