@@ -24,7 +24,9 @@ spec:
         image: "{{ .Values.configs.cosign_deploy.image.registry }}/{{ .Values.configs.cosign_deploy.image.repository }}@{{ .Values.configs.cosign_deploy.image.version }}"
         env:
         - name: OIDC_AUTHENTICATION_REALM
-          value: "sigstore"
+          value: "trusted-artifact-signer"
+        - name: COSIGN_OIDC_CLIENT_ID
+          value: "trusted-artifact-signer"
         - name: COSIGN_FULCIO_URL
           value: "http://fulcio-server.fulcio-system.svc"
         - name: COSIGN_REKOR_URL
