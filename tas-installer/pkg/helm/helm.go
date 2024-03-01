@@ -12,6 +12,7 @@ import (
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/cli"
+	"helm.sh/helm/v3/pkg/kube"
 	"helm.sh/helm/v3/pkg/registry"
 	"helm.sh/helm/v3/pkg/release"
 )
@@ -29,8 +30,8 @@ type templatedValues struct {
 	OIDCconfig             oidc.OIDCConfig
 }
 
-func UninstallTrustedArtifactSigner(tasNamespace, tasReleaseName string) (*release.UninstallReleaseResponse, error) {
-	actionConfig, _, err := actionConfig(tasNamespace)
+func UninstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, tasNamespace, tasReleaseName string) (*release.UninstallReleaseResponse, error) {
+	actionConfig, _, err := actionConfig(kc, tasNamespace)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +75,7 @@ func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oi
 	if err != nil {
 		return err
 	}
-	actionConfig, settings, err := actionConfig(tasNamespace)
+	actionConfig, settings, err := actionConfig(kc, tasNamespace)
 	if err != nil {
 		return err
 	}
@@ -102,10 +103,10 @@ func InstallTrustedArtifactSigner(kc *kubernetes.KubernetesClient, oidcConfig oi
 	return nil
 }
 
-func actionConfig(tasNamespace string) (*action.Configuration, *cli.EnvSettings, error) {
+func actionConfig(kc *kubernetes.KubernetesClient, tasNamespace string) (*action.Configuration, *cli.EnvSettings, error) {
 	settings := cli.New()
 	actionConfig := new(action.Configuration)
-	if err := actionConfig.Init(settings.RESTClientGetter(), tasNamespace, os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
+	if err := actionConfig.Init(kube.GetConfig(kc.KubeConfigPath, "", tasNamespace), tasNamespace, os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
 		return nil, nil, err
 	}
 	return actionConfig, settings, nil

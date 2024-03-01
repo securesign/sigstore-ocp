@@ -17,6 +17,7 @@ type KubernetesClient struct {
 	DynamicClientSet  dynamic.Interface
 	ClusterBaseDomain string
 	ClusterCommonName string
+	KubeConfigPath    string
 }
 
 func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
@@ -44,6 +45,7 @@ func InitKubeClient(kubeConfigPath string) (*KubernetesClient, error) {
 
 	kubeClient.ClusterBaseDomain = baseDomain
 	kubeClient.ClusterCommonName = "apps." + baseDomain
+	kubeClient.KubeConfigPath = kubeConfigPath
 
 	return kubeClient, nil
 }
