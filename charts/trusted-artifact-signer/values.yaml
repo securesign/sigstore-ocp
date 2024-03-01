@@ -26,11 +26,24 @@ configs:
     name: tas-clients
     namespace_create: true
     namespace: trusted-artifact-signer-clientserver
-    image:
-      registry: registry.redhat.io
-      repository: rhtas-tech-preview/client-server-rhel9
-      version: "sha256:eebda321cdc0cb5bd0ce2df83a661e566f5a48a34bd9d192e72d4300347956e3"
-      pullPolicy: IfNotPresent
+    rolebindings:
+      - tas-clients
+    images:
+      httpd:
+        registry: registry.redhat.io
+        repository: ubi9/httpd-24
+        version: "sha256:965f7b03ae8f45228bad765ce47bc8956711e854213df0e4cee8623d51317b0a"
+        pullPolicy: IfNotPresent
+      clientserver_cg:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/cli/client-server-cg
+        version: "sha256:5c7e83f13f9ba52c927bcb86abb5f9efa8ca4fe9ab7031709bde7f48829f6d0f"
+        pullPolicy: IfNotPresent
+      clientserver_re:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/cli/client-server-re
+        version: "sha256:d20c57b457650a025c225863462b2f9bf193ca35534dbf2cfcd9f6ab07a091b9"
+        pullPolicy: IfNotPresent
 
   rekorui:
     enabled: true
