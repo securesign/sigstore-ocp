@@ -16,13 +16,32 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      serviceAccountName: {{ .Values.configs.clientserver.name }}
+        runAsUser: 65533
+      {{- if $.Values.configs.clientserver.rolebindings }}
+      serviceAccountName: {{ index .Values.configs.clientserver.rolebindings 0 }}
+      {{- end }}
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+      initContainers:
+      - name: "init-shared-data-cg"
+        image: "{{ template "image" .Values.configs.clientserver.images.clientserver_cg }}"
+        command: ["sh", "-c", "cp -r /opt/app-root/src/clients/* /var/www/html/clients/"]
+        volumeMounts:
+          - name: shared-data
+            mountPath: /var/www/html/clients/
+      - name: "init-shared-data-re"
+        image: "{{ template "image" .Values.configs.clientserver.images.clientserver_re }}"
+        command: ["sh", "-c", "cp -r /opt/app-root/src/clients/* /var/www/html/clients/"]
+        volumeMounts:
+          - name: shared-data
+            mountPath: /var/www/html/clients/
       containers:
       - name: tas-clients
-        image: "{{ template "image" .Values.configs.clientserver.image }}"
-        #image: quay.io/sallyom/tas-clients:httpd
+        image: "{{ template "image" .Values.configs.clientserver.images.httpd }}"
+        volumeMounts:
+          - name: shared-data
+            mountPath: /var/www/html/clients/
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
