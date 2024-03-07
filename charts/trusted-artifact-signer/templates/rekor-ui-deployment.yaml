@@ -25,8 +25,11 @@ spec:
         image: "{{ template "image" .Values.configs.rekorui.image }}"
         imagePullPolicy: Always
         env:
-        - name: REKORDOMAIN
-          value:  {{ .Values.configs.rekorui.rekordomain }}
+        - name: NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: rekor-ui-default-domain-config
+              key: NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN
         ports:
           - containerPort: 3000
             protocol: TCP
