@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cosign-sts
+  namespace: cosign
+spec:
+  selector:
+    matchLabels:
+      app: cosign-sts
+  template:
+    metadata:
+      labels:
+        app: cosign-sts
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: cosign-sts
+      containers:
+      - args:
+        - -c
+        - env; cosign initialize --mirror=$COSIGN_MIRROR --root=$COSIGN_ROOT; while true; do sleep 86400; done
+        command:
+        - /bin/sh
+        name: cosign
+        image: registry.redhat.io/rhtas-tech-preview/cosign-rhel9@sha256:f4c2cec3fc1e24bbe094b511f6fe2fe3c6fa972da0edacaf6ac5672f06253a3e
+        pullPolicy: IfNotPresent
+        env:
+        - name: AWS_ROLE_SESSION_NAME
+          value: signer-identity-session
+        - name: AWS_REGION
+          value: us-east-1
+        - name: OPENSHIFT_APPS_SUBDOMAIN
+          value: UPDATE_ME
+        - name: OIDC_AUTHENTICATION_REALM
+          value: "sigstore"
+        - name: COSIGN_FULCIO_URL
+          value: "https://fulcio.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: COSIGN_OIDC_ISSUER
+          value: UPDATE_ME
+        - name: COSIGN_CERTIFICATE_OIDC_ISSUER
+          value: UPDATE_ME # same value as COSIGN_OIDC_ISSUER
+        - name: COSIGN_REKOR_URL
+          value: "https://rekor.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: COSIGN_MIRROR
+          value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)"
+        - name: COSIGN_ROOT
+          value: "https://tuf.$(OPENSHIFT_APPS_SUBDOMAIN)/root.json"
+        - name: COSIGN_YES
+          value: "true"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsNonRoot: true
+      serviceAccount: cosign-sts
+      serviceAccountName: cosign-sts
+      terminationGracePeriodSeconds: 30
+
