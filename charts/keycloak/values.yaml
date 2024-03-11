@@ -1,0 +1,65 @@
+keycloak:
+  service:
+    annotations: {}
+    port: 8443
+    name: https
+  ingress:
+    host: ""
+    annotations: {}
+    termination: reencrypt
+  importRealm: true
+  tls:
+    enabled: true
+    secret: ""
+
+postgresql:
+  image:
+    registry: registry.redhat.io
+    repository: rhel9/postgresql-15
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    version: latest
+  service:
+    annotations: {}
+    port: 5432
+  replicas: 1
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+  secret:
+    existingSecret: ""
+    username: keycloak
+    password: keycloakRHTAS123
+    usernameKey: username
+    passwordKey: password
+  persistentVolumeClaimRetentionPolicy:
+    enabled: false
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  database: keycloak
+  livenessProbe:
+    exec:
+      command:
+      - /usr/libexec/check-container
+      - --live
+  readinessProbe:
+    exec:
+      command:
+      - /usr/libexec/check-container
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  persistence:
+    size: 5Gi
+    accessModes:
+      - ReadWriteOnce
+    mountPath: /var/lib/pgsql/data
+    storageClass: ""
+  updateStrategy: {}
+
+openshift: true

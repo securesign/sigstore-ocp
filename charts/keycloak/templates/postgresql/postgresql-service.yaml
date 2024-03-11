@@ -1,0 +1,18 @@
+{{- $postgresqlName := include "keycloak.postgresql.fullname" . }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $postgresqlName }}
+  namespace: {{ include "keycloak.namespace" . }}
+  labels:
+    {{- include "keycloak.postgresql.labels" . | nindent 4 }}
+  {{- if .Values.postgresql.service.annotations }}
+  annotations:
+    {{- tpl (toYaml .Values.postgresql.service.annotations) $ | nindent 4 }}
+  {{- end }}
+spec:
+  ports:
+  - port: {{ .Values.postgresql.service.port }}
+    targetPort: {{ .Values.postgresql.service.port }}
+  selector:
+    {{- include "keycloak.postgresql.selectorLabels" . | nindent 4 }}

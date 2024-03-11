@@ -55,7 +55,7 @@ Authenticate with the OIDC provider (Keycloak, here)  using the desired credenti
 
 4. Verify the signed image
 
-This example that verifies an image signed with email identity `sigstore-user@email.com` and issuer `https://keycloak-keycloak.apps.com/auth/realms/trusted-artifact-signer`.
+This example that verifies an image signed with email identity `sigstore-user@email.com` and issuer `https://keycloak-keycloak.apps.com/realms/trusted-artifact-signer`.
 
 ```shell
 cosign verify \

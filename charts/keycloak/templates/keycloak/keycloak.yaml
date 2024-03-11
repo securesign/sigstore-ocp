@@ -1,0 +1,33 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+  name: {{ include "keycloak.fullname" . }}
+  namespace: {{ include "keycloak.namespace" . }}
+spec:
+  db:
+    database: {{ .Values.keycloak.postgresql }}
+    host: {{ include "keycloak.postgresql.fullname" . }}
+    passwordSecret:
+      key: {{ .Values.postgresql.secret.passwordKey }}
+      name: {{ include "keycloak.postgresql.secret.name" . }}
+    usernameSecret:
+      key: {{ .Values.postgresql.secret.usernameKey }}
+      name: {{ include "keycloak.postgresql.secret.name" . }}
+    vendor: postgres
+  hostname:
+    strict: false
+    strictBackchannel: false
+  http:
+    {{- if .Values.keycloak.tls.enabled }}
+    tlsSecret: keycloak-tls
+    {{- else }}
+    httpEnabled: true
+    {{- end }}
+  ingress:
+    enabled: false
+  hostname:
+    hostname: {{ tpl .Values.keycloak.ingress.host $ }}
+    strictBackchannel: {{ not .Values.keycloak.tls.enabled }}
+  instances: 1
