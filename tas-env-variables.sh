@@ -9,8 +9,8 @@ export KEYCLOAK_NAMESPACE="${KEYCLOAK_NAMESPACE:=keycloak-system}"
 
 export KEYCLOAK_CLIENT_ID="${KEYCLOAK_CLIENT_ID:=trusted-artifact-signer}"
 export KEYCLOAK_REALM="${KEYCLOAK_REALM:=trusted-artifact-signer}"
-export KEYCLOAK_HOSTNAME="${KEYCLOAK_HOSTNAME:=$(kubectl get keycloak -n ${KEYCLOAK_NAMESPACE} -o jsonpath='{.items[*].status.externalURL}')}"
-export OIDC_ISSUER_URL="${OIDC_ISSUER_URL:=${KEYCLOAK_HOSTNAME}/auth/realms/${KEYCLOAK_REALM}}"
+export KEYCLOAK_HOSTNAME="${KEYCLOAK_HOSTNAME:=https://$(kubectl get keycloak -n ${KEYCLOAK_NAMESPACE} -o jsonpath='{.items[*].spec.hostname.hostname}')}"
+export OIDC_ISSUER_URL="${OIDC_ISSUER_URL:=${KEYCLOAK_HOSTNAME}/realms/${KEYCLOAK_REALM}}"
 
 if [[ `kubectl api-resources -o name | grep securesigns.rhtas.redhat.com` ]]; then
     CURRENT_NAMESPACE="${RHTAS_NAMESPACE:=$(kubectl config view --minify -o jsonpath='{..namespace}')}"

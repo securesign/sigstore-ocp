@@ -51,9 +51,9 @@ scaffold:
     config:
       contents:
         OIDCIssuers:
-          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/auth/realms/trusted-artifact-signer
-          ? http://keycloak-internal.keycloak-system.svc/auth/realms/trusted-artifact-signer
-          : IssuerURL: http://keycloak-internal.keycloak-system.svc/auth/realms/trusted-artifact-signer
+          # https://<keycloak_instance>.<keycloak_ns>.<openshift_apps_subdomain>/realms/trusted-artifact-signer
+          ? http://keycloak-internal.keycloak-system.svc/realms/trusted-artifact-signer
+          : IssuerURL: http://keycloak-internal.keycloak-system.svc/realms/trusted-artifact-signer
             ClientID: trusted-artifact-signer
             Type: email
   rekor:

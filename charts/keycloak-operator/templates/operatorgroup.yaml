@@ -1,0 +1,20 @@
+{{- if .Values.operatorgroup.create }}
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ include "keycloak-operator.fullname" . }}
+  generateName: {{ include "keycloak-operator.fullname" . }}-
+  namespace: {{ include "keycloak-operator.namespace" . }}
+  labels:
+    {{- include "keycloak-operator.labels" . | nindent 4 }}
+  {{- if .Values.operatorgroup.annotations }}
+  annotations:
+    {{- tpl (toYaml .Values.operatorgroup.annotations) $ | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.operatorgroup.allNamespaces }}
+  targetNamespaces:
+    {{ tpl (toYaml (list (include "keycloak-operator.namespace" .))) $ }}
+  {{- end }}
+  upgradeStrategy: {{ tpl .Values.operatorgroup.upgradeStrategy $ }}
+{{- end }}

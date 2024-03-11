@@ -8,29 +8,21 @@ annotations:
       url: https://github.com/securesign/sigstore-ocp
     - name: Default Image Source
       url: ""
-  charts.openshift.io/name: TrustedArtifactSigner
+  charts.openshift.io/name: Keycloak
   charts.openshift.io/provider: TrustedArtifactSigner
   charts.openshift.io/supportURL: https://github.com/securesign/sigstore-ocp/issues
 apiVersion: v2
-name: trusted-artifact-signer
-description: A Helm chart for deploying Sigstore scaffold chart that is opinionated for OpenShift
+name: keycloak
+description: A Helm chart for deploying the Keycloak
 type: application
-dependencies:
-  - name: scaffold
-    version: 0.6.41
-    repository: https://sigstore.github.io/helm-charts
-    alias: scaffold
 keywords:
-  - sigstore
-  - sign
-  - cosign
+  - sso
+  - keycloak
+  - identity
 kubeVersion: ">= 1.19.0-0"
 maintainers:
   - name: TrustedArtifactSigner
     url: ""
 sources:
   - https://github.com/securesign/sigstore-ocp
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.53
+version: 0.1.0
