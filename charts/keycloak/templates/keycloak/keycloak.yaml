@@ -1,3 +1,4 @@
+{{- $keycloakHostname := include "keycloak.hostname" . }}
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: Keycloak
 metadata:
@@ -16,9 +17,6 @@ spec:
       key: {{ .Values.postgresql.secret.usernameKey }}
       name: {{ include "keycloak.postgresql.secret.name" . }}
     vendor: postgres
-  hostname:
-    strict: false
-    strictBackchannel: false
   http:
     {{- if .Values.keycloak.tls.enabled }}
     tlsSecret: keycloak-tls
@@ -28,6 +26,16 @@ spec:
   ingress:
     enabled: false
   hostname:
-    hostname: {{ tpl .Values.keycloak.ingress.host $ }}
+    strict: {{ .Values.keycloak.strictHostname }}
+    {{- if $keycloakHostname }}
+    hostname: {{ $keycloakHostname }}
+    {{- end }}
     strictBackchannel: {{ not .Values.keycloak.tls.enabled }}
   instances: 1
+  {{- if .Values.keycloak.resources }}
+  unsupported:
+    podTemplate:
+      spec:
+        containers:
+          - resources: {{- tpl (toYaml .Values.keycloak.resources) $ | nindent 14 }}
+  {{- end }}

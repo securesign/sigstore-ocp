@@ -139,3 +139,13 @@ Name of the TLS Secret
 {{ len .Values.keycloak.tls.secret }}
 {{- end }}
 {{- end }}
+
+{{/*
+Keycloak hostname
+*/}}
+{{- define "keycloak.hostname" -}}
+{{- if .Values.keycloak.strictHostname -}}
+{{ required "A valid hostname must be provided" (tpl .Values.keycloak.ingress.host $) }}
+{{- else -}}
+{{- end -}}
+{{- end }}

@@ -100,15 +100,16 @@ jobs:
           # wait for a while to be sure CRDs are installed
           sleep 1
           kubectl create -f https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/olm.yaml
-          kubectl create --kustomize keycloak/operator/overlay/kind
+          oc create namespace keycloak-system --dry-run=client -o yaml | oc apply -f-
+          helm upgrade -i -n keycloak-system charts/keycloak-operator -f kind/values/values-keycloak-operator.yaml
           until [ ! -z "$(kubectl get pod -l name=keycloak-operator -n keycloak-system 2>/dev/null)" ]
           do
             echo "Waiting for keycloak operator. Pods in keycloak-system namespace:"
             kubectl get pods -n keycloak-system
             sleep 10
           done
-          kubectl create --kustomize keycloak/resources/overlay/kind
-          until [[ $( oc get keycloak keycloak -o jsonpath='{.status.ready}' -n keycloak-system 2>/dev/null) == "true" ]]
+          helm upgrade -i -n keycloak-system charts/keycloak -f kind/values/values-keycloak.yaml
+          until [[ $( oc get keycloak keycloak -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' -n keycloak-system 2>/dev/null) == "True" ]]
           do
             printf "Waiting for keycloak deployment. \n Keycloak ready: %s\n" $(oc get keycloak keycloak -o jsonpath='{.status.ready}' -n keycloak-system)
             sleep 10

@@ -1,4 +1,6 @@
 {{- $keycloakName := include "keycloak.fullname" . }}
+{{- $keycloakHostname := include "keycloak.hostname" . }}
+{{- if $keycloakHostname -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -21,7 +23,7 @@ spec:
       port:
         number: {{ .Values.keycloak.service.port }}
   rules:
-  - host: {{ required "A valid hostname must be provided" (tpl .Values.keycloak.ingress.host $) }}
+  - host: {{ $keycloakHostname }}
     http:
       paths:
       - backend:
@@ -30,3 +32,4 @@ spec:
             port:
               number: {{ .Values.keycloak.service.port }}
         pathType: ImplementationSpecific
+{{- end -}}
