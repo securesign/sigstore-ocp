@@ -55,7 +55,7 @@ spec:
         {{ tpl (toYaml .Values.postgresql.image.pullSecrets) $ | indent 8 }}
       {{- end }}
       securityContext:
-        runAsNonRoot: true
+        runAsNonRoot: {{ .Values.postgresql.securityContext.runAsNonRoot }}
         seccompProfile:
           type: RuntimeDefault
       terminationGracePeriodSeconds: 30

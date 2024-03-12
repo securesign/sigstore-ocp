@@ -11,6 +11,8 @@ keycloak:
   tls:
     enabled: true
     secret: ""
+  resources: {}
+  strictHostname: true
 
 postgresql:
   image:
@@ -54,6 +56,8 @@ postgresql:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 1
+  securityContext:
+    runAsNonRoot: true
   persistence:
     size: 5Gi
     accessModes:
