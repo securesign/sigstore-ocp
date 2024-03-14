@@ -24,7 +24,7 @@ apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDataSource
 metadata:
   name: trillian-grafana
-  namespace: sigstore-monitoring
+  namespace: trusted-artifact-signer-monitoring
 spec:
   name: MySQL-datasource.yaml
   datasources:
