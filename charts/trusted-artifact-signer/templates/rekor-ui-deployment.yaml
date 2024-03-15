@@ -26,10 +26,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN
-          valueFrom:
-            configMapKeyRef:
-              name: rekor-ui-default-domain-config
-              key: NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN
+          value: "https://rekor/.{{ .Values.global.appsSubdomain }}"
         ports:
           - containerPort: 3000
             protocol: TCP
