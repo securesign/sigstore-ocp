@@ -1,0 +1,7 @@
+---
+
+subscription:
+  channel: "fast"
+  name: "keycloak-operator"
+  source: "operatorhubio-catalog"
+  sourceNamespace: "olm"

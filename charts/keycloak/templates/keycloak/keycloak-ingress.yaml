@@ -1,0 +1,35 @@
+{{- $keycloakName := include "keycloak.fullname" . }}
+{{- $keycloakHostname := include "keycloak.hostname" . }}
+{{- if $keycloakHostname -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    {{- if .Values.keycloak.service.annotations }}
+    {{- tpl (toYaml .Values.keycloak.ingress.annotations) $ | nindent 4 }}
+    {{- end }}
+    {{- if .Values.openshift }}
+    route.openshift.io/termination: {{ .Values.keycloak.ingress.termination }}
+    route.openshift.io/destination-ca-certificate-secret: {{ $keycloakName }}-tls
+    {{- end }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+  name: {{ include "keycloak.fullname" . }}
+  namespace: {{ include "keycloak.namespace" . }}
+spec:
+  defaultBackend:
+    service:
+      name: {{ include "keycloak.service.name" . }}
+      port:
+        number: {{ .Values.keycloak.service.port }}
+  rules:
+  - host: {{ $keycloakHostname }}
+    http:
+      paths:
+      - backend:
+          service:
+            name:  {{ include "keycloak.service.name" . }}
+            port:
+              number: {{ .Values.keycloak.service.port }}
+        pathType: ImplementationSpecific
+{{- end -}}

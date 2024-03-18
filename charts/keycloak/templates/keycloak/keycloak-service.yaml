@@ -1,0 +1,24 @@
+{{- if .Values.openshift -}}
+{{- $keycloakName := include "keycloak.fullname" . }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.keycloak.service.annotations }}
+    {{- tpl (toYaml .Values.keycloak.service.annotations) $ | nindent 4 }}
+    {{- end }}
+    {{- if .Values.openshift }}
+    service.beta.openshift.io/serving-cert-secret-name: {{ include "keycloak.tls.secret.name" . }}
+    {{- end }}
+  name: {{ include "keycloak.service.name" . }}
+  namespace: {{ include "keycloak.namespace" . }}
+spec:
+  ports:
+  - name: {{ .Values.keycloak.service.name }}
+    port: {{ .Values.keycloak.service.port }}
+  selector:
+    app: {{ $keycloakName }}
+    app.kubernetes.io/instance: {{ $keycloakName }}
+{{- end }}

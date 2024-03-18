@@ -1,0 +1,5 @@
+---
+
+keycloak:
+  ingress:
+    host: foo

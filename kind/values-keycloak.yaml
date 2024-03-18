@@ -1,0 +1,20 @@
+---
+
+openshift: false
+
+keycloak:
+  strictHostname: false
+  tls:
+    enabled: false
+  resources:
+    requests:
+      memory: 512Mi
+
+postgresql:
+  image:
+    registry: quay.io
+    repository: sclorg/postgresql-15-c9s
+    version: latest
+
+
+  

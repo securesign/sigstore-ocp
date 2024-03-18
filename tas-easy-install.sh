@@ -32,27 +32,75 @@ check_pod_status() {
     return 1
 }
 
-# Install SSO Operator and Keycloak service
-install_sso_keycloak() {
-    oc apply --kustomize keycloak/operator/base
-    check_pod_status "keycloak-system" "rhsso-operator"
-    # Check the return value from the function
-    if [ $? -ne 0 ]; then
-        echo "Pod status check failed. Exiting the script."
-        exit 1
-    fi
+# Function to check Realm Import Status status
+check_rhbk_import_status() {
+    local namespace="$1"
+    local realm_import_name="$2"
+    local attempts=0
 
-    oc apply --kustomize keycloak/resources/base
-    check_pod_status "keycloak-system" "keycloak-postgresql"
-    # Check the return value from the function
-    if [ $? -ne 0 ]; then
-        echo "Pod status check failed. Exiting the script."
-        exit 1
-    fi
+    while [[ $attempts -lt $max_attempts ]]; do
+        realm_import=$(oc get keycloakrealmimport "$realm_import_name" -n "$namespace" --ignore-not-found=true)
+        if [ -n "$realm_import" ]; then
+            realm_import_complete_status=$(oc get keycloakrealmimport "$realm_import_name" -n "$namespace" -o jsonpath='{.status.conditions[?(@.type=="Done")].status}')
+            if [ "$realm_import_complete_status" == "True" ]; then
+                echo "$realm_import_name Keycloak Realm Import in namespace $namespace is complete."
+                return 0
+            fi
+        fi
+
+        sleep $sleep_interval
+        attempts=$((attempts + 1))
+    done
+
+    echo "Timed out. Keycloak Realm Import '$realm_import_name' completed within the specified time."
+    return 1
 }
 
-# Install Red Hat SSO Operator and setup Keycloak service
-install_sso_keycloak
+# Install Red Hat Build of Keycloak
+install_rhbk() {
+
+    # Create keycloak-system namespace
+    oc create namespace keycloak-system --dry-run=client -o yaml | oc apply -f-
+
+    # Create PostgreSQL secret if it does not already exist
+    if [[ ! -n $(oc get secret -n keycloak-system keycloak-postgresql --ignore-not-found=true) ]]; then
+        oc create secret generic -n keycloak-system keycloak-postgresql --from-literal=username=keycloak --from-literal=password=$(echo $(date +%s%N) | sha256sum | head -c 20) --dry-run=client -o yaml | oc apply -f-
+    fi
+
+    # Install Keycloak Operator
+    helm upgrade -i keycloak-operator charts/keycloak-operator  -n keycloak-system
+
+    check_pod_status "keycloak-system" "rhbk-operator"
+    # Check the return value from the function
+    if [ $? -ne 0 ]; then
+        echo "Pod status check failed. Exiting the script."
+        exit 1
+    fi
+
+    # Install Keycloak
+    helm upgrade -i keycloak charts/keycloak  -n keycloak-system --set keycloak.ingress.host=keycloak-keycloak-system.$common_name --set postgresql.secret.existingSecret=keycloak-postgresql
+
+    check_pod_status "keycloak-system" "keycloak-postgresql-0"
+    # Check the return value from the function
+    if [ $? -ne 0 ]; then
+        echo "Pod status check failed. Exiting the script."
+        exit 1
+    fi
+
+    check_pod_status "keycloak-system" "keycloak-0"
+    # Check the return value from the function
+    if [ $? -ne 0 ]; then
+        echo "Pod status check failed. Exiting the script."
+        exit 1
+    fi
+
+    check_rhbk_import_status "keycloak-system" "trusted-artifact-signer"
+}
+
+common_name=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
+
+# Install Red Hat Build of Keycloak
+install_rhbk
 
 mkdir -p keys-cert
 pushd keys-cert > /dev/null
@@ -64,7 +112,6 @@ else
     generate_certs=false
 fi
 
-common_name=apps.$(oc get dns cluster -o jsonpath='{ .spec.baseDomain }')
 if [ "$generate_certs" = true ]; then
     # Prompt for the organizationName
     read -p "Enter the organization name for the certificate: " organization_name
