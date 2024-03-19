@@ -11,7 +11,7 @@ configs:
     image:
       registry: quay.io
       repository: redhat-user-workloads/rhtas-tenant/segment-backup-job/segment-backup-job
-      version: "sha256:89cadb0759653c1e2d9e0b1ecc540eace323f23cff4d1e964ec49333e51eced7"
+      version: "sha256:8adc001b08216d001271d254f918fc1855c575123e393783102ddc991bf9f082"
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job

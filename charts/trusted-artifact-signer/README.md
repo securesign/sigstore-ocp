@@ -157,7 +157,7 @@ Kubernetes: `>= 1.19.0-0`
 | configs.segment_backup_job.image.pullPolicy |  | string | `"IfNotPresent"` |
 | configs.segment_backup_job.image.registry |  | string | `"quay.io"` |
 | configs.segment_backup_job.image.repository |  | string | `"redhat-user-workloads/rhtas-tenant/segment-backup-job/segment-backup-job"` |
-| configs.segment_backup_job.image.version |  | string | `"sha256:3d229e3cd63ca2673b9db3c595677c8b6898ff48e474d7b5c555fb19e9f858a3"` |
+| configs.segment_backup_job.image.version |  | string | `"sha256:8adc001b08216d001271d254f918fc1855c575123e393783102ddc991bf9f082"` |
 | configs.segment_backup_job.name |  | string | `"segment-backup-job"` |
 | configs.segment_backup_job.namespace |  | string | `"trusted-artifact-signer-monitoring"` |
 | configs.segment_backup_job.namespace_create |  | bool | `false` |
