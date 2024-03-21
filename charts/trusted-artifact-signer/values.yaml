@@ -9,9 +9,9 @@ configs:
     enabled: false
     namespace_create: false
     image:
-      registry: quay.io
-      repository: redhat-user-workloads/rhtas-tenant/segment-backup-job/segment-backup-job
-      version: "sha256:8adc001b08216d001271d254f918fc1855c575123e393783102ddc991bf9f082"
+      registry: registry.redhat.io
+      repository: rhtas/segment-reporting-rhel9
+      version: "sha256:47873fadab73fb16df912ded37496e1c4ca09b56a0afafa91c6c23b9351c169e"
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job
@@ -35,14 +35,14 @@ configs:
         version: "sha256:7874b82335a80269dcf99e5983c2330876f5fe8bdc33dc6aa4374958a2ffaaee"
         pullPolicy: IfNotPresent
       clientserver_cg:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/cli/client-server-cg
-        version: "sha256:eb49058e7b12a2f48e363c09ef438aeb8500e83a4fb91451197f6bc2fe2e61de"
+        registry: registry.redhat.io
+        repository: rhtas/client-server-cg-rhel9
+        version: "sha256:3ecacaccf5a43e3832e0e9cd3957850f06e8ae7716d89c83d89fb9b3535d5547"
         pullPolicy: IfNotPresent
       clientserver_re:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/cli/client-server-re
-        version: "sha256:dd05e0575f1ee94ffe8a299a3baf5af1a5b77299f4f356daf7826d6e4814cd3d"
+        registry: registry.redhat.io
+        repository: rhtas/client-server-re-rhel9
+        version: "sha256:9c4867018453a2d02be004b392b8b17e1cdb89ed841aefe619b63627f024ff90"
         pullPolicy: IfNotPresent
 
   rekorui:
@@ -52,9 +52,9 @@ configs:
     namespace_create: true
     namespace: rekor-ui
     image:
-      registry: quay.io
-      repository: redhat-user-workloads/rhtas-tenant/rekor-search-ui/rekor-search-ui
-      version: "sha256:1a8c0448c294e33a3ec6d11f45e886d3ad606b221ed81d114f6d91257a968209"
+      registry: registry.redhat.io
+      repository: rhtas/rekor-search-ui-rhel9
+      version: "sha256:0c8a24911435b3d8b9c137e8105192a3f513d775cc2728a87506c68785975f7b"
       imagePullPolicy: Always
     subdomain: rekorui.appsSubdomain
   ctlog:
@@ -99,9 +99,9 @@ configs:
       enabled: true
       schedule: "0 0 * * *"
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/rekor/backfill-redis
-        version: "sha256:27a016efec4dca3f029d0b7ac0fc02cbac7bd44051ebd0e2f458f8b5b9fc8972"
+        registry: registry.redhat.io
+        repository: rhtas/rekor-backfill-redis-rhel9
+        version: "sha256:46bf598e4959fd032f53ad7728ba9dc23f463b8b841d207d31def4f0d4990888"
         pullPolicy: IfNotPresent
 
 
@@ -175,9 +175,9 @@ configs:
     name: cosign
     # -- Image containing the cosign binary as well as environment variables with the base domain injected.
     image:
-      registry: quay.io
-      repository: redhat-user-workloads/rhtas-tenant/cli/cosign
-      version: sha256:7c4586064ec51bcfff45a50d47121907d076231e20f1505a955fe322e4af3b76
+      registry: registry.redhat.io
+      repository: rhtas/cosign-rhel9
+      version: sha256:b163a535b30864e4499e3264fd01828ce7d9ad4e8c9fcf96ddf763047c50047a
       pullPolicy: IfNotPresent
 
 rbac:
@@ -195,8 +195,8 @@ scaffold:
       name: ctlog-system
     server:
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/certificate-transparency-go/certificate-transparency-go
+        registry: registry.redhat.io
+        repository: rhtas/certificate-transparency-rhel9
         version: "sha256:1419a048cb5095b3f65d08224e6f94c6eb166d8d5a16707942aed2880992ddee"
         pullPolicy: IfNotPresent
     createctconfig:
@@ -209,9 +209,9 @@ scaffold:
           version: latest
           imagePullPolicy: IfNotPresent
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/scaffold/createctconfig
-        version: "sha256:8ae3dce80a5a94bd03cb1c6437f028e36a379e3da5777600afb3b1daab045cf0"
+        registry: registry.redhat.io
+        repository: rhtas/createctconfig-rhel9
+        version: "sha256:e1b4c8a196747cb14b583d098d32b15a958d36358489018e9c21ad8a9f8a79d5"
         pullPolicy: IfNotPresent
     createcerts:
       fullnameOverride: ctlog-createcerts
@@ -219,9 +219,9 @@ scaffold:
       fullnameOverride: ctlog-createtree
       displayName: ctlog-tree
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/scaffold/trillian-createtree
-        version: "sha256:4ab1f1d7ac4f76ab245d60e4be70b74c46eb945335250e6f6b8db55b31bc7458"
+        registry: registry.redhat.io
+        repository: rhtas/trillian-createtree-rhel9
+        version: "sha256:16b64c092f41572d89d89f07113eef509cc739ec9894c611847078c632007ee1"
         pullPolicy: IfNotPresent
   fulcio:
     enabled: true
@@ -237,15 +237,15 @@ scaffold:
       enabled: false
       fullnameOverride: fulcio-createcerts
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/scaffold/fulcio-createcerts
-        version: "sha256:f18fe097108957cec100fb29160c8332720700d61ae04fe52741959558176ebe"
+        registry: registry.redhat.io
+        repository: rhtas/fulcio-createcerts-rhel9
+        version: "sha256:ca60b1c3e3d5d50931c46ed168ef77f3dc49119cb48fbada8927164f3da2a8df"
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: fulcio-server
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/fulcio/fulcio-server
+        registry: registry.redhat.io
+        repository: rhtas/fulcio-rhel9
         version: "sha256:f333772eb0cd23360516da4a7a50813a59d67c690c2b6baef4bc4b6094d1116b"
         pullPolicy: IfNotPresent
       # If content and/or files not provided in configs.fulcio.secret
@@ -286,16 +286,16 @@ scaffold:
         - --appendonly
         - "yes"
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/trillian/redis
-        version: sha256:0804a6634b8836cb2e957ee16d54e8d6ab94d311362a48baf238b1f575d79934
+        registry: registry.redhat.io
+        repository: rhtas/trillian-redis-rhel9
+        version: sha256:8c12d98f96ed3daa3ea7ce03d52e8b6748c4b7ab20eee98c1d1ad031d14af00e
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: rekor-server
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/rekor/rekor-server
-        version: "sha256:a2075576589bec3c4544db4368732cb1388e8f5a3cb2a739d943cee601e64b74"
+        registry: registry.redhat.io
+        repository: rhtas/rekor-server-rhel9
+        version: "sha256:133e42c7dd44ce6d12a3cee28ead1a4eb1a99ebaaa07d67d4362eec7561ae672"
         pullPolicy: IfNotPresent
       # when providing contents of secret with configs.rekor.signer
       # the signer sections must also be provided here
@@ -315,9 +315,9 @@ scaffold:
 
     createtree:
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/scaffold/trillian-createtree
-        version: "sha256:4ab1f1d7ac4f76ab245d60e4be70b74c46eb945335250e6f6b8db55b31bc7458"
+        registry: registry.redhat.io
+        repository: rhtas/trillian-createtree-rhel9
+        version: "sha256:16b64c092f41572d89d89f07113eef509cc739ec9894c611847078c632007ee1"
         pullPolicy: IfNotPresent
   trillian:
     enabled: true
@@ -328,9 +328,9 @@ scaffold:
       name: trillian-system
     createdb:
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/scaffold/trillian-createdb
-        version: "sha256:425d1e11d874e65991523af314777710e8c223c675efaa44aeb97b0f9363df8a"
+        registry: registry.redhat.io
+        repository: rhtas/trillian-createdb-rhel9
+        version: "sha256:d1ecc34e9b2e49a98567d7d04cece3a8e2604b3e61fbaad7c1a6b0db809311bf"
         pullPolicy: IfNotPresent
     initContainerImage:
       netcat:
@@ -344,9 +344,9 @@ scaffold:
         imagePullPolicy: IfNotPresent
     redis:
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/trillian/redis
-        version: sha256:0804a6634b8836cb2e957ee16d54e8d6ab94d311362a48baf238b1f575d79934
+        registry: registry.redhat.io
+        repository: rhtas/trillian-redis-rhel9
+        version: sha256:8c12d98f96ed3daa3ea7ce03d52e8b6748c4b7ab20eee98c1d1ad031d14af00e
         pullPolicy: IfNotPresent
       args: []
 
@@ -354,9 +354,9 @@ scaffold:
       name: trillian-logsigner
       fullnameOverride: trillian-logsigner
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/trillian/logsigner
-        version: "sha256:f8199e0b14f391574181a3e38659a2ec5baeb65ba5101ac63b5b9785ae01c214"
+        registry: registry.redhat.io
+        repository: rhtas/trillian-logsigner-rhel9
+        version: "sha256:aa7812254a582c12bf71834f1617a81f76d00a5ee90413d7d707ed5068e21220"
         pullPolicy: IfNotPresent
     logServer:
       name: trillian-logserver
@@ -364,9 +364,9 @@ scaffold:
       portHTTP: 8090
       portRPC: 8091
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/trillian/logserver
-        version: "sha256:cdb2fa8ef85a9727c2b306652e4127ee4b2723cd361a04f364f4a96d60194777"
+        registry: registry.redhat.io
+        repository: rhtas/trillian-logserver-rhel9
+        version: "sha256:61320904f81c5d389c052222311a1357504a14b0de00426013cb8f29690220bf"
         pullPolicy: IfNotPresent
     mysql:
       fullnameOverride: trillian-mysql
@@ -376,9 +376,9 @@ scaffold:
           repository: rhtas-tech-preview/cloudsqlproxy-rhel9
           version: sha256:f6879364d41b2adbe339c6de1dae5d17be575ea274786895448ee4277831cb7f
       image:
-        registry: quay.io
-        repository: redhat-user-workloads/rhtas-tenant/trillian/database
-        version: "sha256:145560da2f030ab6574d62c912b757d5537e75e4ec10e0d26cf56a67b1573969"
+        registry: registry.redhat.io
+        repository: rhtas/trillian-database-rhel9
+        version: "sha256:4989f92e18a541f12fb6174bd6686a24362a24700813e352c8c2c8eff4ab943f"
         pullPolicy: IfNotPresent
       args: []
       securityContext:
@@ -430,9 +430,9 @@ scaffold:
           - host: tuf.appsSubdomain
             path: /
     deployment:
-      registry: quay.io
-      repository: redhat-user-workloads/rhtas-tenant/scaffold/tuf-server
-      version: "sha256:b6875d661113f34911075264950a4a507090dddb2c01c313885ea367c113ec08"
+      registry: registry.redhat.io
+      repository: rhtas/tuf-server-rhel9
+      version: "sha256:6e07be763052f724ac96739afed4b35509b95d88e3d5d86748c5b931f94639aa"
 
 
   copySecretJob:
