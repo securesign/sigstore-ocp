@@ -7,17 +7,25 @@
 # Note: User must substitute for localhost below.
 ---
 configs:
+  segment_backup_job:
+    image:
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/segment-backup-job/segment-backup-job
   clientserver:
     consoleDownload: false
     route: false
-    # image:
-    #   registry: quay.io
-    #   repository: redhat-user-workloads/rhtas-tenant/access-1-0-gamma/client-server-1-0-gamma
+    images:
+      clientserver_cg:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/cli/client-server-cg
+      clientserver_re:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/cli/client-server-re
   cosign_deploy:
     enabled: true
-    # image:
-    #   registry: quay.io
-    #   repository: redhat-user-workloads/rhtas-tenant/cli-1-0-gamma/cosign-cli-2-2
+    image:
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/cli/cosign
   fulcio:
     clusterMonitoring:
       enabled: false
@@ -26,34 +34,39 @@ configs:
     clusterMonitoring:
       enabled: false
     namespace_create: false
+    backfillRedis:
+      enabled: true
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/rekor/backfill-redis
   rekorui:
     enabled: false
     route: false
 
 # github.com/sigstore/helm-charts/charts
 scaffold:
-  # ctlog:
-  #   server:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/scaffold-1-0-gamma/ct-server-0-6
-  #   createctconfig:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/scaffold-1-0-gamma/createctconfig-0-6
-  #   createtree:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/createtree-0-6
-  fulcio:
-    # createcerts:
-    #   image:
-    #     registry: quay.io
-    #     repository: redhat-user-workloads/rhtas-tenant/fulcio-1-0-gamma/createcerts-1-0-gamma
+  ctlog:
     server:
-      # image:
-      #   registry: quay.io
-      #   repository: redhat-user-workloads/rhtas-tenant/fulcio-1-0-gamma/fulcio-1-0-gamma
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/certificate-transparency-go/certificate-transparency-go
+    createctconfig:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/scaffold/createctconfig
+    createtree:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/scaffold/trillian-createtree
+  fulcio:
+    createcerts:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/scaffold/fulcio-createcerts
+    server:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/fulcio/fulcio-server
       ingress:
         enabled: false
         http:
@@ -67,55 +80,47 @@ scaffold:
             ClientID: trusted-artifact-signer
             Type: email
   rekor:
-    # redis:
-    #   image:
-    #     registry: quay.io
-    #     repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/redis-0-6
+    redis:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/trillian/redis
     server:
-      # image:
-      #   registry: quay.io
-      #   repository: redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/rekor-server-1-0-gamma
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/rekor/rekor-server
       ingress:
         enabled: false
         http:
           enabled: false
-  #   createtree:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/createtree-0-6
-  #   backfillredis:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/rekor-1-0-gamma/backfill-redis-1-0-gamma
-  # trillian:
-  #   createdb:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/createdb-0-6
-  #   initContainerImage:
-  #     netcat:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-netcat-1-5
-  #   redis:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/redis-0-6
+    createtree:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/scaffold/trillian-createtree
+  trillian:
+    createdb:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/scaffold/trillian-createdb
+    redis:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/trillian/redis
 
-  #   logSigner:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-logsigner-1-5
-  #   logServer:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-logserver-1-5
-  #   mysql:
-  #     image:
-  #       registry: quay.io
-  #       repository: redhat-user-workloads/rhtas-tenant/trillian-1-0-gamma/trillian-database-1-5
+    logSigner:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/trillian/logsigner
+    logServer:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/trillian/logserver
+    mysql:
+      image:
+        registry: quay.io
+        repository: redhat-user-workloads/rhtas-tenant/trillian/database
   tuf:
     ingress:
       create: false
-    # deployment:
-    #   registry: quay.io
-    #   repository: redhat-user-workloads/rhtas-tenant/scaffold-1-0-gamma/tuf-server-0-6
+    deployment:
+      registry: quay.io
+      repository: redhat-user-workloads/rhtas-tenant/scaffold/tuf-server
