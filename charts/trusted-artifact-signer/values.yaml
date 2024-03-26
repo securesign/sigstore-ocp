@@ -11,7 +11,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas/segment-reporting-rhel9
-      version: "sha256:47873fadab73fb16df912ded37496e1c4ca09b56a0afafa91c6c23b9351c169e"
+      version: "sha256:4dc0fe0c2d17b8b390cb22839f8005486d68c35c3d4b4809334126cf406d8543"
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job
