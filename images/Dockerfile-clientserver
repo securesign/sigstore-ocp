@@ -53,37 +53,21 @@ RUN mkdir -p /var/www/html/clients/darwin && \
     mkdir -p /var/www/html/clients/linux && \
     mkdir -p /var/www/html/clients/windows
 
-COPY --from=downloads /downloads/cosign/cosign-darwin-amd64.gz  /var/www/html/clients/darwin/cosign-amd64.gz
-COPY --from=downloads /downloads/cosign/cosign-darwin-arm64.gz  /var/www/html/clients/darwin/cosign-arm64.gz
-COPY --from=downloads /downloads/cosign/cosign-linux-amd64.gz   /var/www/html/clients/linux/cosign-amd64.gz
-COPY --from=downloads /downloads/cosign/cosign-linux-arm64.gz   /var/www/html/clients/linux/cosign-arm64.gz
-COPY --from=downloads /downloads/cosign/cosign-linux-ppc64le.gz /var/www/html/clients/linux/cosign-ppc64le.gz
-COPY --from=downloads /downloads/cosign/cosign-linux-s390x.gz   /var/www/html/clients/linux/cosign-s390x.gz
+COPY --from=downloads /downloads/cosign/cosign-darwin*  /var/www/html/clients/darwin/
+COPY --from=downloads /downloads/cosign/cosign-linux*   /var/www/html/clients/linux/
 COPY --from=downloads /downloads/cosign/cosign-windows-amd64.gz /var/www/html/clients/windows/cosign-amd64.gz
 
-COPY --from=downloads /downloads/gitsign/gitsign_cli_darwin_amd64.gz      /var/www/html/clients/darwin/gitsign-amd64.gz
-COPY --from=downloads /downloads/gitsign/gitsign_cli_darwin_arm64.gz      /var/www/html/clients/darwin/gitsign-arm64.gz
-COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_amd64.gz       /var/www/html/clients/linux/gitsign-amd64.gz
-COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_arm64.gz       /var/www/html/clients/linux/gitsign-arm64.gz
-COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_ppc64le.gz     /var/www/html/clients/linux/gitsign-ppc64le.gz
-COPY --from=downloads /downloads/gitsign/gitsign_cli_linux_s390x.gz       /var/www/html/clients/linux/gitsign-s390x.gz
-COPY --from=downloads /downloads/gitsign/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows/gitsign-amd64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_darwin*      /var/www/html/clients/darwin/gitsign-amd64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_linux*       /var/www/html/clients/linux/gitsign-amd64.gz
+COPY --from=downloads /downloads/gitsign/gitsign_cli_windows_amd64.exe.gz /var/www/html/clients/windows/gitsign_cli_windows_amd64.exe.gz
 
-COPY --from=downloads /downloads/rekor/rekor_cli_darwin_amd64.gz      /var/www/html/clients/darwin/rekor-cli-amd64.gz
-COPY --from=downloads /downloads/rekor/rekor_cli_darwin_arm64.gz      /var/www/html/clients/darwin/rekor-cli-arm64.gz
-COPY --from=downloads /downloads/rekor/rekor_cli_linux_amd64.gz       /var/www/html/clients/linux/rekor-cli-amd64.gz
-COPY --from=downloads /downloads/rekor/rekor_cli_linux_arm64.gz       /var/www/html/clients/linux/rekor-cli-arm64.gz
-COPY --from=downloads /downloads/rekor/rekor_cli_linux_ppc64le.gz     /var/www/html/clients/linux/rekor-cli-ppc64le.gz
-COPY --from=downloads /downloads/rekor/rekor_cli_linux_s390x.gz       /var/www/html/clients/linux/rekor-cli-s390x.gz
-COPY --from=downloads /downloads/rekor/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows/rekor-cli-amd64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_darwin*      /var/www/html/clients/darwin/rekor-cli-amd64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_linux*       /var/www/html/clients/linux/rekor-cli-amd64.gz
+COPY --from=downloads /downloads/rekor/rekor_cli_windows_amd64.exe.gz /var/www/html/clients/windows/rekor_cli_windows_amd64.exe.gz
 
-COPY --from=downloads /downloads/ec/ec_darwin_amd64.gz      /var/www/html/clients/darwin/ec-amd64.gz
-COPY --from=downloads /downloads/ec/ec_darwin_arm64.gz      /var/www/html/clients/darwin/ec-arm64.gz
-COPY --from=downloads /downloads/ec/ec_linux_amd64.gz       /var/www/html/clients/linux/ec-amd64.gz
-COPY --from=downloads /downloads/ec/ec_linux_arm64.gz       /var/www/html/clients/linux/ec-arm64.gz
-COPY --from=downloads /downloads/ec/ec_linux_ppc64le.gz     /var/www/html/clients/linux/ec-ppc64le.gz
-COPY --from=downloads /downloads/ec/ec_linux_s390x.gz       /var/www/html/clients/linux/ec-s390x.gz
-COPY --from=downloads /downloads/ec/ec_windows_amd64.exe.gz /var/www/html/clients/windows/ec-amd64.gz
+COPY --from=downloads /downloads/ec/ec_darwin*      /var/www/html/clients/darwin/
+COPY --from=downloads /downloads/ec/ec_linux*       /var/www/html/clients/linux/
+COPY --from=downloads /downloads/ec/ec_windows_amd64.exe.gz /var/www/html/clients/windows/ec_windows_amd64.exe.gz
 
 CMD run-httpd
 
