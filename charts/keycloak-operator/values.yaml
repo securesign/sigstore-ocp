@@ -1,0 +1,16 @@
+---
+
+subscription:
+  channel: "stable-v22"
+  installPlanApproval: Automatic
+  name: "rhbk-operator"
+  source: "redhat-operators"
+  sourceNamespace: "openshift-marketplace"
+  config: {}
+
+operatorgroup:
+  create: true
+  allNamespaces: false
+  upgradeStrategy: Default
+
+namespaceOverride: ""

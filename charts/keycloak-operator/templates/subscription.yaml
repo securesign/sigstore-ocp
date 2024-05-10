@@ -1,0 +1,21 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: {{ include "keycloak-operator.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" }}
+  labels:
+    {{- include "keycloak-operator.labels" . | nindent 4 }}
+  {{- if .Values.subscription.annotations }}
+  annotations:
+    {{- tpl (toYaml .Values.subscription.annotations) $ | nindent 4 }}
+  {{- end }}
+spec:
+  channel: {{ required "Operator channel is required!" .Values.subscription.channel }}
+  installPlanApproval: {{ default "Automatic" .Values.subscription.installPlanApproval }}
+  name: {{ required "Operator name is required!" .Values.subscription.name }}
+  source: {{ required "Operator source is required!" .Values.subscription.source }}
+  sourceNamespace: {{ required "Operator source namespace is required!" .Values.subscription.sourceNamespace }}
+{{- if .Values.subscription.config }}
+  config:
+  {{- tpl (toYaml .Values.subscription.config) $ | nindent 4 }}
+{{- end }}

@@ -1,0 +1,83 @@
+---
+{{- $postgresqlName := include "keycloak.postgresql.fullname" . }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $postgresqlName }}
+  namespace: {{ include "keycloak.namespace" . }}
+spec:
+  {{- if .Values.postgresql.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.postgresql.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.postgresql.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
+  podManagementPolicy: {{ .Values.postgresql.podManagementPolicy }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "keycloak.postgresql.selectorLabels" . | nindent 6 }}
+  serviceName: {{ $postgresqlName }}
+  template:
+    metadata:
+      labels:
+        {{- include "keycloak.postgresql.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: POSTGRESQL_USER
+          valueFrom:
+            secretKeyRef:
+              key: {{ .Values.postgresql.secret.usernameKey }}
+              name: {{ include "keycloak.postgresql.secret.name" . }}
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: {{ .Values.postgresql.secret.passwordKey }}
+              name: {{ include "keycloak.postgresql.secret.name" . }}
+        - name: POSTGRESQL_DATABASE
+          value: {{ .Values.postgresql.database }}
+        image: "{{ template "keycloak.image" .Values.postgresql.image }}"
+        imagePullPolicy: {{ .Values.postgresql.image.pullPolicy }}
+        livenessProbe: {{ tpl (toYaml .Values.postgresql.livenessProbe) $ | nindent 10 }}
+        name: {{ $postgresqlName }}
+        readinessProbe: {{ tpl (toYaml .Values.postgresql.readinessProbe) $ | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: {{ .Values.postgresql.persistence.mountPath }}
+          name: data
+      serviceAccountName: {{ include "keycloak.serviceAccountName" (dict "serviceAccount" .Values.postgresql.serviceAccount "name" (include "keycloak.postgresql.fullname" .)) }}
+      {{- if .Values.postgresql.image.pullSecrets }}
+      imagePullSecrets:
+        {{ tpl (toYaml .Values.postgresql.image.pullSecrets) $ | indent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: {{ .Values.postgresql.securityContext.runAsNonRoot }}
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+  updateStrategy:
+    {{- if .Values.postgresql.updateStrategy }}
+    rollingUpdate: {{- tpl (toYaml .Values.postgresql.updateStrategy) . | nindent 6 }}
+    {{- end }}
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: data
+    spec:
+      accessModes:
+        {{- if .Values.postgresql.storageClass }}
+        storageClassName: {{ .Values.postgresql.persistence.storageClass }}
+        {{- end }}
+        {{- range .Values.postgresql.persistence.accessModes }}
+          - {{ . | quote | indent 12 }}
+        {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.postgresql.persistence.size }}
+      volumeMode: Filesystem
