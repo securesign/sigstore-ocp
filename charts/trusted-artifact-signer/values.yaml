@@ -11,7 +11,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas/segment-reporting-rhel9
-      version: "sha256:4dc0fe0c2d17b8b390cb22839f8005486d68c35c3d4b4809334126cf406d8543"
+      version: "sha256:54be793ea9e2af996e5e5c6f9156ee02d5d915adb53b4ab028cb3030f64b1496"
       pullPolicy: IfNotPresent
     rolebindings:
       - segment-backup-job
@@ -37,12 +37,12 @@ configs:
       clientserver_cg:
         registry: registry.redhat.io
         repository: rhtas/client-server-cg-rhel9
-        version: "sha256:7448d37e1f9e8bb9cff80cb10271cffa345c2bb15ef7e1719a186e3020a6805c"
+        version: "sha256:046029a9a2028efa9dcbf8eff9b41fe5ac4e9ad64caf0241f5680a5cb36bf36b"
         pullPolicy: IfNotPresent
       clientserver_re:
         registry: registry.redhat.io
         repository: rhtas/client-server-re-rhel9
-        version: "sha256:3499f0e2d371d07fc23fc6a37ba92911980d79b3510370cc7c00e0da5bad64ae"
+        version: "sha256:7254f4c94182d21159162ea850e1ed14332fa5dee987103d54e7e4096a6fea31"
         pullPolicy: IfNotPresent
 
   rekorui:
@@ -54,7 +54,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas/rekor-search-ui-rhel9
-      version: "sha256:0c8a24911435b3d8b9c137e8105192a3f513d775cc2728a87506c68785975f7b"
+      version: "sha256:03fa0d23079aa4146d6d7b3f4edaa302e383e7d0a6c15cbf73a58179f1d07e02"
       imagePullPolicy: Always
     subdomain: rekorui.appsSubdomain
   ctlog:
@@ -101,7 +101,7 @@ configs:
       image:
         registry: registry.redhat.io
         repository: rhtas/rekor-backfill-redis-rhel9
-        version: "sha256:46bf598e4959fd032f53ad7728ba9dc23f463b8b841d207d31def4f0d4990888"
+        version: "sha256:5c7460ab3cd13b2ecf2b979f5061cb384174d6714b7630879e53d063e4cb69d2"
         pullPolicy: IfNotPresent
 
 
@@ -177,7 +177,7 @@ configs:
     image:
       registry: registry.redhat.io
       repository: rhtas/cosign-rhel9
-      version: sha256:b163a535b30864e4499e3264fd01828ce7d9ad4e8c9fcf96ddf763047c50047a
+      version: sha256:652d81daa2f58119e12824a2d6cef5568b0b22539194099baafda9aa4d6a38f6
       pullPolicy: IfNotPresent
 
 rbac:
@@ -197,7 +197,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/certificate-transparency-rhel9
-        version: "sha256:1419a048cb5095b3f65d08224e6f94c6eb166d8d5a16707942aed2880992ddee"
+        version: "sha256:44906b1e52b0b5e324f23cae088837caf15444fd34679e6d2f3cc018d4e093fe"
         pullPolicy: IfNotPresent
     createctconfig:
       backoffLimit: 30
@@ -211,7 +211,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/createctconfig-rhel9
-        version: "sha256:e1b4c8a196747cb14b583d098d32b15a958d36358489018e9c21ad8a9f8a79d5"
+        version: "sha256:89df86ee16666e45f5d0e6d652228802a06421d266c9fb66a05ea05a874447da"
         pullPolicy: IfNotPresent
     createcerts:
       fullnameOverride: ctlog-createcerts
@@ -221,7 +221,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-createtree-rhel9
-        version: "sha256:16b64c092f41572d89d89f07113eef509cc739ec9894c611847078c632007ee1"
+        version: "sha256:073be9c7a03aa5d38c6a460355771ff12fa4d3dff41583f29b4fbdbca2fee7ee"
         pullPolicy: IfNotPresent
   fulcio:
     enabled: true
@@ -239,14 +239,14 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/fulcio-createcerts-rhel9
-        version: "sha256:ca60b1c3e3d5d50931c46ed168ef77f3dc49119cb48fbada8927164f3da2a8df"
+        version: "sha256:988adf28abc60d977dbd9879b473bd22b3d4656ea690722c37ab642f86be236c"
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: fulcio-server
       image:
         registry: registry.redhat.io
         repository: rhtas/fulcio-rhel9
-        version: "sha256:f333772eb0cd23360516da4a7a50813a59d67c690c2b6baef4bc4b6094d1116b"
+        version: "sha256:c4abc6342b39701d237ab3f0f25b75b677214b3ede00540b2488f524ad112179"
         pullPolicy: IfNotPresent
       # If content and/or files not provided in configs.fulcio.secret
       # then this secret must exist in fulcio-system ns. See ../quickstart-with-keycloak.md
@@ -288,14 +288,14 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-redis-rhel9
-        version: sha256:8c12d98f96ed3daa3ea7ce03d52e8b6748c4b7ab20eee98c1d1ad031d14af00e
+        version: sha256:5f0630c7aa29eeee28668f7ad451f129c9fb2feb86ec21b6b1b0b5cc42b44f4a
         pullPolicy: IfNotPresent
     server:
       fullnameOverride: rekor-server
       image:
         registry: registry.redhat.io
         repository: rhtas/rekor-server-rhel9
-        version: "sha256:133e42c7dd44ce6d12a3cee28ead1a4eb1a99ebaaa07d67d4362eec7561ae672"
+        version: "sha256:eed7af638b1587c61a76daef5df949bb37364023e5fa8a13255da02e2595f5ca"
         pullPolicy: IfNotPresent
       # when providing contents of secret with configs.rekor.signer
       # the signer sections must also be provided here
@@ -317,7 +317,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-createtree-rhel9
-        version: "sha256:16b64c092f41572d89d89f07113eef509cc739ec9894c611847078c632007ee1"
+        version: "sha256:073be9c7a03aa5d38c6a460355771ff12fa4d3dff41583f29b4fbdbca2fee7ee"
         pullPolicy: IfNotPresent
   trillian:
     enabled: true
@@ -330,7 +330,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-createdb-rhel9
-        version: "sha256:d1ecc34e9b2e49a98567d7d04cece3a8e2604b3e61fbaad7c1a6b0db809311bf"
+        version: "sha256:064bf81c4164cb0eb7255d9da253c20857786081238d627faab578ce9aae0032"
         pullPolicy: IfNotPresent
     initContainerImage:
       netcat:
@@ -346,7 +346,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-redis-rhel9
-        version: sha256:8c12d98f96ed3daa3ea7ce03d52e8b6748c4b7ab20eee98c1d1ad031d14af00e
+        version: sha256:5f0630c7aa29eeee28668f7ad451f129c9fb2feb86ec21b6b1b0b5cc42b44f4a
         pullPolicy: IfNotPresent
       args: []
 
@@ -356,7 +356,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-logsigner-rhel9
-        version: "sha256:aa7812254a582c12bf71834f1617a81f76d00a5ee90413d7d707ed5068e21220"
+        version: "sha256:920f2fd735525dd612546a874e24d301761ca83c79ddb6898ee7d31470ffc467"
         pullPolicy: IfNotPresent
     logServer:
       name: trillian-logserver
@@ -366,7 +366,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-logserver-rhel9
-        version: "sha256:61320904f81c5d389c052222311a1357504a14b0de00426013cb8f29690220bf"
+        version: "sha256:4478e867e59b5c2d7a4e2630f76fad7899205de611a6f4648d9ca7389392780d"
         pullPolicy: IfNotPresent
     mysql:
       fullnameOverride: trillian-mysql
@@ -378,7 +378,7 @@ scaffold:
       image:
         registry: registry.redhat.io
         repository: rhtas/trillian-database-rhel9
-        version: "sha256:4989f92e18a541f12fb6174bd6686a24362a24700813e352c8c2c8eff4ab943f"
+        version: "sha256:221b4cb0f86d73606520c708499f0e6686838054fb0a759ba323c3f3ac8b7fed"
         pullPolicy: IfNotPresent
       args: []
       securityContext:
@@ -432,7 +432,7 @@ scaffold:
     deployment:
       registry: registry.redhat.io
       repository: rhtas/tuf-server-rhel9
-      version: "sha256:6e07be763052f724ac96739afed4b35509b95d88e3d5d86748c5b931f94639aa"
+      version: "sha256:8c229e2c7f9d6cc0ebf4f23dd944373d497be2ed31960f0383b1bb43f16de0db"
 
 
   copySecretJob:
