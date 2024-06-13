@@ -21,6 +21,7 @@ var (
 	helmChartVersion string
 	helmValuesFile   string
 	oidcConfig       oidc.OIDCConfig
+	helmChartUrl     = "./charts/trusted-artifact-signer"
 )
 
 var installCmd = &cobra.Command{
@@ -70,7 +71,7 @@ func installTas(tasNamespace string) error {
 		},
 		func() error {
 			log.Print("installing helm chart")
-			if err := install.HandleHelmChartInstall(kc, oidcConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartVersion); err != nil {
+			if err := install.HandleHelmChartInstall(kc, oidcConfig, tasNamespace, tasReleaseName, helmValuesFile, helmChartUrl, helmChartVersion); err != nil {
 				return err
 			}
 			return nil
@@ -85,11 +86,12 @@ func installTas(tasNamespace string) error {
 }
 
 func init() {
-	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", "0.1.26", "Version of the Helm chart")
+	installCmd.PersistentFlags().StringVar(&helmChartVersion, "chartVersion", helmChartVersion, "Version of the Helm chart")
 	installCmd.PersistentFlags().StringVar(&helmValuesFile, "valuesFile", "", "Custom values file for chart configuration")
 	installCmd.PersistentFlags().StringVar(&oidcConfig.IssuerURL, "oidc-issuer-url", "", "Specify the OIDC issuer URL e.g for keycloak: https://[keycloak-domain]/auth/realms/[realm-name]")
 	installCmd.PersistentFlags().StringVar(&oidcConfig.ClientID, "oidc-client-id", "", "Specify the OIDC client ID")
 	installCmd.PersistentFlags().StringVar(&oidcConfig.Type, "oidc-type", "", "Specify the OIDC type")
+	installCmd.PersistentFlags().StringVar(&helmChartUrl, "chartUrl", helmChartUrl, "URL to Trusted Artifact Signer Helm chart")
 }
 
 func getFulcioSecretFiles() map[string]string {
